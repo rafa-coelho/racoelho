@@ -25,6 +25,12 @@ const ProjectCard = ({ title, techStack, description, url }) => {
 const Projects = () => {
   const projects = [
     {
+      title: "Jokenpô",
+      description: "Jogo de Jokenpo multiplayer feito com WebSockets",
+      url: "/posts/construi-um-jogo-de-jokenpo",
+      techStack: "NodeJS, Javascript, WebSockets"
+    },
+    {
       title: "Fichas de RPG",
       description: "Sistema de gerenciamento de Fichas de RPG focado no Dungeons and Dragons",
       url: "https://github.com/rafa-coelho/SistemaFichas",

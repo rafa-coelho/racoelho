@@ -22,7 +22,7 @@ export default function PostPreview({
           width={556}
         />
       </div>
-      <h3 className="text-3xl lg:text-4xl mb-1 leading-snug">
+      <h3 className="text-2xl lg:text-3xl mb-1 leading-snug">
         <Link as={`/posts/${slug}`} href="/posts/[slug]" className="hover:underline">
           {title}
         </Link>

@@ -25,10 +25,12 @@ Quando você se conecta, ele te coloca numa fila aguardando outro jogador para p
 Queria dar uma evoluída nele eventualmente, mas tô sentindo que não vou 😅 (pelo menos, não tão cedo).
 
 Bem, sintam-se livres a dar uma olhada e contribuir, se quiserem:
-https://github.com/rafa-coelho/jokenpo
+
+[Repositório](https://github.com/rafa-coelho/jokenpo)
 
 Eu hospedei ele no render também (pode demorar pra startar o pod deles):
-https://jokenpo.racoelho.com.br/
+##### Lembre-se de abrir 2 navegadores!!
+[Demo](https://jokenpo.racoelho.com.br/)
 
 
 Segue uns prints dele:
