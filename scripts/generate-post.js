@@ -3,32 +3,28 @@ const fs = require('fs');
 const args = process.argv.slice(2);
 
 function generatePost(title) {
-
-  function capitalizeFirstWordLetter (str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
-  const sentenceCaseTitle = capitalizeFirstWordLetter(title);
-  const formattedTitle = sentenceCaseTitle.split('-').join(' ');
+  const nomalizedTitle = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ /g, "-").toLowerCase();
 
   const frontMatter = `---
-title: "${formattedTitle}"
+title: "${title}"
 excerpt: "Lorem ipsum."
-coverImage: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/Capa%20Geral%20-%20Aug%202023.png?updatedAt=1707360098513"
+coverImage: "/assets/blog/${nomalizedTitle}/banner.png"
 date: "${new Date(Date.now()).toISOString()}"
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
-  url: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/Capa%20Geral%20-%20Aug%202023.png?updatedAt=1707360098513"
+  url: "/assets/blog/${nomalizedTitle}/banner.png"
 ---
 `
 
-  fs.writeFile(`./_posts/${title}.md`, frontMatter, (err) => {
+  fs.writeFile(`./_posts/${nomalizedTitle}.md`, frontMatter, (err) => {
     if (err) throw err;
-    console.log(`Created ${title}.md!`);
+    console.log(`Created ${nomalizedTitle}.md!`);
     console.log("Don't forget to update the excerpt, coverImage path, and ogImage path in the front matter!");
   });
+
+  fs.mkdir(`./public/assets/blog/${nomalizedTitle}`, () => {});
 }
 
 generatePost(args[0]);
