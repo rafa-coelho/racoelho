@@ -1,0 +1,32 @@
+{
+    "presentationText": "Oi, eu sou",
+    "customers": {
+        "title": "Clientes",
+        "customerList": [
+            {
+                "title": "Prefácio",
+                "subtitle": "Portal de Controle de Vendas",
+                "stack": "ReactJS e NodeJS",
+                "description": "A Prefácio é uma empresa de confecção e venda de paramentos religiosos.",
+                "features": ["Foi criado um sistema de gerenciamento de Pedidos e Clientes com gerenciamento de produção, estoque e com controle de acessos por níveis."],
+                "logo": "https://ik.imagekit.io/wphcyip3g/racoelho_dev/prefacio.png?updatedAt=1701911037015"
+            },
+            {
+                "title": "Club7",
+                "subtitle": "Plataforma, Aplicativo e Aplicação BackOffice",
+                "stack": "NextJS, NodeJS e Flutter",
+                "description": "Club7 é uma plataforma onde estabelecimentos e motoristas de aplicativo se encontram.",
+                "features": ["Sistema de mapeamento", "Portal para estabelecimentos", "Aplicativo para os motoristas", "Sistema de cobrança recorrente de assinatura do serviço", "Gerenciador de clientes."],
+                "logo": "https://ik.imagekit.io/wphcyip3g/racoelho_dev/club7.png?updatedAt=1701911037908"
+            },
+            {
+                "title": "LeadThis",
+                "subtitle": "Plataforma de Geração e Venda de Leads",
+                "stack": "NodeJS e ReactJS",
+                "description": "O LeadThis era uma plataforma onde os corretores de planos de saúde podiam encontrar clientes em potencial.",
+                "features": ["Sistema de captura de Leads", "Plataforma onde o Corretor podia comprar a Lead que mais lhe interessasse."],
+                "logo": "https://ik.imagekit.io/wphcyip3g/racoelho_dev/leadthis.png?updatedAt=1701911037104"
+            }
+        ]
+    }
+}
