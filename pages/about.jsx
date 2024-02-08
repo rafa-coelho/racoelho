@@ -14,7 +14,7 @@ export default function About () {
         <PageHeading>Quem é o Rafael?</PageHeading>
         <section className="max-w-3xl mx-auto py-8 md:py-16 lg:py-24">
           <p>
-            Meu nome é Rafael Coelho e sou apaixonado por tecnologia aos 12 anos.
+            Meu nome é Rafael Coelho e sou apaixonado por tecnologia desde os meus 12 anos.
             Gosto de desenvolver sistemas, criar automações, fazer protótipos no Figma, gravar vídeos e etc.
           </p>
           <br />
