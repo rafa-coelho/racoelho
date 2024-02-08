@@ -85,16 +85,20 @@ const KnowledgeSection = () => {
   ];
 
   return (
-    <section className="flex justify-between items-start text-white px-12 gap-8">
-      <div className="flex flex-col w-1/2 space-y-4">
-        <KnowledgeIcon />
-        <h2 className="text-3xl font-bold text-[#BBB]">Conhecimentos</h2>
-        <p>{currentDescription || "Passe o mouse ao lado para mais informações"}</p>
+    <section className="flex flex-col md:flex-row  justify-between items-start text-white px-12 gap-8">
+      <div className="w-full">
+        <div className="">
+          <KnowledgeIcon />
+          <h2 className="text-3xl font-bold text-[#BBB]">Conhecimentos</h2>
+          <p className="hidden md:block">{currentDescription || "Passe o mouse ao lado para mais informações"}</p>
+        </div>
       </div>
-      <div className="flex w-1/2 items-end grid grid-cols-4 gap-2">
-        {items.map((item, index) => (
-          <KnowledgeItem key={index} item={item} onHover={setCurrentDescription} />
-        ))}
+      <div className="w-full">
+        <div className="flex items-end grid grid-cols-3 md:grid-cols-4 gap-2">
+          {items.map((item, index) => (
+            <KnowledgeItem key={index} item={item} onHover={setCurrentDescription} />
+          ))}
+        </div>
       </div>
     </section>
   );
