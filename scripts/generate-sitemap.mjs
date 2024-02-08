@@ -2,8 +2,8 @@ import { writeFileSync } from 'fs'
 import { globby } from 'globby'
 import prettier from 'prettier'
 
-const BLOG_URL = 'https://blog-starter.sandypockets.dev'
-const LANG = 'en-CA'
+const BLOG_URL = 'https://racoelho.com.br'
+const LANG = 'pt-BR'
 
 async function generate() {
   const prettierConfig = await prettier.resolveConfig('./.prettierrc.js')

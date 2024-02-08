@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function Intro () {
   return (
     <section className="flex flex-col justify-center items-center md:flex-row md:justify-between min-h-screen mt-16 mb-16 md:mb-12 -mt-20">
@@ -11,7 +13,7 @@ export default function Intro () {
         Software Developer
       </span>
       <div>
-        <img
+        <Image
           src="https://ik.imagekit.io/wphcyip3g/racoelho_dev/darkbannerimage.png?updatedAt=1707339583738"
           alt=""
         />

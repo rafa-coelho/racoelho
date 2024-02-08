@@ -1,10 +1,11 @@
 import React from 'react';
+import Image from 'next/image'
 
 const ClientCard = ({ logo, title, subtitle, description, features }) => {
     return (
         <div className="bg-[#111111] text-white p-6 rounded-lg shadow-lg py-12">
             <div className="flex justify-center mb-4">
-                <img src={logo} alt={title} className="h-20 aspect-square object-cover rounded-full" />
+                <Image src={logo} alt={title} className="h-20 aspect-square object-cover rounded-full" />
             </div>
             <h3 className="text-x text-xl font-bold mb-2">{title}</h3>
             <h4 className="text-sm text-gray-400 mb-4">{subtitle}</h4>
