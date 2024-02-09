@@ -5,10 +5,11 @@ import { BLOG_NAME } from '../lib/constants'
 import PageHeading from '../components/PageHeading'
 
 export default function About () {
+  const title = `Sobre mim | ${BLOG_NAME || "Loading..."}`
   return (
     <Layout>
       <Head>
-        <title>Sobre mim | {BLOG_NAME}</title>
+        <title>{title}</title>
       </Head>
       <Container>
         <PageHeading>Quem é o Rafael?</PageHeading>

@@ -11,11 +11,14 @@ import PostBody from '../../components/Post/PostBody'
 import PostHeader from '../../components/Post/PostHeader'
 import PostTitle from '../../components/Post/PostTitle'
 
-export default function Post({ post, morePosts, preview }) {
+export default function Post ({ post, morePosts, preview }) {
   const router = useRouter()
   if (!router.isFallback && !post?.slug) {
     return <ErrorPage title='Postagem não encontrada' statusCode={404} />
   }
+
+  const title = `${post.title} | ${BLOG_NAME}`;
+
   return (
     <Layout preview={preview}>
       <Container>
@@ -26,9 +29,7 @@ export default function Post({ post, morePosts, preview }) {
           <>
             <article className="mb-32">
               <Head>
-                <title>
-                  {post.title} | {BLOG_NAME}
-                </title>
+                <title>{title}</title>
                 <meta property="og:image" content={post.ogImage.url} />
               </Head>
               <PostHeader
@@ -46,7 +47,7 @@ export default function Post({ post, morePosts, preview }) {
   )
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps ({ params }) {
   const post = getPostBySlug(params.slug, [
     'title',
     'date',
@@ -68,7 +69,7 @@ export async function getStaticProps({ params }) {
   }
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths () {
   const posts = getAllPosts(['slug'])
 
   return {

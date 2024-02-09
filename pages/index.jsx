@@ -8,12 +8,12 @@ import Head from 'next/head'
 import { BLOG_NAME } from '../lib/constants'
 
 export default function Index () {
-
+  const title = `Home | ${BLOG_NAME || "Loading..."}`
   return (
     <>
       <Layout>
         <Head>
-          <title>Home | {BLOG_NAME}</title>
+          <title>{title}</title>
         </Head>
         <Container>
           <Intro />

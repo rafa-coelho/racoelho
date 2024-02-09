@@ -6,11 +6,14 @@ import { BLOG_NAME } from '../../lib/constants'
 import PostPreview from '../../components/Home/PostPreview'
 
 const Posts = ({ allPosts }) => {
-    const posts = allPosts
+    const posts = allPosts;
+
+    const title = `Blog | ${BLOG_NAME || "Loading..."}`
+    
     return (
         <Layout>
             <Head>
-                <title>Blog | {BLOG_NAME}</title>
+                <title>{title}</title>
             </Head>
             <Container>
                 <section>
