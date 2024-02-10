@@ -1,3 +1,4 @@
+import Adsense from '../AdBanner'
 import markdownStyles from './markdown-styles.module.css'
 
 export default function PostBody ({ content }) {
@@ -11,7 +12,9 @@ export default function PostBody ({ content }) {
         />
       </div>
 
-      <div className="w-1/4 h-20"></div>
+      <div className="w-1/4 h-20">
+        <Adsense />
+      </div>
     </div>
   )
 }
