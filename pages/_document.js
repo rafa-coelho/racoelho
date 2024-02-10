@@ -6,7 +6,7 @@ import { ADS_CLIENT_ID } from '../lib/constants';
 export default class MyDocument extends Document {
   render () {
     return (
-      <Html lang={LANG}>
+      <Html lang={LANG} className='dark'>
         <Head>
           <meta name="description" content={DESCRIPTION} />
           <meta name="author" content={AUTHOR} />
