@@ -3,7 +3,7 @@ import { KEYWORDS, DESCRIPTION, AUTHOR, LANG } from '../lib/constants'
 import { GA_TRACKING_ID } from '../lib/gtag'
 
 export default class MyDocument extends Document {
-  render() {
+  render () {
     return (
       <Html lang={LANG}>
         <Head>
@@ -33,6 +33,8 @@ export default class MyDocument extends Document {
           `,
             }}
           />
+          <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADS_CLIENT_ID}`}
+            crossOrigin="anonymous"></script>
         </Head>
         <body>
           <Main />
