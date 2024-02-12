@@ -88,7 +88,7 @@ Então essas foram as primeiras alterações:
 
 ```csharp
 # Service.cs
-// Busca todas as viagens da frota
+// Busca todas as viagens do veículo
 var vehicleTrips = await facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
 
 foreach(var trip in vehicleTrips) {
@@ -102,7 +102,7 @@ FleetStats fleetStats = await facade.GetFleetStatsAsync(startTime, endTime);
 // Instancia o objeto de retorno onde é processada a média dos dados
 var reportResult = new ReportExample(vehicleTrips);
 
-if(fleetTrips.Any()) {
+if(fleetStats != null) {
   // Método alterado para receber FleetStats ao invés de IEnumerable<VehicleTrip>
   reportResult.CalculatePercentageDifferenceToTheFleet(fleetStats);
 }
@@ -351,6 +351,65 @@ Com isso, chegamos a marca média dos........................................
 Mas ainda faltava algo...
 
 ### Threading 
+
+Depois de tudo isso, ainda havia uma coisa que poderia ser alterada lá na Service.
+
+Das 3 chamadas ao facade, somente uma delas precisava da resposta de outra.
+
+Então, não havia a necessidade de esperar chamada por chamada para montar o resultado desde que eu garanta que todas foram executadas.
+
+E com isso em mente, nosso código da service foi atualizado para algo assim:
+
+
+```csharp
+# Service.cs
+
+var eventsTask = facade.GetEventsAsync(startTime, endTime);
+var vehicleTripsTask = facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
+var fleetStatsTask = facade.GetFleetStatsAsync(startTime, endTime);
+
+await Task.WhenAll(eventsTask, vehicleTripsTask, fleetStatsTask);
+
+// Aplicando o "await" da task que já está completa
+var events = await eventsTask;
+
+// Aplicando o "await" da task que já está completa
+var vehicleTrips = (await vehicleTripsTask)
+    .Select(trip =>
+    {
+      trip.Events = events
+        .Where(x => x.DateTimeUTC >= trip.StartDateTime && 
+                    x.DateTimeUTC <= trip.EndDateTime)
+        .ToList();
+        return trip;
+    });
+
+// Aplicando o "await" da task que já está completa
+FleetStats fleetStats = await fleetStatsTask;
+
+var reportResult = new ReportExample(vehicleTrips);
+if(fleetStats != null) {
+  reportResult.CalculatePercentageDifferenceToTheFleet(fleetStats);
+}
+
+return reportResult;
+```
+
+
+## Conclusão
+
+Com isso, eu decidi rodar mais uma vez a versão existente e compará-la com a minha.
+
+E esses foram os resultados:
+
+A versão antes da change:
+
+![Staging](/assets/blog/melhorando-a-performance-de-um-relatorio/staging.jpg)
+
+A versão atualizada:
+
+![Dev](/assets/blog/melhorando-a-performance-de-um-relatorio/dev.jpg)
+
 
 
 ![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI5eTBmcHBjcWlkZnF0OGJjYm95aTlxd2xxaGk5bHZoeDNuZng5NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YprQElVsTlnbztuWv4/giphy.gif)
