@@ -2,7 +2,8 @@
 title: "De 35 à 3 segundos: Melhorando a Performance de um Relatório"
 excerpt: "Como eu reduzi o tempo de resposta de um relatório de 34s para 3s."
 coverImage: "/assets/blog/melhorando-a-performance-de-um-relatorio/banner.png"
-date: "2024-02-08T15:53:28.942Z"
+date: "2024-02-12T08:48:28.942Z"
+keywords: C#, Performance, refatoração, 
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
@@ -17,13 +18,10 @@ Um belo dia, recebo um ticket que reclamava de algo:
 
 Estou em um projeto de um SaaS onde se coleta centenas de sinais por minuto para serem inseridos no database do **BigQuery** e que, eventualmente, são processados para geração de relatórios.
 
-No caso desse post, os relatório em questão busca os dados das viagens geradas por um motorista en determinado intervalo de tempo e compara seu desempenho com o restante da frota.
-
+No caso desse post, os relatório em questão busca os dados das viagens geradas por um motorista em um determinado intervalo de tempo e compara seu desempenho com o restante da frota.
 
 ## Disclaimer
-Mas já adianto algo:
 *Este sistema ainda está em desenvolvimento e homologação, então, muitas decisões foram tomadas sem o mesmo volume de dados ou criados às pressas para melhorias futuras.*
-
 
 ## O Problema
 
@@ -36,7 +34,7 @@ E com este ticket foi traçada uma meta: resposta em 3 segundos.
 ## Solucionando
 
 Com isso dito, comecei a analisar o código para procurar os pontos mais lentos.
-Usando um `Stopwatch`, metrifiquei cada etapa do relatório para descobrir que dos 35 segundos da minha request, *metade* ocorria em 2 buscas ao banco que aconteciam no inicio do processo.
+Usando um `Stopwatch`, metrifiquei cada etapa do relatório para descobrir que dos 35 segundos da minha request, *metade* ocorria em 2 buscas ao banco que aconteciam no inicio do processo da Service.
 
 Em resumo, a função recebia um StartDateTime e um EndDateTime e um identificador do veículo e realizava uma lógica parecida com a abaixo:
 
@@ -72,18 +70,18 @@ Então, vamos para o primeiro:
 
 Como pode perceber, esse método captura todos os dados de todos os veículos da frota e só os usaria no final do processo, o que me pareceu um esforço desnecessário.
 
-Claro, até havia caching para que todos os momentos em que os cálculos precisassem buscar alguma informação, como a média de determinado evento, não buscasse novamente no banco. 
+Claro, até havia caching. Assim, nos momentos em que era necessário buscar a quantidade de eventos críticos ou mesmo realizar alguma filtragem, os dados já estavam lá.
 
-Mas mesmo assim, as informações que não seriam exclusivamente do veículo não pareciam ser necessárias em outro momento se não naquele método `CalculatePercentageDifferenceToTheFleet` onde seriam comparadas as médias de desempenho entre o Veículo e a Frota para informações como: 
+Mas mesmo assim, as informações que não seriam exclusivamente do veículo não pareciam ser necessárias em outro momento além daquele método `CalculatePercentageDifferenceToTheFleet` onde seriam comparadas as médias de desempenho entre o Veículo e a Frota para informações como: 
 - "O veículo está consumindo, em média, *X*% a mais do que a frota"
-- "O veículo está consumindo, em média, *X*% a menos do que a frota"
+- "O veículo está andando, em média, *X*% a mais rápido do que a frota"
 
 E não há necessidade de calcular a média da frota no código, uma vez que podemos buscá-la diretamente no banco.
 
 Então essas foram as primeiras alterações: 
-- O método foi atualizado para buscar unicamente os dados do veículo 
-- Criação do método `facade.GetFleetStats()` para retornar as médias de toda a frota
-- Adaptação do método `CalculatePercentageDifferenceToTheFleet` para receber o objeto retornado do `facade.GetFleetStats` ao invés da listagem de trips.
+- O método foi atualizado para buscar unicamente os dados do veículo ;
+- Criação do método `facade.GetFleetStats()` para retornar as médias de toda a frota sem a necessidade de listar os dados;
+- Adaptação do método `CalculatePercentageDifferenceToTheFleet` para receber o objeto retornado do `facade.GetFleetStats` ao invés da listagem de trips;
 
 
 ```csharp
@@ -183,7 +181,7 @@ public async Task<List<T>> GetQueryResultsAsync<T>(string query)
     {
       T data = default;
       
-      // Converte a linha para o objeto T chamando o método do snippet a seguir.
+      // Converte a linha para o objeto T chamando o método de ParseRow.
       data = ParseRow<T>(row);
       
       // Adiciona na lista que será retornada
@@ -213,8 +211,8 @@ Console.WriteLine("Tamanho do arr2: {0}", arr2.Length);
 // Tamanho do arr2: 8
 ```
 
-Mas porque não precisamos informar para o List?
-Quando você gera um List, ele cria um array de tamanho **0** e quando você adiciona itens dentro dele com o `.Add()` ele gera um **NOVO** array com tamanho **4**, vai atribuir o valor do array anterior ao novo e descantar o velho.
+Mas porque não precisamos informar um tamanho para o List?
+Quando você gera um List, ele cria um array de tamanho **0** e quando você adiciona itens dentro dele com o `.Add()` ele gera um **NOVO** array com tamanho **4**, vai atribuir o valor do array anterior ao novo e descartar o velho.
 
 *"E se eu rodar o `.Add()` 5 vezes?"*
 
@@ -312,7 +310,7 @@ private T ParseRow<T>(BigQueryRow row)
 
 E a pergunta principal foi "O que dá pra melhorar?" e a resposta estava na variável `typeProperties`.
 
-Ela armazena cada uma das propriedades do objeto **T**, mas isso acontece para cada uma das chamadas desse método... o que quer dizer que se houver um resultado de 1800 linhas para um objeto de 12 propriedades.... bem, você entendeu.
+Ela armazena cada uma das propriedades do objeto **T**, mas isso acontece para cada uma das linhas retornadas do banco... o que quer dizer que se houver um resultado de 1800 linhas para um objeto de 12 propriedades.... bem, você entendeu.
 
 Então, a melhor solução é fazer a aplicação buscar uma única vez e reutilizar a informação coletada.
 
@@ -343,7 +341,7 @@ Com isso, a aplicação armazenaria uma única vez as informações de um objeto
 E agora, meus amigos...
 Com isso, chegamos a marca média dos........................................
 
-**4 segundos**
+**3.2 segundos**
 
 ![UHUL](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGI1bGRncWFtZTlmd2x1OGN6Y25uemI1c3I5ajVkOXo0NnMzcno5cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy-downsized-large.gif)
 
@@ -363,11 +361,12 @@ E com isso em mente, nosso código da service foi atualizado para algo assim:
 
 ```csharp
 # Service.cs
-
+// Declaração das chamadas
 var eventsTask = facade.GetEventsAsync(startTime, endTime);
 var vehicleTripsTask = facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
 var fleetStatsTask = facade.GetFleetStatsAsync(startTime, endTime);
 
+// Aguardando a execução de todas simultâneamente
 await Task.WhenAll(eventsTask, vehicleTripsTask, fleetStatsTask);
 
 // Aplicando o "await" da task que já está completa
