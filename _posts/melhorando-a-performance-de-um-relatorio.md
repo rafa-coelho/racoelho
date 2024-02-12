@@ -321,18 +321,36 @@ E como o método `GetQueryResultsAsync` é chamado algumas vezes durante o proce
 O que deixou o código mais ou menos assim:
 
 ```csharp
+#BigQuery.cs
+
+private static readonly ConcurrentDictionary<Type, PropertyInfo[]> _typePropertiesCache = new ConcurrentDictionary<Type, PropertyInfo[]>();
+
 private T ParseRow<T>(BigQueryRow row)
 {
-  // Criação de instância do genérico
   T result = Activator.CreateInstance<T>();
-  // Armazena todas as propriedades do objeto
   var typeProperties = typeof(T).GetProperties();
-
+  var typeProperties = _typePropertiesCache.GetOrAdd(typeof(T), t => t.GetProperties());
   /*
-    ...
-    
+      [...]
   */
   
   return result;
 }
 ```
+
+Com isso, a aplicação armazenaria uma única vez as informações de um objeto e nunca mais o consultaria, poupando armazenamento e tempo de processamento.
+
+E agora, meus amigos...
+Com isso, chegamos a marca média dos........................................
+
+**4 segundos**
+
+![UHUL](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGI1bGRncWFtZTlmd2x1OGN6Y25uemI1c3I5ajVkOXo0NnMzcno5cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy-downsized-large.gif)
+
+
+Mas ainda faltava algo...
+
+### Threading 
+
+
+![](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI5eTBmcHBjcWlkZnF0OGJjYm95aTlxd2xxaGk5bHZoeDNuZng5NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/YprQElVsTlnbztuWv4/giphy.gif)
