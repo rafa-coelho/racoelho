@@ -2,7 +2,7 @@ import Container from '../../components/Layout/Container'
 import Layout from '../../components/Layout/Layout'
 import Head from 'next/head'
 import { getAllPosts } from '../../lib/api'
-import { BLOG_NAME } from '../../lib/constants'
+import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../../lib/constants'
 import PostPreview from '../../components/Home/PostPreview'
 
 const Posts = ({ allPosts }) => {
@@ -14,6 +14,7 @@ const Posts = ({ allPosts }) => {
         <Layout>
             <Head>
                 <title>{title}</title>
+                <meta property="og:image" content={HOME_OG_IMAGE_URL} />
             </Head>
             <Container>
                 <section>
