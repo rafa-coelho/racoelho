@@ -2,7 +2,7 @@
 title: "De 35 à 3 segundos: Melhorando a Performance de um Relatório"
 excerpt: "Como eu reduzi o tempo de resposta de um relatório de 34s para 3s."
 coverImage: "/assets/blog/melhorando-a-performance-de-um-relatorio/banner.png"
-date: "2024-02-14T14:30:00.000Z"
+date: "2024-02-12T08:48:28.942Z"
 keywords: C#, Performance, refatoração, 
 author:
   name: "racoelho"
@@ -41,22 +41,22 @@ Em resumo, a função recebia um StartDateTime e um EndDateTime e um identificad
 ```csharp
 # Service.cs
 // Busca todas as viagens da frota
-IEnumerable<ViagemVeiculo> viagensFrota = await facade.ListarViagensAsync(startTime, endTime);
+IEnumerable<VehicleTrip> fleetTrips = await facade.GetTripsAsync(startTime, endTime);
 
 // Filtra as viagens daquele veículo em específico
-IEnumerable<ViagemVeiculo> viagensVeiculo = viagensFrota.Where(x => x.VehicleId == vehicleId).ToList();
+IEnumerable<VehicleTrip> vehicleTrips = fleetTrips.Where(x => x.VehicleId == vehicleId).ToList();
 
-foreach(var trip in viagensVeiculo) {
+foreach(var trip in vehicleTrips) {
   // Busca uma lista de eventos para ocorridos na viagem
-  trip.Events = await facade.ListarEventosAsync(...);
+  trip.Events = await facade.GetEventsAsync(...);
 }
 
 // Instancia o objeto de retorno onde é processada a média dos dados
-var reportResult = new ReportExample(viagensVeiculo);
+var reportResult = new ReportExample(vehicleTrips);
 
-if(viagensFrota.Any()) {
+if(fleetTrips.Any()) {
   // Realizava a comparação de desempenho individual com o da frota inteira
-  reportResult.CalcularDiferencaPorcentagemEmRelacaoAFrota(viagensFrota);
+  reportResult.CalculatePercentageDifferenceToTheFleet(fleetTrips);
 }
 
 return reportResult;
@@ -66,13 +66,13 @@ Se você deu uma boa olhada, já deve ter conseguido encontrar onde estão pelo 
 
 Então, vamos para o primeiro:
 
-### Alterando o facade.ListarViagensAsync()
+### Alterando o facade.GetTripsAsync()
 
 Como pode perceber, esse método captura todos os dados de todos os veículos da frota e só os usaria no final do processo, o que me pareceu um esforço desnecessário.
 
 Claro, até havia caching. Assim, nos momentos em que era necessário buscar a quantidade de eventos críticos ou mesmo realizar alguma filtragem, os dados já estavam lá.
 
-Mas mesmo assim, as informações que não seriam exclusivamente do veículo não pareciam ser necessárias em outro momento além daquele método `CalcularDiferencaPorcentagemEmRelacaoAFrota` onde seriam comparadas as médias de desempenho entre o Veículo e a Frota para informações como: 
+Mas mesmo assim, as informações que não seriam exclusivamente do veículo não pareciam ser necessárias em outro momento além daquele método `CalculatePercentageDifferenceToTheFleet` onde seriam comparadas as médias de desempenho entre o Veículo e a Frota para informações como: 
 - "O veículo está consumindo, em média, *X*% a mais do que a frota"
 - "O veículo está andando, em média, *X*% a mais rápido do que a frota"
 
@@ -81,28 +81,28 @@ E não há necessidade de calcular a média da frota no código, uma vez que pod
 Então essas foram as primeiras alterações: 
 - O método foi atualizado para buscar unicamente os dados do veículo ;
 - Criação do método `facade.GetFleetStats()` para retornar as médias de toda a frota sem a necessidade de listar os dados;
-- Adaptação do método `CalcularDiferencaPorcentagemEmRelacaoAFrota` para receber o objeto retornado do `facade.GetFleetStats` ao invés da listagem de trips;
+- Adaptação do método `CalculatePercentageDifferenceToTheFleet` para receber o objeto retornado do `facade.GetFleetStats` ao invés da listagem de trips;
 
 
 ```csharp
 # Service.cs
 // Busca todas as viagens do veículo
-var viagensVeiculo = await facade.ListarViagensDoVeiculoAsync(startTime, endTime, vehicleId);
+var vehicleTrips = await facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
 
-foreach(var trip in viagensVeiculo) {
+foreach(var trip in vehicleTrips) {
   // Busca uma lista de eventos para ocorridos na viagem
-  trip.Events = await facade.ListarEventosAsync(...);
+  trip.Events = await facade.GetEventsAsync(...);
 }
 
 // Executa o calculo das médias de sinais da Frota
-EstatisticaFrota fleetStats = await facade.RecuperarEstatisticaFrota(startTime, endTime);
+FleetStats fleetStats = await facade.GetFleetStatsAsync(startTime, endTime);
 
 // Instancia o objeto de retorno onde é processada a média dos dados
-var reportResult = new ReportExample(viagensVeiculo);
+var reportResult = new ReportExample(vehicleTrips);
 
 if(fleetStats != null) {
-  // Método alterado para receber EstatisticaFrota ao invés de IEnumerable<ViagemVeiculo>
-  reportResult.CalcularDiferencaPorcentagemEmRelacaoAFrota(fleetStats);
+  // Método alterado para receber FleetStats ao invés de IEnumerable<VehicleTrip>
+  reportResult.CalculatePercentageDifferenceToTheFleet(fleetStats);
 }
 
 return reportResult;
@@ -113,24 +113,24 @@ Bom? Eu não achei.
 
 O que me levou para a segunda alteração.
 
-### Removendo multiplas chamadas ao facade.ListarEventosAsync()
+### Removendo multiplas chamadas ao facade.GetEventsAsync()
 
 Para cada uma das viagens, a aplicação precisa buscar os eventos gerados dentro do intervalo dela.
 E como já deve ter pensado por conta própria, realizar uma chamada assíncrona para cada uma das trips não era a melhor solução... então a alteração foi bem intuitiva e rápida:
 
 Este código:
 ```csharp
-var viagensVeiculo = await facade.ListarViagensDoVeiculoAsync(startTime, endTime, vehicleId);
+var vehicleTrips = await facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
 
-foreach(var trip in viagensVeiculo) {
-  trip.Events = await facade.ListarEventosAsync(trip.StartDateTime, trip.EndDateTime, trip.VehicleId);
+foreach(var trip in vehicleTrips) {
+  trip.Events = await facade.GetEventsAsync(trip.StartDateTime, trip.EndDateTime, trip.VehicleId);
 }
 ```
 
 Foi substituido por este:
 ```csharp
-var events = await facade.ListarEventosAsync(startTime, endTime);
-var viagensVeiculo = await facade.ListarViagensDoVeiculoAsync(startTime, endTime, vehicleId)
+var events = await facade.GetEventsAsync(startTime, endTime);
+var vehicleTrips = await facade.GetVehicleTripsAsync(startTime, endTime, vehicleId)
     .Select(trip =>
     {
       trip.Events = events
@@ -362,9 +362,9 @@ E com isso em mente, nosso código da service foi atualizado para algo assim:
 ```csharp
 # Service.cs
 // Declaração das chamadas
-var eventsTask = facade.ListarEventosAsync(startTime, endTime);
-var vehicleTripsTask = facade.ListarViagensDoVeiculoAsync(startTime, endTime, vehicleId);
-var fleetStatsTask = facade.RecuperarEstatisticaFrota(startTime, endTime);
+var eventsTask = facade.GetEventsAsync(startTime, endTime);
+var vehicleTripsTask = facade.GetVehicleTripsAsync(startTime, endTime, vehicleId);
+var fleetStatsTask = facade.GetFleetStatsAsync(startTime, endTime);
 
 // Aguardando a execução de todas simultâneamente
 await Task.WhenAll(eventsTask, vehicleTripsTask, fleetStatsTask);
@@ -373,7 +373,7 @@ await Task.WhenAll(eventsTask, vehicleTripsTask, fleetStatsTask);
 var events = await eventsTask;
 
 // Aplicando o "await" da task que já está completa
-var viagensVeiculo = (await vehicleTripsTask)
+var vehicleTrips = (await vehicleTripsTask)
     .Select(trip =>
     {
       trip.Events = events
@@ -384,11 +384,11 @@ var viagensVeiculo = (await vehicleTripsTask)
     });
 
 // Aplicando o "await" da task que já está completa
-EstatisticaFrota fleetStats = await fleetStatsTask;
+FleetStats fleetStats = await fleetStatsTask;
 
-var reportResult = new ReportExample(viagensVeiculo);
+var reportResult = new ReportExample(vehicleTrips);
 if(fleetStats != null) {
-  reportResult.CalcularDiferencaPorcentagemEmRelacaoAFrota(fleetStats);
+  reportResult.CalculatePercentageDifferenceToTheFleet(fleetStats);
 }
 
 return reportResult;
