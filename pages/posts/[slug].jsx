@@ -34,6 +34,12 @@ export default function Post ({ post, morePosts, preview }) {
                 <meta property="og:image" content={post.ogImage.url} />
                 <meta property='keywords' content={post.keywords} />
                 <meta property='description' content={post.excerpt} />
+
+                <meta name="twitter:card" content={post.ogImage.url} />
+                <meta name="twitter:title" content={post.title} />
+                <meta name="twitter:description" content={post.excerpt} />
+                <meta name="twitter:image" content={post.ogImage.url} />
+
               </Head>
               <PostHeader
                 title={post.title}
@@ -45,7 +51,7 @@ export default function Post ({ post, morePosts, preview }) {
             </article>
           </>
         )}
-        
+        <FloatActionBar />
       </Container>
     </Layout>
   )
