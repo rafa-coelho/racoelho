@@ -16,7 +16,7 @@ A organizadora nos enviou links onde vimos os nomes de quem tiramos.
 
 E algo me chamou muita atenção...
 
-O site pareceu uma aplicação tão simples: Uma plaraforma onde você informa uma lista de nomes que terão pares sorteados e links individuais para exibição dos nomes.
+O site pareceu uma aplicação tão simples: Uma plataforma onde você informa uma lista de nomes que terão pares sorteados e links individuais para exibição dos nomes.
 
 E eis o que me chamou a atenção: **a elegância de uma solução simples.**
 
