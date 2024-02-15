@@ -1,5 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { KEYWORDS, DESCRIPTION, AUTHOR, LANG } from '../lib/constants'
+import { AUTHOR, LANG } from '../lib/constants'
 import { GA_TRACKING_ID } from '../lib/gtag'
 import { ADS_CLIENT_ID } from '../lib/constants';
 
@@ -8,9 +8,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang={LANG} className='dark'>
         <Head>
-          <meta name="description" content={DESCRIPTION} />
           <meta name="author" content={AUTHOR} />
-          <meta name="keywords" content={KEYWORDS} />
           <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link

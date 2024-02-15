@@ -2,8 +2,9 @@ import Container from '../../components/Layout/Container'
 import Layout from '../../components/Layout/Layout'
 import Head from 'next/head'
 import { getAllPosts } from '../../lib/api'
-import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../../lib/constants'
+import { BLOG_NAME } from '../../lib/constants'
 import PostPreview from '../../components/Home/PostPreview'
+import { KEYWORDS } from '../../lib/constants'
 
 const Posts = ({ allPosts }) => {
     const posts = allPosts;
@@ -14,6 +15,8 @@ const Posts = ({ allPosts }) => {
         <Layout>
             <Head>
                 <title>{title}</title>
+                <meta name="description" content={"Blog sobre Programação e Tecnologia - Rafael Coelho"} />
+                <meta name="keywords" content={KEYWORDS} />
                 <meta property="og:image" content={HOME_OG_IMAGE_URL} />
             </Head>
             <Container>
