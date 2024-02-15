@@ -3,6 +3,7 @@ import Container from '../components/Layout/Container'
 import Layout from '../components/Layout/Layout'
 import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../lib/constants'
 import PageHeading from '../components/PageHeading'
+import { KEYWORDS, DESCRIPTION } from '../lib/constants'
 
 export default function About () {
   const title = `Sobre mim | ${BLOG_NAME || "Loading..."}`
@@ -10,6 +11,8 @@ export default function About () {
     <Layout>
       <Head>
         <title>{title}</title>
+        <meta name="description" content={DESCRIPTION} />
+        <meta name="keywords" content={KEYWORDS} />
         <meta property="og:image" content={HOME_OG_IMAGE_URL} />
       </Head>
       <Container>
@@ -31,7 +34,7 @@ export default function About () {
           <br />
           <p>
             Amo meu trabalho e nas horas vagas gosto de assistir séries, animes e jogar video games.
-          </p>          
+          </p>
         </section>
       </Container>
     </Layout>

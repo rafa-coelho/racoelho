@@ -33,6 +33,7 @@ export default function Post ({ post, morePosts, preview }) {
                 <title>{title}</title>
                 <meta property="og:image" content={post.ogImage.url} />
                 <meta property='keywords' content={post.keywords} />
+                <meta property='description' content={post.excerpt} />
               </Head>
               <PostHeader
                 title={post.title}
@@ -59,6 +60,7 @@ export async function getStaticProps ({ params }) {
     'content',
     'keywords',
     'ogImage',
+    'excerpt',
     'coverImage',
   ]);
   const content = await markdownToHtml(post.content || '');
