@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Container from '../components/Layout/Container'
 import Layout from '../components/Layout/Layout'
-import { BLOG_NAME } from '../lib/constants'
+import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../lib/constants'
 import PageHeading from '../components/PageHeading'
 import { KEYWORDS, DESCRIPTION } from '../lib/constants'
 
@@ -13,6 +13,7 @@ export default function About () {
         <title>{title}</title>
         <meta name="description" content={DESCRIPTION} />
         <meta name="keywords" content={KEYWORDS} />
+        <meta property="og:image" content={HOME_OG_IMAGE_URL} />
       </Head>
       <Container>
         <PageHeading>Quem é o Rafael?</PageHeading>
