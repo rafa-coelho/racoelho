@@ -51,7 +51,6 @@ export default function Post ({ post, morePosts, preview }) {
             </article>
           </>
         )}
-        <FloatActionBar />
       </Container>
     </Layout>
   )
