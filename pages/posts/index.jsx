@@ -4,6 +4,7 @@ import Head from 'next/head'
 import { getAllPosts } from '../../lib/api'
 import { BLOG_NAME } from '../../lib/constants'
 import PostPreview from '../../components/Home/PostPreview'
+import { KEYWORDS, DESCRIPTION } from '../../lib/constants'
 
 const Posts = ({ allPosts }) => {
     const posts = allPosts;
@@ -14,6 +15,8 @@ const Posts = ({ allPosts }) => {
         <Layout>
             <Head>
                 <title>{title}</title>
+                <meta name="description" content={"Blog sobre Programação e Tecnologia - Rafael Coelho"} />
+                <meta name="keywords" content={KEYWORDS} />
             </Head>
             <Container>
                 <section>
