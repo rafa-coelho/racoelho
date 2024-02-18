@@ -5,7 +5,7 @@ export default function PostBody ({ content }) {
   return (
     <div className="max-w flex justify-start gap-4">
 
-      <div className="w-full md:w-3/4 mx-10">
+      <div className="w-full md:w-3/4 mx-10 p-2">
         <div
           className={markdownStyles['markdown']}
           dangerouslySetInnerHTML={{ __html: content }}
