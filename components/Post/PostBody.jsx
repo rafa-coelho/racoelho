@@ -13,7 +13,6 @@ export default function PostBody ({ content }) {
       </div>
 
       <div className="w-1/4 h-20">
-        <Adsense />
       </div>
     </div>
   )
