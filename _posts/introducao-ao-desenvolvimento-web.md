@@ -11,15 +11,6 @@ ogImage:
   url: "/assets/blog/introducao-ao-desenvolvimento-web/banner.png"
 ---
 
-## Sumário
-- [O que é o Desenvolvimento Web?](#o-que-é-o-desenvolvimento-web) - Visão geral do desenvolvimento de sites e aplicativos.
-- [Estrutura básica de um site](#estrutura-básica-de-um-site) - Fundamentos do desenvolvimento FrontEnd: HTML, CSS, JavaScript.
-- [Primeiro código](#primeiro-código) - Um guia passo a passo para criar sua primeira página.
-- [Entendendo as linguagens](#entendendo-as-linguagens) - Detalhes sobre HTML, CSS e JavaScript.
-- [Ampliando Horizontes: Frameworks no Desenvolvimento Web](#ampliando-horizontes-frameworks-no-desenvolvimento-web) - Introdução aos frameworks e sua importância.
-
-
-
 ## O que é o Desenvolvimento Web?
 
 Se você é iniciante essa pergunta pode ter muitas respostas, mas em resumo, é a criação de Sites, Aplicativos e sistemas que operam através da internet.
