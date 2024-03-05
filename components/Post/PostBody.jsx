@@ -1,4 +1,5 @@
 import Adsense from '../AdBanner'
+import AffiliateAd from '../AffiliateAd'
 import markdownStyles from './markdown-styles.module.css'
 
 export default function PostBody ({ content }) {
@@ -13,6 +14,7 @@ export default function PostBody ({ content }) {
       </div>
 
       <div className="w-full md:w-1/4 h-20">
+        <AffiliateAd code={"AD-E6451B5"}  />
       </div>
     </div>
   )
