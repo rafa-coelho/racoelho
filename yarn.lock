@@ -2873,10 +2873,10 @@ address@^1.0.1:
   resolved "https://registry.npmjs.org/address/-/address-1.2.2.tgz"
   integrity sha512-4B/qKCfeE/ODUaAUpSwfzazo5x29WD4r3vXiWsB7I2mSDAihwEqKO+g8GELZUQSSAo5e1XTYh3ZVfLyxBc12nA==
 
-affiliate-ad@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.npmjs.org/affiliate-ad/-/affiliate-ad-0.0.3.tgz"
-  integrity sha512-jielXnN5ZcIYRZ6l/quoUZnMwYFUKHyigUwPcO+UD3g5fDAIZOQlMXSCBPVSiLizip1Vpigf9D+FtJYsH4VKrA==
+affiliate-ad@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.npmjs.org/affiliate-ad/-/affiliate-ad-0.0.4.tgz"
+  integrity sha512-I1lIHPwl1qOt60jUjIEktr2JpbzMPI7Cs3putD3dRQFERo/I5QPtqFRXTnqyq/S1tviFPUJncgWIyfVtV1CVTA==
 
 agent-base@6:
   version "6.0.2"
