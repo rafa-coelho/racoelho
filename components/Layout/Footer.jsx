@@ -50,7 +50,7 @@ const navigation = {
 
 export default function Footer () {
   return (
-    <footer className="bg-accent-1 border-t border-accent-2 dark:bg-black dark:text-white dark:border-black h-full pb-10">
+    <footer className=" border-t border-accent-2 bg-black text-white border-black h-full pb-10">
       <Container>
         <div className="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
           <nav
@@ -62,7 +62,7 @@ export default function Footer () {
                 <Link
                   href={item.href}
                   target='_blank'
-                  className="text-base text-gray-500 hover:text-gray-900 dark:hover:text-gray-200">
+                  className="text-base text-gray-500 hover:text-gray-200">
 
                   {item.name}
 
@@ -76,7 +76,7 @@ export default function Footer () {
                 key={index}
                 href={item.href}
                 target='_blank'
-                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-200" rel="noreferrer"
+                className="text-gray-400 hover:text-gray-200" rel="noreferrer"
               >
                 <span className="sr-only">{item.name}</span>
                 <item.icon className="h-6 w-6" aria-hidden="true" />
