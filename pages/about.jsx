@@ -3,7 +3,7 @@ import Container from '../components/Layout/Container'
 import Layout from '../components/Layout/Layout'
 import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../lib/constants'
 import PageHeading from '../components/PageHeading'
-import { KEYWORDS, DESCRIPTION } from '../lib/constants'
+import { KEYWORDS, DESCRIPTION, BLOG_URL } from '../lib/constants'
 
 export default function About () {
   const title = `Sobre mim | ${BLOG_NAME || "Loading..."}`
@@ -14,6 +14,7 @@ export default function About () {
         <meta name="description" content={DESCRIPTION} />
         <meta name="keywords" content={KEYWORDS} />
         <meta property="og:image" content={HOME_OG_IMAGE_URL} />
+        <link rel="canonical" href={`${BLOG_URL}`} />
       </Head>
       <Container>
         <PageHeading>Quem é o Rafael?</PageHeading>

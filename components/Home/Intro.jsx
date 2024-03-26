@@ -15,7 +15,7 @@ export default function Intro () {
       <div className="h-1/2 w-auto aspect-square">
         <Image
           src="https://ik.imagekit.io/wphcyip3g/racoelho_dev/darkbannerimage.png?updatedAt=1707339583738"
-          alt=""
+          alt="Site Banner"
           width={1024} height={1024}
           className=" w-96 h-auto aspect-square"
         />
