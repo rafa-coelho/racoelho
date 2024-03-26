@@ -17,7 +17,6 @@ export default function Index () {
           <meta name="description" content={DESCRIPTION} />
           <meta name="keywords" content={KEYWORDS} />
           <meta property="og:image" content={HOME_OG_IMAGE_URL} />
-          <link rel="canonical" href={BLOG_URL} />
         </Head>
         <Container>
           <Intro />
