@@ -10,12 +10,11 @@ import Layout from '../../components/Layout/Layout'
 import PostBody from '../../components/Post/PostBody'
 import PostHeader from '../../components/Post/PostHeader'
 import PostTitle from '../../components/Post/PostTitle'
-import FloatActionBar from '../../components/Post/FloatActionBar'
 
 export default function Post ({ post, morePosts, preview }) {
   const router = useRouter()
   if (!router.isFallback && !post?.slug) {
-    return <ErrorPage title='Postagem não encontrada' statusCode={404} />
+    return <ErrorPage title='Postagem não encontrada' statusCode={404} />;
   }
 
   const title = `${post.title} | ${BLOG_NAME}`;
@@ -24,33 +23,37 @@ export default function Post ({ post, morePosts, preview }) {
     <Layout preview={preview}>
       <Container>
         <Header />
-        {router.isFallback ? (
-          <PostTitle>Carregando...</PostTitle>
-        ) : (
-          <>
-            <article className="mb-32">
-              <Head>
-                <title>{title}</title>
-                <meta property="og:image" content={post.ogImage.url} />
-                <meta property='keywords' content={post.keywords} />
-                <meta property='description' content={post.excerpt} />
+        {
+          router.isFallback
+            ? (
+              <PostTitle>Carregando...</PostTitle>
+            ) : (
+              <>
+                <article className="mb-32">
+                  <Head>
+                    <title>{title}</title>
+                    <meta property="og:image" content={post.ogImage.url} />
+                    <meta property='keywords' content={post.keywords} />
+                    <meta property='description' content={post.excerpt} />
 
-                <meta name="twitter:card" content={post.ogImage.url} />
-                <meta name="twitter:title" content={post.title} />
-                <meta name="twitter:description" content={post.excerpt} />
-                <meta name="twitter:image" content={post.ogImage.url} />
+                    <meta name="twitter:card" content={post.ogImage.url} />
+                    <meta name="twitter:title" content={post.title} />
+                    <meta name="twitter:description" content={post.excerpt} />
+                    <meta name="twitter:image" content={post.ogImage.url} />
+                  </Head>
 
-              </Head>
-              <PostHeader
-                title={post.title}
-                coverImage={post.coverImage}
-                date={post.date}
-                author={post.author}
-              />
-              <PostBody content={post.content} />
-            </article>
-          </>
-        )}
+                  <PostHeader
+                    title={post.title}
+                    coverImage={post.coverImage}
+                    date={post.date}
+                    author={post.author}
+                  />
+                  
+                  <PostBody content={post.content} />
+                </article>
+              </>
+            )
+        }
       </Container>
     </Layout>
   )

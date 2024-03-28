@@ -18,16 +18,16 @@ export default function Layout({ children }) {
       document.documentElement.classList.remove('dark')
       setDarkMode(false)
     }
-  }, [darkMode])
+  }, [darkMode]);
 
   return (
     <>
       <Meta />
       <div className="min-h-screen text-gray-100 bg-black font-inter">
         <Nav darkMode={darkMode} setDarkMode={setDarkMode} />
-        <main className="pt-20">{children}</main>
+        <main className="py-20">{children}</main>
         <Footer />
       </div>
     </>
-  )
+  );
 }
