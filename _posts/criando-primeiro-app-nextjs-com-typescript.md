@@ -1,9 +1,9 @@
 ---
 title: "Criando Primeiro App com NextJs e Typescript: Guia Passo a Passo"
-excerpt: "Lorem ipsum."
+excerpt: "Explore o universo do Next.js e dê vida ao seu primeiro app utilizando TypeScript com este guia detalhado. Desde a configuração inicial até a publicação, aprenda como aproveitar as vantagens do Next.js para criar aplicações web performáticas com facilidade. Descubra a simplicidade do roteamento baseado em arquivos, a eficiência da renderização do lado do servidor e como a tipagem do TypeScript pode elevar a qualidade do seu projeto."
 coverImage: "/assets/blog/criando-primeiro-app-nextjs-com-typescript/banner.png"
-date: "2024-03-26T14:34:49.353Z"
-keywords: programação, dev, desenvolvimento, 
+date: "2024-03-28T12:40:02.353Z"
+keywords: programação, dev, desenvolvimento, Criando app Next.js, Tutorial Next.js TypeScript, Introdução ao Next.js, Desenvolvimento web Next.js, Next.js para iniciantes, Configuração Next.js TypeScript, Publicação de app Next.js, Vantagens do Next.js, Tipagem em Next.js com TypeScript, Next.js SSR e SSG
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
@@ -63,6 +63,54 @@ Este comando irá criar uma nova pasta chamada **my-app** com as configurações
 Em resumo, configurar o ambiente de desenvolvimento para um novo projeto Next.js com TypeScript é fácil e simples. Basta instalar o Node.js e NPM e criar um novo projeto com o comando **create-next-app**.
 
 
+Agora, com tudo pronto, entre na sua pasta e execute em modo de desenvolvimento:
+
+```bash
+cd my-app
+```
+
+E em seguida:
+```bash
+npm run dev
+```
+
+E pronto! Seu primeiro app esta funcionando: 
+
+![NextJs Rodando em dev](/assets/blog/criando-primeiro-app-nextjs-com-typescript/next-console.png)
+
+Ao abrir o navegador no `http://localhost:3000` você verá uma página assim:
+
+![Tela padrão  do app NextJS](/assets/blog/criando-primeiro-app-nextjs-com-typescript/default-page-nextjs.png)
+
+
+Para alterá-la, vá até o arquivo no caminho `src/pages/index.tsx` e edite como quiser.
+Ex.:
+
+```typescript
+import Head from "next/head";
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export default function Home() {
+  return (
+    <>
+      <Head>
+        <title>Meu Primeiro App NextJS</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className={`${styles.main} ${inter.className}`}>
+        <h1>Olá, Mundo!</h1>
+      </main>
+    </>
+  );
+}
+```
+
+E a página ficará assim:
+![Olá Mundo com NextJS](/assets/blog/criando-primeiro-app-nextjs-com-typescript/hello-world-nextjs.png)
+
 
 ## Estrutura Básica de um Projeto Next.js
 
@@ -105,3 +153,22 @@ export default MyComponent;
 Com essas configurações e práticas em dia, é possível utilizar o Next.js com TypeScript de forma segura e produtiva.
 
 
+## Conclusão: Lançando seu App Next.js ao Mundo
+
+Pronto! Você acabou de criar seu primeiro app com Next.js e TypeScript. 
+Agora que você tem o básico, é hora de pensar no próximo passo: publicar seu app.
+
+Publicar um app Next.js é surpreendentemente simples, graças ao suporte integrado para plataformas de hospedagem como **Vercel** e **Netlify**, que oferecem implantações diretas do seu repositório Git. Com apenas alguns cliques, seu app pode estar ao vivo na internet, pronto para ser acessado por qualquer pessoa, em qualquer lugar do mundo.
+
+Também é possível publicar no Github Pages, mas para isso é preciso exportar de forma estática.
+
+Antes de publicar, aqui estão algumas dicas finais:
+
+- **Reveja seu código**: Garanta que todo o código está funcionando conforme esperado e não há erros de compilação ou runtime.
+- **Otimização**: Utilize as ferramentas de análise e otimização do Next.js para melhorar o desempenho do seu app, como o next build e o next start.
+- **SEO**: Certifique-se de que seu app está otimizado para mecanismos de busca, aproveitando as funcionalidades do Next.js como SSR e SSG para melhorar o SEO.
+- **Teste em diferentes dispositivos**: Teste seu app em diferentes dispositivos e navegadores para garantir uma experiência de usuário consistente.
+
+Finalmente, este é apenas o começo da sua jornada com Next.js e TypeScript. O ecossistema de desenvolvimento web está sempre evoluindo, e com essas ferramentas em suas mãos, você está bem equipado para construir aplicações web incrivelmente rápidas, eficientes e escaláveis.
+
+Continue explorando, aprendendo e construindo. O mundo da programação web está ao seu alcance!
