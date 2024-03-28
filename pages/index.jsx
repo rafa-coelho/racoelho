@@ -1,5 +1,6 @@
 import Container from '../components/Layout/Container'
 import Intro from '../components/Home/Intro'
+import About from '../components/Home/About'
 import Knowledge from '../components/Home/Knowledge'
 import Projects from '../components/Home/Projects'
 import Clients from '../components/Home/Clients'
@@ -20,6 +21,7 @@ export default function Index () {
         </Head>
         <Container>
           <Intro />
+          <About />
           <Knowledge />
           <Projects />
           <Clients />
