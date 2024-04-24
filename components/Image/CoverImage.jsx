@@ -14,10 +14,10 @@ export default function CoverImage({
   const image = (
     <Image
       src={src}
-      alt={`Cover Image for ${title}`}
+      alt={`Banner do post: ${title}`}
       className={cn('shadow-sm', {
         'hover:shadow-md transition-shadow duration-200': slug,
-      })}
+      }) + " rounded-lg"}
       layout="responsive"
       width={width}
       height={height}
@@ -27,13 +27,15 @@ export default function CoverImage({
     />
   )
   return (
-    <div className="sm:mx-0">
+    <div className="sm:mx-0 flex items-center justify-center">
       {slug ? (
         <Link as={`/posts/${slug}`} href="/posts/[slug]" aria-label={title}>
           {image}
         </Link>
       ) : (
-        image
+        <div className=' md:w-1/2'>
+          {image}
+        </div>
       )}
     </div>
   );

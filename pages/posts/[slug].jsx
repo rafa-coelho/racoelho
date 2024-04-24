@@ -5,7 +5,6 @@ import { BLOG_NAME } from '../../lib/constants'
 import markdownToHtml from '../../lib/markdownToHtml'
 import Container from '../../components/Layout/Container'
 import Head from 'next/head'
-import Header from '../../components/Post/Header'
 import Layout from '../../components/Layout/Layout'
 import PostBody from '../../components/Post/PostBody'
 import PostHeader from '../../components/Post/PostHeader'
@@ -22,7 +21,6 @@ export default function Post ({ post, morePosts, preview }) {
   return (
     <Layout preview={preview}>
       <Container>
-        <Header />
         {
           router.isFallback
             ? (
