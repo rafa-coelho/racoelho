@@ -26,7 +26,7 @@ const App = ({ Component, pageProps }) => {
 
   return <>
     <Head>
-    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+      {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     </Head>
     <Component {...pageProps} />
   </>

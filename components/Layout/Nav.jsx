@@ -2,6 +2,7 @@ import { Disclosure } from '@headlessui/react'
 import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import * as gtag from '../../lib/gtag'
 
 const navigation = [
   {
@@ -14,7 +15,7 @@ const navigation = [
   },
   {
     name: "Blog",
-    href: '/posts'
+    href: '/posts',
   }
 ]
 
@@ -42,6 +43,14 @@ export default function Nav({ darkMode, setDarkMode }) {
                     (<Link
                       key={index}
                       href={item.href}
+                      onClick={(e) => {
+                        gtag.event({
+                          action: 'navbar_click',
+                          category: 'Navigation',
+                          label: `From: ${currentPath} To: ${item.href}`,
+                          value: 1,
+                        })
+                      }}
                       className={
                         currentPath === item.href
                           ? 'border-transparent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium border-gray-200 text-gray-200'
