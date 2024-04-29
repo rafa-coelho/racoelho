@@ -2,8 +2,9 @@ import Avatar from '../Image/Avatar'
 import DateFormatter from '../Utils/DateFormatter'
 import CoverImage from '../Image/CoverImage'
 import Link from 'next/link'
+import * as gtag from '../../lib/gtag'
 
-export default function PostPreview({
+export default function PostPreview ({
   title,
   coverImage,
   date,
@@ -23,7 +24,19 @@ export default function PostPreview({
         />
       </div>
       <h3 className="text-2xl lg:text-3xl mb-1 leading-snug">
-        <Link as={`/posts/${slug}`} href="/posts/[slug]" className="hover:underline">
+        <Link
+          as={`/posts/${slug}`}
+          href="/posts/[slug]"
+          className="hover:underline"
+          onClick={() => {
+            gtag.event({
+              action: 'post_click',
+              category: 'Navigation',
+              label: slug,
+              value: 1,
+            })
+          }}
+        >
           {title}
         </Link>
       </h3>
