@@ -1,14 +1,14 @@
 ---
-title: "GitHub Actions e a Magia dos Triggers: Automatizando Tarefas com C#"
+title: "Magia dos Triggers: Automatizando Tarefas com C# (Baseado em GitHub Actions)"
 excerpt: "Explore a automação de tarefas com C# neste guia prático. Descubra como usar triggers e scripts para automatizar backups e uploads de arquivos e deixar sua rotina mais eficiente."
-coverImage: "/assets/blog/github-actions-e-a-magia-dos-triggers---automatizando-tarefas-com-c-sharp/banner.png"
+coverImage: "/assets/blog/magia-dos-triggers-automatizando-tarefas-com-c-sharp/banner.png"
 date: "2024-05-08T03:41:18.662Z"
 keywords: programação, dev, desenvolvimento, GitHub Actions, automação com C#, triggers em desenvolvimento, automação de tarefas, scripts de automação, programação C#, desenvolvimento de software, eficiência em TI, integração contínua
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
-  url: "/assets/blog/github-actions-e-a-magia-dos-triggers---automatizando-tarefas-com-c-sharp/banner.png"
+  url: "/assets/blog/magia-dos-triggers-automatizando-tarefas-com-c-sharp/banner.png"
 ---
 ## A Ideia
 
@@ -421,7 +421,7 @@ $now = Get-Date
 ```
 
 **Resultado:**
-![Resultado Job Cron Trigger](/assets/blog/github-actions-e-a-magia-dos-triggers---automatizando-tarefas-com-c-sharp/resultado-job-cron-trigger.png)
+![Resultado Job Cron Trigger](/assets/blog/magia-dos-triggers-automatizando-tarefas-com-c-sharp/resultado-job-cron-trigger.png)
 
 ## Melhorias
 
@@ -496,7 +496,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 **Resultado:**
 
-![Passando Parâmetros para o script](/assets/blog/github-actions-e-a-magia-dos-triggers---automatizando-tarefas-com-c-sharp/passando-parametros-para-o-script.png)
+![Passando Parâmetros para o script](/assets/blog/magia-dos-triggers-automatizando-tarefas-com-c-sharp/passando-parametros-para-o-script.png)
 
 
 ## Conclusão
