@@ -15,9 +15,9 @@ Esse será o primeiro post sobre um assunto de extrema importância para todos q
 Segue a lista das postagens:
 
 - Parte 1: O Modelo TCP/IP: A Fundação da Internet
-- Parte 2: HTTP: A Linguagem da WEB (Em breve)
-- Parte 3: DNS e Roteamento: Os Nomes da Internet (Em breve)
-- Parte 4: Segurança na Internet: Protegendo os Dados (Em breve)
+- [Parte 2: HTTP: A Linguagem da WEB](https://racoelho.com.br/posts/como-funciona-a-internet-parte-2)
+- Parte 3: Segurança na Internet: Protegendo os Dados (Em breve)
+- Parte 4: DNS e Roteamento: Os Nomes da Internet (Em breve)
 
 Para responder a pergunta "Como funciona a internet?", é importante que você saiba o que ela é.
 O que chamamos de _internet_ é uma conexão entre multiplos dispositivos de comunicação, seja por cabo ou não.
