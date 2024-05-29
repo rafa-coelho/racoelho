@@ -5,7 +5,7 @@ export default function Intro () {
     <section className="bg-[#111111] flex flex-col justify-center items-center md:flex-row md:justify-between mt-16 mb-16 md:mb-28 -mt-20 py-12 px-4 rounded">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="w-full md:w-1/4 mt-8 md:mt-0 flex justify-center">
-          <img src="https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991" alt="Rafael Coelho" className="rounded-full w-48 h-48 object-cover" />
+          <img src="https://github.com/rafa-coelho.png" alt="Rafael Coelho" className="rounded-full w-48 h-48 object-cover" />
         </div>
         <div className="w-full md:w-3/4">
           <h2 className="text-3xl font-bold">Quem sou eu?</h2>
@@ -18,7 +18,6 @@ export default function Intro () {
             Por isso criei esse site com blog para poder escrever sobre o que o que eu amo: Programação e tecnologia.
             <br />
           </p>
-
 
           <h3 className="text-lg font-bold mt-5">Redes Sociais</h3>
 

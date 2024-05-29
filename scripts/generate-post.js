@@ -13,7 +13,7 @@ date: "${new Date(Date.now()).toISOString()}"
 keywords: programação, dev, desenvolvimento, 
 author:
   name: "racoelho"
-  picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
+  picture: "https://github.com/rafa-coelho.png"
 ogImage:
   url: "/assets/blog/${nomalizedTitle}/banner.png"
 ---
