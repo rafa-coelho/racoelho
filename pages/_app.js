@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import * as gtag from '../lib/gtag'
 import 'prism-themes/themes/prism-dracula.css'
 import Head from 'next/head';
+import NewsletterCard from '../components/Home/NewsletterCard'
 
 
 const App = ({ Component, pageProps }) => {
@@ -29,6 +30,7 @@ const App = ({ Component, pageProps }) => {
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     </Head>
     <Component {...pageProps} />
+    <NewsletterCard />
   </>
 }
 

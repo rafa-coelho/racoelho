@@ -1,7 +1,6 @@
 // import AffiliateAd from '../AffiliateAd'
 import AffiliateAd from 'affiliate-ad'
 import markdownStyles from './markdown-styles.module.css'
-import FloatActionBar from './FloatActionBar'
 
 export default function PostBody ({ content }) {
   return (

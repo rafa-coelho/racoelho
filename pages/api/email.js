@@ -1,29 +1,35 @@
-import sgMail from '@sendgrid/mail'
+require('dotenv').config();
+import axios from 'axios';
 
-export default function handler(req, res) {
-  if (req.method === 'POST') {
-    const parsedReq = {
-      to: process.env.SENDGRID_TO_EMAIL,
-      from: process.env.SENDGRID_FROM_EMAIL,
-      subject: req.body.msg.subject,
-      text: req.body.msg.text,
-      html: req.body.msg.html,
-    }
+axios.defaults.baseURL = "https://api.convertkit.com/v3";
 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    sgMail
-      .send(parsedReq)
-      .then(() => {
-        console.log('Email sent')
-        res.send('Successfully sent! Note, the email may be queued.')
-      })
-      .catch((error) => {
-        console.error(error)
-        res.send(error)
-      })
-  } else {
-    res.send(
-      "Something's not right. Check your API call. Note, this route only accepts post requests!"
-    )
+export default function handler (req, res) {
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  const { email } = req.body;
+
+  const data = JSON.stringify({
+    "api_key": process.env.CONVERTKIT_API_KEY,
+    "first_name": '',
+    email
+  });
+
+  let config = {
+    maxBodyLength: Infinity,
+    url: '/forms/6710800/subscribe',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8'
+    }
+  };
+
+  axios.post(`/forms/6710800/subscribe`, data, config)
+    .then((response) => {
+      return res.status(200).json({ data: response.data });
+    })
+    .catch((error) => {
+      return res.status(500).json({ error: error.message });
+    });
 }

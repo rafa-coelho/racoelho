@@ -5,6 +5,7 @@ import About from '../components/Home/About'
 import Knowledge from '../components/Home/Knowledge'
 import Projects from '../components/Home/Projects'
 import Clients from '../components/Home/Clients'
+import NewsletterForm from '../components/Home/NewsletterForm'
 import Layout from '../components/Layout/Layout'
 import Head from 'next/head'
 import { getAllPosts } from '../lib/api'
@@ -29,34 +30,39 @@ export default function Index ({ recentPosts }) {
           <Projects />
           <Clients />
 
-          <div className="bg-[#111111] rounded py-12 px-8">
-            <h2 className="text-3xl text-white font-bold mb-8 text-center">Posts recentes</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <section className="flex flex-col justify-center items-center md:flex-row md:justify-between mt-16 mb-16 md:mb-28 -mt-20">
+            <div className="bg-[#111111] rounded py-12 px-8">
+              <h2 className="text-3xl text-white font-bold mb-8 text-center">Posts recentes</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-              {
-                recentPosts.map((post) => (
-                  <PostPreview
-                    key={post.slug}
-                    title={post.title}
-                    coverImage={post.coverImage}
-                    date={post.date}
-                    slug={post.slug}
-                  />
-                ))
-              }
-            </div>
-            <div className="text-center mt-8">
+                {
+                  recentPosts.map((post) => (
+                    <PostPreview
+                      key={post.slug}
+                      title={post.title}
+                      coverImage={post.coverImage}
+                      date={post.date}
+                      slug={post.slug}
+                    />
+                  ))
+                }
+              </div>
+              <div className="text-center mt-8">
 
-              <Link
-                as={"/posts"}
-                href="/posts"
-                className="text-white hover:text-gray-500"
-                rel="noreferrer"
-              >
-                Ver outros Posts
-              </Link>
+                <Link
+                  as={"/posts"}
+                  href="/posts"
+                  className="text-white hover:text-gray-500"
+                  rel="noreferrer"
+                >
+                  Ver outros Posts
+                </Link>
+              </div>
             </div>
-          </div>
+          </section>
+
+          <NewsletterForm />
+
         </Container>
       </Layout>
     </>
@@ -71,7 +77,7 @@ export async function getStaticProps () {
     'author',
     'coverImage',
     'excerpt',
-  ]).slice(0, 3)
+  ]).slice(0, 3);
 
   return {
     props: { recentPosts },
