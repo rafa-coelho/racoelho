@@ -1,5 +1,5 @@
 ---
-title: "Como funciona a internet (Parte 2) - O Protocolo HTTP"
+title: "Como funciona a internet (Parte 2): O Protocolo HTTP"
 excerpt: "Veja como o HTTP funciona e como os dados são transmitidos pela internet."
 coverImage: "/assets/blog/como-funciona-a-internet-parte-2/banner.png"
 date: "2024-05-20T12:01:00.220Z"
@@ -15,7 +15,7 @@ Esse post é a continuação da série "Como funciona a internet" onde vamos com
 
 - [Parte 1: O Modelo TCP/IP: A Fundação da Internet](https://racoelho.com.br/posts/como-funciona-a-internet-parte-1)
 - Parte 2: O Protocolo HTTP
-- Parte 3: Segurança na Internet: Protegendo os Dados (Em breve)
+- [Parte 3: Segurança na Internet: Protegendo os Dados](https://racoelho.com.br/posts/como-funciona-a-internet-parte-3)
 - Parte 4: DNS e Roteamento: Os Nomes da Internet (Em breve)
 
 
