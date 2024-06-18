@@ -13,7 +13,7 @@ const navigation = {
   social: [
     {
       name: 'Instagram',
-      href: 'https://www.instagram.com/racoelho.dev',
+      href: 'https://www.instagram.com/rafael.coelho_',
       icon: InstagramIcon,
     },
     {
