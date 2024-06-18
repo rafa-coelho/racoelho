@@ -61,7 +61,7 @@ export default function Index ({ recentPosts }) {
             </div>
           </section>
 
-          <NewsletterForm />
+          {/* <NewsletterForm /> */}
 
         </Container>
       </Layout>
