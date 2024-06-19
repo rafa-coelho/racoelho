@@ -44,7 +44,7 @@ const Projects = () => {
   const projects = [
     {
       title: "Amigo Secreto",
-      description: "Jogo de Jokenpo multiplayer feito com WebSockets",
+      description: "Gerenciador de amigo secreto sem banco de dados",
       url: "/posts/construi-um-jogo-de-jokenpo",
       links: [
         { title: "Artigo", url: "/posts/sorteio-de-amigo-secreto" },
