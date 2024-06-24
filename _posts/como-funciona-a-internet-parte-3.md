@@ -2,9 +2,9 @@
 title: "Como funciona a internet (Parte 3): Segurança na Internet: Protegendo os Dados"
 excerpt: "Explore a segurança na comunicação web neste terceiro post da série 'Como funciona a internet'. Aprenda sobre as principais ameaças, como interceptação de dados e ataques Man-In-The-Middle, e descubra as medidas de segurança mais eficazes, incluindo HTTPS, certificados digitais e autenticação multifator, para proteger seus dados online."
 coverImage: "/assets/blog/como-funciona-a-internet-parte-3/banner.png"
-date: "2024-06-19T12:00:00.0Z"
+date: "2024-06-24T12:00:00.0Z"
 keywords: programação, dev, desenvolvimento, Segurança na Internet, HTTPS, Certificados Digitais, Autenticação Multifator, Firewalls, IDS, Interceptação de Dados, Ataques Man-In-The-Middle, Malware, Proteção de Dados
-draft: true
+draft: false
 author:
   name: "racoelho"
   picture: "https://github.com/rafa-coelho.png"
