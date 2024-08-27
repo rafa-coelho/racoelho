@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MailIcon } from '../Icons';
+import { useRouter } from 'next/router'
 
 const NewsletterCard = () => {
     const router = useRouter();
