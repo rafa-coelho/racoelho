@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MailIcon } from '../Icons';
 
 const NewsletterCard = () => {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState({ error: '', success: '' });
     const [loading, setLoading] = useState(false);
