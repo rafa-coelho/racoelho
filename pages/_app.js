@@ -30,7 +30,7 @@ const App = ({ Component, pageProps }) => {
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     </Head>
     <Component {...pageProps} />
-    {/* <NewsletterCard /> */}
+    <NewsletterCard />
   </>
 }
 

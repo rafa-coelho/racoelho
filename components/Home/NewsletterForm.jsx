@@ -34,7 +34,7 @@ const NewsletterForm = () => {
 
 
     return (
-        <div className="relative isolate overflow-hidden bg-[#111111] py-10 rounded">
+        <div className="w-full relative isolate overflow-hidden bg-[#111111] py-10 rounded">
             <div className="flex justify-center">
                 <div className="max-w-xl lg:max-w-lg text-center">
                     <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Notícias de Tecnologia</h2>
