@@ -25,6 +25,11 @@ const NewsletterCard = () => {
         }        
     };
 
+    const handleClose = () => {
+        setIsVisible(false);
+
+    };
+
     useEffect(() => {
         const timer = setTimeout(() => {
             if (message.success) {
@@ -49,7 +54,7 @@ const NewsletterCard = () => {
     }, []);
 
 
-    if (!isVisible || subscribed === true || ([null, undefined].includes(subscribed))) {
+    if (!isVisible || subscribed === true || ([null, undefined].includes(subscribed)) || router.pathname === '/newsletter') {
         return "";
     }
 
@@ -59,7 +64,7 @@ const NewsletterCard = () => {
                 <h2 className="text-xl font-bold text-white">Participe da minha Newsletter</h2>
                 <button
                     className="text-gray-500 hover:text-gray-300 focus:outline-none"
-                    onClick={() => setIsVisible(false)}
+                    onClick={handleClose}
                 >
                     &times;
                 </button>
