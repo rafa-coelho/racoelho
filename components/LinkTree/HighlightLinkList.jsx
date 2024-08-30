@@ -1,3 +1,4 @@
+import * as gtag from '../../lib/gtag';
 import Image from 'next/image';
 
 const HighlightLinkList = ({ links }) => {

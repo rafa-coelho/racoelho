@@ -3,8 +3,6 @@ import Head from 'next/head';
 import Container from '../components/Layout/Container';
 import Layout from '../components/Layout/Layout';
 import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../lib/constants';
-import * as gtag from '../lib/gtag';
-import { RightArrowIcon } from "../components/Icons";
 import SocialLinks from "../components/SocialLinks";
 import { getLinks } from "../lib/api";
 import HighlightLinkList from '../components/LinkTree/HighlightLinkList';
@@ -13,7 +11,7 @@ import LinkTree from '../components/LinkTree/LinkTree';
 export default function NewsLetterPage (props) {
     const { links } = props;
 
-    const title = `Newsletter | ${BLOG_NAME || "Loading..."}`
+    const title = `Links | ${BLOG_NAME || "Loading..."}`
 
     return (
         <Layout hideNav>
@@ -58,7 +56,7 @@ export default function NewsLetterPage (props) {
 
         </Layout>
     )
-}
+};
 
 
 export async function getStaticProps ({ params }) {
