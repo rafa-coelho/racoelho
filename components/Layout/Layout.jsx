@@ -3,7 +3,7 @@ import Footer from './Footer'
 import Meta from './Meta'
 import Nav from './Nav'
 
-export default function Layout({ children }) {
+export default function Layout({ children, hideNav }) {
   const [darkMode, setDarkMode] = useState()
 
   useEffect(() => {
@@ -24,8 +24,10 @@ export default function Layout({ children }) {
     <>
       <Meta />
       <div className="min-h-screen text-gray-100 bg-black font-inter">
-        <Nav darkMode={darkMode} setDarkMode={setDarkMode} />
-        <main className="py-20">{children}</main>
+        {
+          !hideNav && <Nav darkMode={darkMode} setDarkMode={setDarkMode} />
+        }
+        <main className={!hideNav ? "py-20" : "py-"}>{children}</main>
         <Footer />
       </div>
     </>

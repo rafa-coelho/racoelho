@@ -2,30 +2,13 @@ import Link from 'next/link'
 import Container from './Container'
 import Highlight from '../Utils/Highlight'
 import { BLOG_NAME } from '../../lib/constants'
-import { GitHubIcon, InstagramIcon, TwitterIcon } from '../Icons'
+import SocialLinks from '../SocialLinks'
 
 const navigation = {
   main: [
     { name: 'Home', href: '/' },
     { name: 'Sobre mim', href: '/about' },
     { name: 'Blog', href: '/posts' },
-  ],
-  social: [
-    {
-      name: 'Instagram',
-      href: 'https://www.instagram.com/rafael.coelho_',
-      icon: InstagramIcon,
-    },
-    {
-      name: 'Twitter',
-      href: 'https://twitter.com/racoelhodev',
-      icon: TwitterIcon,
-    },
-    {
-      name: 'GitHub',
-      href: 'https://github.com/rafa-coelho',
-      icon: GitHubIcon,
-    }
   ],
 }
 
@@ -51,19 +34,9 @@ export default function Footer () {
               </div>
             ))}
           </nav>
-          <div className="mt-8 flex justify-center space-x-6">
-            {navigation.social.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                target='_blank'
-                className="text-gray-400 hover:text-gray-200" rel="noreferrer"
-              >
-                <span className="sr-only">{item.name}</span>
-                <item.icon className="h-6 w-6" aria-hidden="true" />
-              </a>
-            ))}
-          </div>
+          
+          <SocialLinks />
+          
           <p className="mt-8 text-center text-base text-gray-400 cursor-default">
             <Highlight>{BLOG_NAME}</Highlight> <br /> 2024{new Date().getFullYear() > 2024 ? `- ${new Date().getFullYear()}` : ''}
           </p>

@@ -1,3 +1,3 @@
-export default function Container({ children }) {
-  return <div className="container mx-auto px-5">{children}</div>
+export default function Container({ children, padding = 'px-5' }) {
+  return <div className={`container mx-auto ${padding}`}>{children}</div>
 }
