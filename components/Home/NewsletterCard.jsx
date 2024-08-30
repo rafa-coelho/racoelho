@@ -56,7 +56,7 @@ const NewsletterCard = () => {
     }, []);
 
 
-    if (!isVisible || subscribed === true || ([null, undefined].includes(subscribed)) || router.pathname === '/newsletter') {
+    if (!isVisible || subscribed === true || ([null, undefined].includes(subscribed)) || ['/newsletter', '/links'].includes(router.pathname)) {
         return "";
     }
 
