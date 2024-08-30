@@ -8,7 +8,7 @@ const HighlightLinkList = ({ links }) => {
                 <div className="absolute top-0 right-0 h-full w-12 bg-gradient-to-l from-gray-900 pointer-events-none"></div>
             )}
 
-            <div className={`flex ${links.length > 1 ? 'space-x-4 overflow-x-auto pr-4' : ''} custom-scrollbar`}>
+            <div className={`flex ${links.length > 1 ? 'space-x-4 overflow-x-auto pr-4' : 'justify-center'} custom-scrollbar`}>
                 {links.map((link, index) => (
                     <HighlightLink key={index} link={link} />
                 ))}
