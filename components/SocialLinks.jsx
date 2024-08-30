@@ -24,7 +24,7 @@ const SocialLinks = () => {
         },
         {
             name: 'LinkedIn',
-            href: 'https://www.linkedin.com/in/rafael-coelho-dev',
+            href: 'https://www.linkedin.com/in/racoelhodev/',
             icon: LinkedInIcon,
         }
     ];
