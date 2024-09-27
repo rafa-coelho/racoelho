@@ -16,8 +16,8 @@ LinkTree.displayName = 'LinkTree';
 LinkTree.LinkTreeItem = ({ link }) => {
     const handleLinkClick = (url, title) => {
         gtag.event({
-            action: 'click',
-            category: 'link',
+            action: 'link_click',
+            category: 'LinkTree',
             label: title,
             value: url,
         });

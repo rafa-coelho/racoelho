@@ -2,13 +2,14 @@ import * as gtag from '../../lib/gtag';
 import Image from 'next/image';
 
 const HighlightLinkList = ({ links }) => {
+    const shouldScroll = links.length > 1;
     return (
         <div className="w-full transition-all duration-500 ease-in-out relative">
-            {links.length > 1 && (
+            {/* {shouldScroll && (
                 <div className="absolute top-0 right-0 h-full w-12 bg-gradient-to-l from-gray-900 pointer-events-none"></div>
-            )}
+            )} */}
 
-            <div className={`flex ${links.length > 1 ? 'space-x-4 overflow-x-auto pr-4' : 'justify-center'} custom-scrollbar`}>
+            <div className={`flex ${shouldScroll ? 'space-x-4 overflow-x-auto pr-4' : ''} justify-center custom-scrollbar gap-2`}>
                 {links.map((link, index) => (
                     <HighlightLink key={index} link={link} />
                 ))}
