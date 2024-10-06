@@ -4,19 +4,19 @@ const SocialLinks = () => {
     const social = [
         {
             name: 'Instagram',
-            href: 'https://www.instagram.com/rafael.coelho_',
+            href: 'https://www.instagram.com/racoelhoo',
             icon: InstagramIcon,
         },
         {
             name: 'Tiktok',
-            href: 'https://www.tiktok.com/@rafael.coelho_',
+            href: 'https://www.tiktok.com/@racoelhoo',
             icon: TiktokIcon,
         },
-        {
-            name: 'Twitter',
-            href: 'https://twitter.com/racoelhodev',
-            icon: TwitterIcon,
-        },
+        // {
+        //     name: 'Twitter',
+        //     href: 'https://twitter.com/racoelhodev',
+        //     icon: TwitterIcon,
+        // },
         {
             name: 'GitHub',
             href: 'https://github.com/rafa-coelho',

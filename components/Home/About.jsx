@@ -25,11 +25,8 @@ export default function Intro () {
             <a target="_blank" href="https://github.com/rafa-coelho" className="mr-4" rel="noreferrer">
               <GitHubIcon className="h-6 w-6" />
             </a>
-            <a target="_blank" href="https://www.instagram.com/rafael.coelho_" className="mr-4" rel="noreferrer">
+            <a target="_blank" href="https://www.instagram.com/racoelhoo" className="mr-4" rel="noreferrer">
               <InstagramIcon className="h-6 w-6" />
-            </a>
-            <a target="_blank" href="https://twitter.com/racoelho_dev" rel="noreferrer">
-              <TwitterIcon className="h-6 w-6" />
             </a>
           </div>
         </div>
