@@ -26,7 +26,6 @@ LinkTree.LinkTreeItem = ({ link }) => {
         <li>
             <a
                 href={link.url}
-                target="_blank"
                 className="flex items-center bg-gray-800 text-white py-4 px-4 rounded-lg shadow-md hover:bg-gray-700 transition duration-300"
                 rel="noreferrer"
                 onClick={() => handleLinkClick(link.url, link.title)}
