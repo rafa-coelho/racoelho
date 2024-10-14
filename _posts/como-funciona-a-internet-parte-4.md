@@ -1,7 +1,7 @@
 ---
 title: "Como funciona a internet (Parte 4): DNS e Roteamento: Os Nomes da Internet"
 excerpt: "Lorem ipsum."
-coverImage: "/assets/blog/como-funciona-a-internet-parte-3/banner.png"
+coverImage: "/assets/blog/como-funciona-a-internet-parte-4/banner.png"
 date: "2024-10-14T18:15:17.532Z"
 keywords: programação, dev, desenvolvimento, 
 draft: false
