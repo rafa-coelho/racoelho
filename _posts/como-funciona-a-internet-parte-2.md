@@ -16,7 +16,7 @@ Esse post é a continuação da série "Como funciona a internet" onde vamos com
 - [Parte 1: O Modelo TCP/IP: A Fundação da Internet](https://racoelho.com.br/posts/como-funciona-a-internet-parte-1)
 - Parte 2: O Protocolo HTTP
 - [Parte 3: Segurança na Internet: Protegendo os Dados](https://racoelho.com.br/posts/como-funciona-a-internet-parte-3)
-- Parte 4: DNS e Roteamento: Os Nomes da Internet (Em breve)
+- [Parte 4: DNS e Roteamento](https://racoelho.com.br/posts/como-funciona-a-internet-parte-4)
 
 
 No [post anterior](https://racoelho.com.br/posts/como-funciona-a-internet-parte-1), falamos do TCP como o protocolo mais seguro e confiável para comunicações via sockets de rede.

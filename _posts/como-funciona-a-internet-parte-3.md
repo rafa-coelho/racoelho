@@ -17,7 +17,7 @@ Esse post é a continuação da série "Como funciona a internet".
 - [Parte 1: O Modelo TCP/IP: A Fundação da Internet](https://racoelho.com.br/posts/como-funciona-a-internet-parte-1)
 - [Parte 2: O Protocolo HTTP](https://racoelho.com.br/posts/como-funciona-a-internet-parte-2)
 - Parte 3: Segurança na Internet: Protegendo os Dados
-- Parte 4: DNS e Roteamento: Os Nomes da Internet (Em breve)
+- [Parte 4: DNS e Roteamento](https://racoelho.com.br/posts/como-funciona-a-internet-parte-4)
 
 
 ## Introdução
