@@ -11,7 +11,8 @@
     "postbuild": "node ./scripts/generate-sitemap.mjs && node ./scripts/generate-rss.mjs",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "new": "node ./scripts/generate-post.js"
+    "new": "node ./scripts/generate-post.js",
+    "new-challenge": "node ./scripts/generate-challenge.js"
   },
   "repository": {
     "type": "git",

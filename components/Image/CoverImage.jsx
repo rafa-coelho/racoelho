@@ -10,6 +10,7 @@ export default function CoverImage({
   height,
   width,
   coverImagePriority,
+  fullWidth = false
 }) {
   const image = (
     <Image
@@ -33,7 +34,7 @@ export default function CoverImage({
           {image}
         </Link>
       ) : (
-        <div className=' md:w-1/2'>
+        <div className={fullWidth ? '' : ' md:w-1/2'}>
           {image}
         </div>
       )}

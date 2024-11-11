@@ -55,8 +55,15 @@ const NewsletterCard = () => {
         setSubscribed((subscribed || "").toString() == 'true');
     }, []);
 
+    const routesWithoutNewsletterRgx = /\/newsletter|\/links|\/listas\/.*/;
+    const isRouteWithoutNewsletter = routesWithoutNewsletterRgx.test(router.pathname);
 
-    if (!isVisible || subscribed === true || ([null, undefined].includes(subscribed)) || ['/newsletter', '/links'].includes(router.pathname)) {
+    if (
+        !isVisible || 
+        subscribed === true || 
+        ([null, undefined].includes(subscribed)) || 
+        isRouteWithoutNewsletter
+    ) {
         return "";
     }
 
