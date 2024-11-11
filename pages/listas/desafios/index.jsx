@@ -5,8 +5,8 @@ import Layout from '../../../components/Layout/Layout';
 import Empty from '../../../components/Layout/Empty';
 import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../../../lib/constants';
 import { getAllChallenges } from '../../../lib/api';
-import Image from 'next/image'
 import CoverImage from '../../../components/Image/CoverImage'
+import CategoryBadge from '../../../components/CategoryBadge'
 
 export default function ChallengesListPage ({ challenges }) {
     const title = `Desafios | ${BLOG_NAME || "Loading..."}`;
@@ -30,14 +30,24 @@ export default function ChallengesListPage ({ challenges }) {
                                     challenges.map((challenge, index) => (
                                         <div key={index} className="bg-gray-800 p-4 rounded-lg shadow-md">
                                             <Link href={`/listas/desafios/${challenge.slug}`} passHref>
-                                                    <CoverImage
-                                                        title={challenge.title}
-                                                        src={challenge.coverImage}
-                                                        height={278}
-                                                        width={556}
-                                                        fullWidth
-                                                    />
-                                                
+                                                <CoverImage
+                                                    title={challenge.title}
+                                                    src={challenge.coverImage}
+                                                    height={278}
+                                                    width={556}
+                                                    fullWidth
+                                                />
+
+                                                <div className="my-4">
+                                                    {challenges.map((challenge, index) => (
+                                                        <div key={index} className="my-4">
+                                                            {challenge.categories.split(',').map((category, index) => (
+                                                                <CategoryBadge key={index} category={category} />
+                                                            ))}
+                                                        </div>
+                                                    ))}
+                                                </div>
+
                                                 <div className="mt-4">
                                                     <h2 className="text-xl font-bold text-white">{challenge.title}</h2>
                                                     <p className="text-gray-400">{challenge.category}</p>

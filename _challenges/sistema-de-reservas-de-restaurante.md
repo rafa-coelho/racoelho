@@ -1,7 +1,8 @@
 ---
 id: "m3d3yohl0yb4e"
 title: "Desafio: Sistema de Reservas de Restaurante"
-categories: Backend, Desafios de backend, portfolio, portfolio de backend, programação, portfolio programação, ideias de projetos backend
+keywords: Backend, Desafios de backend, portfolio, portfolio de backend, programação, portfolio programação, ideias de projetos backend
+categories: Backend, API
 description: 
 link: 
 coverImage: "/assets/challenges/sistema-de-reservas-de-restaurante/banner.png"

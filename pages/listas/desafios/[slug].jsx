@@ -9,6 +9,7 @@ import { getAllChallenges, getChallengeBySlug } from '../../../lib/api';
 import markdownToHtml from '../../../lib/markdownToHtml'
 import PostBody from '../../../components/Post/PostBody'
 import CoverImage from '../../../components/Image/CoverImage'
+import CategoryBadge from '../../../components/CategoryBadge'
 
 export default function ChallengeDetailsPage ({ challenge }) {
     const router = useRouter()
@@ -30,7 +31,7 @@ export default function ChallengeDetailsPage ({ challenge }) {
                                 <Head>
                                     <title>{title}</title>
                                     <meta name="description" content={challenge.description} />
-                                    <meta name="keywords" content={challenge.categories} />
+                                    <meta name="keywords" content={challenge.keywords} />
                                     <meta property="og:image" content={challenge.ogImage.url} />
                                 </Head>
 
@@ -42,6 +43,14 @@ export default function ChallengeDetailsPage ({ challenge }) {
                                         width={1240}
                                         coverImagePriority={true}
                                     />
+
+                                    <div className="my-4">
+                                        {
+                                            challenge.categories.split(',').map((category, index) => (
+                                                <CategoryBadge key={index} category={category} />
+                                            ))
+                                        }
+                                    </div>
 
                                     <PostBody fullSized content={challenge.content} />
                                 </div>
@@ -60,6 +69,7 @@ export async function getStaticProps ({ params }) {
         'date',
         'slug',
         'categories',
+        'keywords',
         'coverImage',
         'ogImage',
         'content',
