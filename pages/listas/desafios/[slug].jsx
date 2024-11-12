@@ -54,6 +54,19 @@ export default function ChallengeDetailsPage ({ challenge }) {
 
                                     <PostBody fullSized content={challenge.content} />
                                 </div>
+
+                                {/* block to get in touch to send the links */}
+                                <div className="p-4">
+                                    <h2 className="text-2xl font-bold">Envie o link do seu projeto</h2>
+                                    <p className="text-lg">
+                                        Envie o link do seu projeto para o email
+                                        <a href="mailto:contato@racoelho.com.br" className="text-blue-500">
+                                            {' '}
+                                            contato@racoelho.com.br
+                                        </a>.
+                                    </p>
+                                </div>
+
                             </>
                         )
                 }
