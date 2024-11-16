@@ -5,6 +5,7 @@ keywords: Backend, Desafios de backend, portfolio, portfolio de backend, program
 categories: Backend, API
 description: 
 link: 
+level: EASY
 coverImage: "/assets/challenges/sistema-de-reservas-de-restaurante/banner.png"
 ogImage:
   url: "/assets/challenges/sistema-de-reservas-de-restaurante/banner.png"

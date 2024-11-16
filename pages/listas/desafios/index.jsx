@@ -7,6 +7,7 @@ import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../../../li
 import { getAllChallenges } from '../../../lib/api';
 import CoverImage from '../../../components/Image/CoverImage'
 import CategoryBadge from '../../../components/CategoryBadge'
+import LevelBadge from '../../../components/LevelBadge'
 
 export default function ChallengesListPage ({ challenges }) {
     const title = `Desafios | ${BLOG_NAME || "Loading..."}`;
@@ -38,14 +39,13 @@ export default function ChallengesListPage ({ challenges }) {
                                                     fullWidth
                                                 />
 
-                                                <div className="my-4">
-                                                    {challenges.map((challenge, index) => (
-                                                        <div key={index} className="my-4">
-                                                            {challenge.categories.split(',').map((category, index) => (
-                                                                <CategoryBadge key={index} category={category} />
-                                                            ))}
-                                                        </div>
-                                                    ))}
+                                                <div className="my-4 flex justify-between">
+                                                    <div>
+                                                        {challenge.categories.split(',').map((category, index) => (
+                                                            <CategoryBadge key={index} category={category} />
+                                                        ))}
+                                                    </div>
+                                                    <LevelBadge level={challenge.level} />
                                                 </div>
 
                                                 <div className="mt-4">
@@ -70,6 +70,7 @@ export async function getStaticProps () {
     const challenges = getAllChallenges([
         'title',
         'date',
+        'level',
         'slug',
         'categories',
         'coverImage',
