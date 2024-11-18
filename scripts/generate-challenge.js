@@ -14,8 +14,10 @@ function generateProject (title) {
     const frontMatter = `---
 id: "${id}"
 title: "${title}"
-categories: desafios, desafios programação, portfolio, portfolio de programador, programação, ideias de projeto
+keywords: desafios, desafios programação, portfolio, portfolio de programador, programação, ideias de projeto
+categories:
 description: 
+level:
 link: 
 coverImage: "/assets/challenges/${normalizedTitle}/banner.png"
 ogImage:
