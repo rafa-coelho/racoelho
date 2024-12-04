@@ -1,6 +1,6 @@
 ---
 id: "m3mwv9x4ief21"
-title: "Sistema de Notificações"
+title: "#2 Sistema de Notificações"
 keywords: desafios, desafios programação, portfolio, portfolio de programador, programação, ideias de projeto
 categories: Backend, Microsserviços
 description: 
@@ -12,7 +12,7 @@ ogImage:
 date: "2024-11-18T10:56:59.896Z"
 ---
 
-# 🚀 Sistema de Notificação
+# #2 Desafio de Programação: Sistema de Notificação 🚀
 
 ## 📚 Visão Geral
 Desenvolva um Sistema de Notificação eficiente e escalável que gerencie o envio de mensagens para usuários através de múltiplos canais (e-mail, SMS, push notifications). 
