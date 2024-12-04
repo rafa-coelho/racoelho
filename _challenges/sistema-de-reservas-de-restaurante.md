@@ -1,6 +1,6 @@
 ---
 id: "m3d3yohl0yb4e"
-title: "Desafio: Sistema de Reservas de Restaurante"
+title: "#1 Desafio: Sistema de Reservas de Restaurante"
 keywords: Backend, Desafios de backend, portfolio, portfolio de backend, programação, portfolio programação, ideias de projetos backend
 categories: Backend, API
 description: 
@@ -13,7 +13,7 @@ date: "2024-11-11T14:17:54.297Z"
 ---
 
 
-# Desafio: Sistema de Reservas de Restaurante
+# #1 Desafio de Programação: Desafio: Sistema de Reservas de Restaurante
 
 Neste desafio, você vai construir uma API para gerenciar reservas de mesas em um restaurante. O objetivo é desenvolver funcionalidades comuns em sistemas reais de reserva, incluindo autenticação, validação e controle de disponibilidade. Esse projeto será uma ótima adição ao seu portfólio de backend!
 
@@ -148,7 +148,7 @@ Para adicionar esse projeto ao seu portfólio de maneira atrativa, considere os 
 
 5. **Apresentação Visual**: Crie um README.md organizado e visualmente atrativo, com imagens e diagramas simples (como diagrama ER) para demonstrar o funcionamento e a arquitetura do sistema.
 
-6. **Demo em Produção**: Se possível, hospede o projeto em uma plataforma gratuita como Heroku ou Render, para que recrutadores ou interessados possam testar a API em tempo real.
+6. **Demo em Produção**: Se possível, hospede o projeto em uma plataforma gratuita como Vercel ou Render, para que recrutadores ou interessados possam testar a API em tempo real.
 
 7. **Explicação Técnica no Portfólio**: Adicione uma seção explicando os desafios enfrentados e soluções implementadas. Destacar problemas específicos resolvidos mostra seu conhecimento técnico.
 

@@ -1,6 +1,6 @@
 ---
 id: "m3wyngtbhu27e"
-title: "Fila de Espera"
+title: " #3 Fila de Espera"
 keywords: desafios, desafios programação, portfolio, portfolio de programador, programação, ideias de projeto
 categories: Backend
 description: Sistema para gerenciar filas de espera e consultar posições nela.
@@ -13,7 +13,7 @@ date: "2024-11-25T11:44:36.575Z"
 ---
 
 
-# Desafio de Programação: Sistema de Fila de Espera
+# #3 Desafio de Programação: Sistema de Fila de Espera
 
 ## Objetivo
 Desenvolver um **Sistema de Fila de Espera** completo, desde o backend até a interface (opcional), que organiza clientes em filas de atendimento. O sistema deve gerenciar múltiplas filas, priorizar atendimentos, enviar notificações e fornecer painéis para administração e consulta dos clientes.
@@ -193,4 +193,25 @@ Você deverá construir um sistema funcional com as seguintes capacidades:
   - Crie scripts para geração de dados de teste e simulação de filas em tempo real.
 
 ---
+
+
+## Como Disponibilizar no Portfólio
+
+Para adicionar esse projeto ao seu portfólio de maneira atrativa, considere os seguintes pontos:
+
+1. **Publicar no GitHub com um bom README.md**: Suba o código no GitHub com uma descrição completa do projeto, incluindo uma breve introdução, estrutura do banco de dados, principais endpoints e instruções para instalação modo de uso, regras de negócio, explicação das decisões técnicas e etc.
+
+3. **Documentação da API**: Use o Swagger ou Postman para documentar a API, incluindo exemplos de requisições e respostas. Isso facilita a compreensão das funcionalidades e mostra seu cuidado com documentação.
+
+4. **Demonstração com Docker**: Disponibilize uma configuração Docker para facilitar a execução da API. Isso torna o projeto acessível para quem deseja testá-lo rapidamente.
+
+5. **Apresentação Visual**: Crie um README.md organizado e visualmente atrativo, com imagens e diagramas simples (como diagrama ER) para demonstrar o funcionamento e a arquitetura do sistema.
+
+6. **Demo em Produção**: Se possível, hospede o projeto em uma plataforma gratuita como Vercel ou Render, para que recrutadores ou interessados possam testar a API em tempo real.
+
+7. **Explicação Técnica no Portfólio**: Adicione uma seção explicando os desafios enfrentados e soluções implementadas. Destacar problemas específicos resolvidos mostra seu conhecimento técnico.
+
+---
+
+
 Boa sorte e bom desafio! 🚀
