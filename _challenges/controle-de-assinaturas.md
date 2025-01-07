@@ -13,7 +13,7 @@ date: "2025-01-07T19:07:43.636Z"
 ---
 
 
-# #6 Desafio de Programação: Controle de Assinaturas
+# #7 Desafio de Programação: Controle de Assinaturas
 
 ## **Descrição**
 Desenvolva uma API para gerenciar assinaturas em um sistema SaaS ou serviço de streaming. A API deve lidar com planos de assinaturas, cobrança recorrente, upgrades/downgrades e gerenciamento do ciclo de vida das assinaturas. O sistema será orientado a eventos, utilizando uma fila de mensagens para processar atualizações de cobrança e assinaturas.
