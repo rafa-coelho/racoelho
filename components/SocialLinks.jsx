@@ -1,4 +1,4 @@
-import { GitHubIcon, InstagramIcon, TwitterIcon, LinkedInIcon, TiktokIcon } from './Icons'
+import { GitHubIcon, InstagramIcon, TwitterIcon, LinkedInIcon, TiktokIcon, YouTubeIcon } from './Icons'
 
 const SocialLinks = () => {
     const social = [
@@ -17,6 +17,11 @@ const SocialLinks = () => {
         //     href: 'https://twitter.com/racoelhodev',
         //     icon: TwitterIcon,
         // },
+        {
+            name: 'YouTube',
+            href: 'https://www.youtube.com/channel/UCg1yj6K1J9Y0bD1QJ6Qy1zg',
+            icon: YouTubeIcon,
+        },
         {
             name: 'GitHub',
             href: 'https://github.com/rafa-coelho',
