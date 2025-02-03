@@ -19,7 +19,7 @@ const SocialLinks = () => {
         // },
         {
             name: 'YouTube',
-            href: 'https://www.youtube.com/channel/UCg1yj6K1J9Y0bD1QJ6Qy1zg',
+            href: 'https://www.youtube.com/@racoelhoo',
             icon: YouTubeIcon,
         },
         {
