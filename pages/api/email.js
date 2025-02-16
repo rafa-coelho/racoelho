@@ -14,18 +14,19 @@ export default function handler (req, res) {
   const data = JSON.stringify({
     "api_key": process.env.CONVERTKIT_API_KEY,
     "first_name": '',
+    tags: [process.env.CONVERTKIT_TECH_ARTICLE_TAG_ID],
     email
   });
 
   let config = {
     maxBodyLength: Infinity,
-    url: '/forms/6710800/subscribe',
+    url: `/forms/${proccess.env.CONVERTKIT_FORM_ID}/subscribe`,
     headers: {
       'Content-Type': 'application/json; charset=utf-8'
     }
   };
 
-  axios.post(`/forms/6710800/subscribe`, data, config)
+  axios.post(`/forms/${proccess.env.CONVERTKIT_FORM_ID}/subscribe`, data, config)
     .then((response) => {
       return res.status(200).json({ data: response.data });
     })
