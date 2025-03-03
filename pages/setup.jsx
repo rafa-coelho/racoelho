@@ -37,7 +37,7 @@ export default function SetupPage (props) {
                     </div>
 
                     <div className="w-full mt-8">
-                        <h2 className="text-xl text-white mb-4">Meu Setup</h2>
+                        <h2 className="text-xl text-white mb-4">Meu Setup?</h2>
 
                         <LinkTree>
                             {
