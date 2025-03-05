@@ -4,8 +4,8 @@ import Head from 'next/head';
 import Container from '../../../components/Layout/Container';
 import Layout from '../../../components/Layout/Layout';
 import PostTitle from '../../../components/Post/PostTitle'
-import { BLOG_NAME } from '../../../lib/constants';
-import { getAllChallenges, getChallengeBySlug } from '../../../lib/api';
+import { BLOG_NAME } from '../../../lib/config/constants';
+import { getAllChallenges, getChallengeBySlug } from '../../../lib/local-api';
 import markdownToHtml from '../../../lib/markdownToHtml'
 import PostBody from '../../../components/Post/PostBody'
 import CoverImage from '../../../components/Image/CoverImage'

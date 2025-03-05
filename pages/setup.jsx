@@ -2,9 +2,9 @@ import Image from 'next/image';
 import Head from 'next/head';
 import Container from '../components/Layout/Container';
 import Layout from '../components/Layout/Layout';
-import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../lib/constants';
+import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../lib/config/constants';
 import SocialLinks from "../components/SocialLinks";
-import { getSetupLinks } from "../lib/api";
+import { getSetupLinks } from "../lib/local-api";
 import LinkTree from '../components/LinkTree/LinkTree';
 
 export default function SetupPage (props) {

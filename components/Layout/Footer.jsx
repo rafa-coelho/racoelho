@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Container from './Container'
 import Highlight from '../Utils/Highlight'
-import { BLOG_NAME } from '../../lib/constants'
+import { BLOG_NAME } from '../../lib/config/constants'
 import SocialLinks from '../SocialLinks'
 
 const navigation = {

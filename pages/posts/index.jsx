@@ -1,10 +1,10 @@
 import Container from '../../components/Layout/Container'
 import Layout from '../../components/Layout/Layout'
 import Head from 'next/head'
-import { getAllPosts } from '../../lib/api'
-import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../../lib/constants'
+import { getAllPosts } from '../../lib/local-api'
+import { BLOG_NAME, HOME_OG_IMAGE_URL } from '../../lib/config/constants'
 import PostPreview from '../../components/Home/PostPreview'
-import { KEYWORDS } from '../../lib/constants'
+import { KEYWORDS } from '../../lib/config/constants'
 
 const Posts = ({ allPosts }) => {
     const posts = allPosts;

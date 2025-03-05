@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import PostPreview from '../../components/Home/PostPreview';
-import { getAllPosts } from '../../lib/api'
+import { getAllPosts } from '../../lib/local-api'
 
 export default function RecentPosts ({ posts }) {
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ADS_CLIENT_ID, ADS_AD_SLOT } from '../lib/constants';
+import { ADS_CLIENT_ID, ADS_AD_SLOT } from '../lib/config/constants';
 
 const Adsense = () => {
     useEffect(() => {

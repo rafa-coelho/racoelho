@@ -3,8 +3,8 @@ import Link from 'next/link';
 import Container from '../../../components/Layout/Container';
 import Layout from '../../../components/Layout/Layout';
 import Empty from '../../../components/Layout/Empty';
-import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../../../lib/constants';
-import { getAllChallenges } from '../../../lib/api';
+import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../../../lib/config/constants';
+import { getAllChallenges } from '../../../lib/local-api';
 import CoverImage from '../../../components/Image/CoverImage'
 import CategoryBadge from '../../../components/CategoryBadge'
 import LevelBadge from '../../../components/LevelBadge'

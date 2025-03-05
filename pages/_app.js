@@ -5,7 +5,7 @@ import * as gtag from '../lib/gtag'
 import 'prism-themes/themes/prism-dracula.css'
 import Head from 'next/head';
 import NewsletterCard from '../components/Home/NewsletterCard'
-
+import { Toaster } from 'react-hot-toast';
 
 const App = ({ Component, pageProps }) => {
   const router = useRouter()
@@ -31,6 +31,7 @@ const App = ({ Component, pageProps }) => {
     </Head>
     <Component {...pageProps} />
     <NewsletterCard />
+    <Toaster />
   </>
 }
 

@@ -5,8 +5,8 @@ import About from '../components/Home/About'
 import NewsletterForm from '../components/Home/NewsletterForm'
 import Layout from '../components/Layout/Layout'
 import Head from 'next/head'
-import { getAllPosts, getAllChallenges } from '../lib/api'
-import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../lib/constants'
+import { getAllPosts, getAllChallenges } from '../lib/local-api'
+import { BLOG_NAME, DESCRIPTION, HOME_OG_IMAGE_URL, KEYWORDS } from '../lib/config/constants'
 import PostPreview from '../components/Home/PostPreview'
 
 export default function Index ({ recentPosts, recentChallenges }) {

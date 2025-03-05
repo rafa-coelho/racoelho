@@ -1,7 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { AUTHOR, LANG } from '../lib/constants'
+import { AUTHOR, LANG } from '../lib/config/constants'
 import { GA_TRACKING_ID } from '../lib/gtag'
-import { ADS_CLIENT_ID } from '../lib/constants';
+import { ADS_CLIENT_ID } from '../lib/config/constants';
 
 export default class MyDocument extends Document {
   render () {

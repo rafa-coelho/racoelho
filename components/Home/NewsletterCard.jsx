@@ -55,7 +55,7 @@ const NewsletterCard = () => {
         setSubscribed((subscribed || "").toString() == 'true');
     }, []);
 
-    const routesWithoutNewsletterRgx = /\/newsletter|\/links|\/listas\/.*|\/setup/;
+    const routesWithoutNewsletterRgx = /\/newsletter|\/links|\/listas\/.*|\/setup|\/ebooks\/.*/;
     const isRouteWithoutNewsletter = routesWithoutNewsletterRgx.test(router.pathname);
 
     if (

@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { TWITTER_USERNAME } from '../../lib/constants'
+import { TWITTER_USERNAME } from '../../lib/config/constants'
 
 // Favicon should be recreated at various sizes for each link below.
 export default function Meta() {

@@ -6,7 +6,7 @@ import Image from 'next/image'
 export default function CoverImage({
   title,
   src,
-  slug,
+  slug = undefined,
   height,
   width,
   coverImagePriority,
@@ -15,11 +15,11 @@ export default function CoverImage({
   const image = (
     <Image
       src={src}
-      alt={`Banner do post: ${title}`}
+      alt={`Banner do: ${title}`}
       className={cn('shadow-sm', {
         'hover:shadow-md transition-shadow duration-200': slug,
       }) + " rounded-lg"}
-      layout="responsive"
+      // layout="responsive"
       width={width}
       height={height}
       priority={coverImagePriority ? coverImagePriority : false}
