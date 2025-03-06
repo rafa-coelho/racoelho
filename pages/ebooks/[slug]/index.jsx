@@ -96,10 +96,10 @@ export default function EbookPage ({ ebook }) {
 
           {/* Botão que rola até a seção do formulário */}
           <a
-            href="#downloadSection"
+            href={`${ebook.heroButton.link || '#downloadSection'}`}
             className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full shadow-md transition-all"
           >
-            Quero Receber o eBook
+            {ebook.heroButton.title}
           </a>
         </div>
       </section>

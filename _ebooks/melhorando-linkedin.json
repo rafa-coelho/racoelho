@@ -8,6 +8,9 @@
     "price": 0,
     "imageUrl": "/assets/ebooks/melhorando-linkedin/banner.png",
     "benefitsTitle": "O que você vai aprender",
+    "heroButton": {
+        "title": "Receber Ebook de Graça"
+    },
     "benefits": [
         {
             "title": "Ajustes Visuais",
