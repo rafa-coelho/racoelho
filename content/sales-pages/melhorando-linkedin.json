@@ -1,0 +1,102 @@
+{
+  "title": "Ebook: Melhorando seu LinkedIn para Desenvolvedores",
+  "slug": "melhorando-linkedin",
+  "blocks": [
+    {
+      "type": "header",
+      "title": "Transforme seu Perfil do LinkedIn em uma Ferramenta Poderosa para sua Carreira",
+      "content": "Aprenda estratégias comprovadas para criar um perfil profissional que se destaque e atraia as melhores oportunidades de trabalho.",
+      "image": "/assets/ebooks/melhorando-linkedin/banner.png"
+    },
+    {
+      "type": "text",
+      "title": "Por que melhorar seu LinkedIn?",
+      "content": "<p>Um perfil bem otimizado no LinkedIn pode abrir portas para:</p><ul><li>Oportunidades de trabalho exclusivas</li><li>Networking com profissionais influentes</li><li>Visibilidade para seus projetos e conquistas</li><li>Construção de uma marca pessoal forte</li><li>Atrair recrutadores e headhunters</li></ul><p>Este ebook vai te guiar passo a passo para criar um perfil que se destaque e atraia as melhores oportunidades.</p>"
+    },
+    {
+      "type": "pricing",
+      "title": "O que você vai aprender",
+      "content": "Este ebook gratuito contém estratégias práticas e acionáveis para transformar seu perfil do LinkedIn.",
+      "price": "GRATUITO"
+    },
+    {
+      "type": "features",
+      "title": "Conteúdo do Ebook",
+      "items": [
+        {
+          "title": "Otimização do Perfil",
+          "description": "Aprenda a estruturar seu perfil para maximizar sua visibilidade e atrair recrutadores."
+        },
+        {
+          "title": "Palavras-chave Estratégicas",
+          "description": "Descubra quais palavras-chave usar para aparecer nas buscas dos recrutadores."
+        },
+        {
+          "title": "Apresentação de Projetos",
+          "description": "Técnicas para destacar seus projetos e experiências de forma profissional."
+        },
+        {
+          "title": "Networking Efetivo",
+          "description": "Como construir e manter uma rede profissional valiosa."
+        },
+        {
+          "title": "Criação de Conteúdo",
+          "description": "Dicas para compartilhar conteúdo relevante e aumentar sua autoridade."
+        },
+        {
+          "title": "Portfólio Digital",
+          "description": "Transforme seu LinkedIn em um portfólio digital impressionante."
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "title": "Perguntas Frequentes",
+      "items": [
+        {
+          "title": "O ebook é realmente gratuito?",
+          "description": "Sim, o ebook é 100% gratuito. Apenas preencha o formulário abaixo para receber o link de download."
+        },
+        {
+          "title": "Quanto tempo leva para receber o ebook?",
+          "description": "Você receberá o link de download imediatamente após preencher o formulário."
+        },
+        {
+          "title": "Posso compartilhar o ebook com amigos?",
+          "description": "Sim, você pode compartilhar o link do formulário para que seus amigos também possam receber o ebook."
+        },
+        {
+          "title": "O conteúdo é atualizado?",
+          "description": "Sim, o ebook é atualizado periodicamente para incluir as melhores práticas e tendências do LinkedIn."
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "title": "Receba o Ebook Gratuitamente",
+      "content": "<p>Preencha o formulário abaixo para receber o ebook diretamente no seu email. Não se preocupe, não enviaremos spam e você pode cancelar a inscrição a qualquer momento.</p>",
+      "apiUrl": "/api/send-ebook",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nome",
+          "type": "text",
+          "required": true,
+          "placeholder": "Seu nome completo"
+        },
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "email",
+          "required": true,
+          "placeholder": "seu@email.com"
+        }
+      ],
+      "submitText": "Receber Ebook Gratuitamente",
+      "successMessage": "Obrigado! O ebook foi enviado para o seu email. Verifique sua caixa de entrada e a pasta de spam."
+    }
+  ],
+  "ctaText": "Baixar Ebook Gratuitamente",
+  "ctaUrl": "#form-6",
+  "paymentUrl": "#form-6"
+} 

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Microfone FIFINE K688",
+    "category": "Áudio",
+    "description": "Microfone dinâmico com conexão USB/XLR, ideal para gravação de podcasts e transmissões ao vivo.",
+    "image": "https://tse1.mm.bing.net/th?id=OIP.2zEyLy7faGkqh6SvMNQWcAHaHa&pid=Api",
+    "price": "R$ 399,00",
+    "url": "https://s.click.aliexpress.com/e/_oE2nV2R"
+  },
+  {
+    "name": "Mixer de áudio FIFINE SC3",
+    "category": "Áudio",
+    "description": "Mixer de áudio com efeitos de voz, conexão USB e entrada XLR, projetado para jogos e streaming.",
+    "image": "https://tse2.mm.bing.net/th?id=OIP.bRnot2PBshlgBkfC94I1nwHaGJ&pid=Api",
+    "price": "R$ 249,99",
+    "url": "https://s.click.aliexpress.com/e/_olwG3cj"
+  },
+  {
+    "name": "Teclado Mecânico Redragon",
+    "category": "Periféricos",
+    "description": "Teclado mecânico para jogos com retroiluminação RGB e switches Outemu Blue.",
+    "image": "https://tse4.mm.bing.net/th?id=OIP.nShe-5BGSlrGzbd93gFZxgHaD5&pid=Api",
+    "price": "R$ 245,00",
+    "url": "https://s.click.aliexpress.com/e/_on7VBFZ"
+  },
+  {
+    "name": "Mouse Logitech Lift Vertical",
+    "category": "Periféricos",
+    "description": "Mouse ergonômico vertical sem fio, projetado para reduzir a tensão no pulso durante o uso prolongado.",
+    "image": "https://tse1.mm.bing.net/th?id=OIP.5dOQ-H-3RsMlS2FzOKFFFAHaHa&pid=Api",
+    "price": "R$ 379,90",
+    "url": "https://s.click.aliexpress.com/e/_olOkIMz"
+  },
+  {
+    "name": "Mouse Redragon",
+    "category": "Periféricos",
+    "description": "Mouse gamer sem fio com DPI ajustável de até 8.000 e iluminação RGB.",
+    "image": "https://tse2.mm.bing.net/th?id=OIP.UjI1_fsBx6RRY7SBzYq1lwHaHP&pid=Api",
+    "price": "R$ 135,00",
+    "url": "https://s.click.aliexpress.com/e/_ootnbCT"
+  },
+  {
+    "name": "Webcam Logitech C920e",
+    "category": "Áudio/Vídeo",
+    "description": "Webcam Full HD 1080p com obturador de privacidade, ideal para videoconferências e streaming.",
+    "image": "https://tse4.mm.bing.net/th/id/OIP.uOXHsk-Hxv8EHiZ4bW-VaAHaHa?pid=Api",
+    "price": "R$ 429,99",
+    "url": "https://s.click.aliexpress.com/e/_oC9D4p1"
+  }
+]
