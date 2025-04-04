@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title><![CDATA[Blog Racoelho]]></title>
+        <description><![CDATA[Blog Racoelho]]></description>
+        <link>https://racoelho.com.br</link>
+        <generator>RSS for Node</generator>
+        <lastBuildDate>Tue, 26 Mar 2024 03:25:14 GMT</lastBuildDate>
+        <atom:link href="https://racoelho.com.br/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Construi um jogo de jokenpo]]></title>
+            <description><![CDATA[Como eu criei um Jokenpo com WebSockets e JavaScript vanilla!]]></description>
+            <link>https://racoelho.com.br/posts/construi-um-jogo-de-jokenpo</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/construi-um-jogo-de-jokenpo</guid>
+            <pubDate>Thu, 08 Feb 2024 02:43:41 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Criando um app React com Typescript: guia passo a passo]]></title>
+            <description><![CDATA[Aprenda como fazer seu próximo app com esse tutorial de como criar um app com React usando Typescript.]]></description>
+            <link>https://racoelho.com.br/posts/criando-um-app-com-react-e-typescript</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/criando-um-app-com-react-e-typescript</guid>
+            <pubDate>Mon, 25 Mar 2024 12:45:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Introdução ao Desenvolvimento Web]]></title>
+            <description><![CDATA[Se você está querendo entrar no mundo do desenvolvimento web, esse guia é o ponto de partida. Aqui, descomplico o HTML, CSS e JavaScript para você começar a criar seus próprios sites. Ideal para quem tá começando e quer entender o básico.]]></description>
+            <link>https://racoelho.com.br/posts/introducao-ao-desenvolvimento-web</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/introducao-ao-desenvolvimento-web</guid>
+            <pubDate>Mon, 19 Feb 2024 15:18:17 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[De 35 à 3 segundos: Melhorando a Performance de um Relatório]]></title>
+            <description><![CDATA[Como eu reduzi o tempo de resposta de um relatório de 34s para 3s.]]></description>
+            <link>https://racoelho.com.br/posts/melhorando-a-performance-de-um-relatorio</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/melhorando-a-performance-de-um-relatorio</guid>
+            <pubDate>Mon, 12 Feb 2024 08:48:28 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[TypeScript Descomplicado: Domine a Evolução do JavaScript]]></title>
+            <description><![CDATA[Descubra como o TypeScript aprimora o JavaScript com tipagem estática e orientação a objetos, simplificando o desenvolvimento de aplicativos complexos e escaláveis. Este guia revela o poder do TypeScript, desde sua instalação até a adoção em seus projetos, mostrando por que é a escolha certa para desenvolvedores modernos.]]></description>
+            <link>https://racoelho.com.br/posts/o-que-e-o-typescript</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/o-que-e-o-typescript</guid>
+            <pubDate>Tue, 27 Feb 2024 23:07:15 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[O que é um PWA: Entenda o Conceito de Progressive Web Apps]]></title>
+            <description><![CDATA[Descubra o poder dos Progressive Web Apps (PWA) e como eles estão redefinindo a experiência de usuário na web. De acessibilidade offline a notificações push, explore como os PWAs combinam a praticidade dos aplicativos web com a robustez dos aplicativos nativos, oferecendo uma alternativa moderna e eficaz para engajar usuários em qualquer dispositivo.]]></description>
+            <link>https://racoelho.com.br/posts/o-que-e-uma-pwa</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/o-que-e-uma-pwa</guid>
+            <pubDate>Fri, 22 Mar 2024 01:47:30 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Sorteio de Amigo Secreto: Sem API, Só Hash]]></title>
+            <description><![CDATA[Explorando a simplicidade na criação de projetos, este post mostra a construção de um app de Sorteio de Amigo Secreto com hash e IndexedDB.]]></description>
+            <link>https://racoelho.com.br/posts/sorteio-de-amigo-secreto</link>
+            <guid isPermaLink="true">https://racoelho.com.br/posts/sorteio-de-amigo-secreto</guid>
+            <pubDate>Thu, 15 Feb 2024 10:15:00 GMT</pubDate>
+        </item>
+    </channel>
+</rss>
