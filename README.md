@@ -83,6 +83,23 @@ public/                 # Arquivos estáticos
 - **Analytics**: Rastreamento de eventos e cliques
 - **Tema escuro/claro**: Suporte a temas claro e escuro
 
+## Sistema de Versionamento
+
+Este projeto conta com um sistema de versionamento automático que incrementa a versão e atualiza a data de build sempre que ocorre um merge para a branch principal (master/main) via Pull Request.
+
+### Como funciona:
+
+O versionamento é gerenciado pelo **GitHub Actions**:
+
+- Quando um Pull Request é mesclado na branch principal, o workflow `update-version.yml` é acionado
+- O workflow incrementa automaticamente a versão (patch) usando `npm version patch`
+- A data de build é atualizada para a data atual
+- Um commit é criado e enviado de volta ao repositório
+
+### Versão e Data de Build
+
+A versão atual e a data de build são exibidas no rodapé do site para referência.
+
 ## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

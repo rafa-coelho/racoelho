@@ -1,6 +1,7 @@
 {
   "name": "racoelho",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "buildDate": "2025-04-09",
   "description": "Rafael Coelho's site and blog",
   "license": "MIT",
   "repository": {
@@ -17,7 +18,8 @@
     "generate:challenge": "ts-node --project tsconfig.scripts.json scripts/generate-challenge.ts",
     "generate:rss": "ts-node --project tsconfig.scripts.json scripts/generate-rss.ts",
     "generate:sitemap": "ts-node --project tsconfig.scripts.json scripts/generate-sitemap.ts",
-    "generate:all": "npm run generate:rss && npm run generate:sitemap"
+    "generate:all": "npm run generate:rss && npm run generate:sitemap",
+    "prepare": "husky"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
