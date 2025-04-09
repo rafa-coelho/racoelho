@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { BLOG_NAME } from "@/lib/config/constants";
 import SocialLinks from "../../content/social-links.json";
 import { GetSocialIcon } from "./LinksContent";
+import packageJson from '../../package.json';
 
 interface LayoutProps {
   children: ReactNode;
@@ -134,6 +135,12 @@ export default function Layout({ children }: LayoutProps) {
 
             </p>
           </div>
+
+          <footer className="mt-8 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>
+              © {new Date().getFullYear()} {packageJson.name} • v{packageJson.version} • Build: {packageJson.buildDate}
+            </p>
+          </footer>
         </div>
       </footer>
     </div>

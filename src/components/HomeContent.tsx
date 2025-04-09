@@ -26,8 +26,7 @@ export default function HomeContent({ posts, challenges }: HomeContentProps) {
             Desenvolvimento, Tecnologia e Desafios
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Compartilhando conhecimento e experiências sobre o mundo do 
-            desenvolvimento de software, novas tecnologias e desafios de programação.
+            Aqui, tu vai encontrar Conteúdo sobre Programação e Desafios para tentar te incentivar a continuar aprendendo
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
@@ -64,12 +63,11 @@ export default function HomeContent({ posts, challenges }: HomeContentProps) {
               </div>
               <div>
                 <p className="text-lg mb-4">
-                  Olá! Sou um desenvolvedor e criador de conteúdo apaixonado por tecnologia e programação.
-                  Compartilho meus conhecimentos e experiências através de posts, tutoriais e desafios práticos.
+                  Desde os 12 anos gosto de estudar e reproduzir sistemas e aplicações; Hoje, trabalho como Fullstack .NET, React e Angular.
+                  Falo um pouco sobre programação, tecnologia e desafios de desenvolvimento.
                 </p>
                 <p className="text-lg mb-6">
-                  Meu objetivo é tornar o conhecimento técnico acessível, ajudando outros desenvolvedores
-                  a crescerem em suas jornadas profissionais.
+                  Quer me conhecer melhor? Dá uma olhada no link abaixo.
                 </p>
                 <Link
                   href="/links"
