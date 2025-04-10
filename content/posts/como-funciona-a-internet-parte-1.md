@@ -9,6 +9,7 @@ author:
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
   url: "/assets/blog/como-funciona-a-internet-parte-1/banner.png"
+tags: ["Internet"]
 ---
 
 Esse será o primeiro post sobre um assunto de extrema importância para todos que querem se aperfeiçoar no desenvolvimento de aplicações para a Web.

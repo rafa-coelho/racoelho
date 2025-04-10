@@ -3,7 +3,7 @@ title: "Construi um jogo de jokenpo"
 excerpt: "Como eu criei um Jokenpo com WebSockets e JavaScript vanilla!"
 coverImage: "/assets/blog/construi-um-jogo-de-jokenpo/paper-rock-and-scissors.webp"
 date: "2024-02-08T02:43:41.748Z"
-tags: ["JavaScript", "WebSockets", "Jogos", "Desenvolvimento Web", "HTML", "CSS"]
+tags: ["JavaScript", "WebSockets"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg"

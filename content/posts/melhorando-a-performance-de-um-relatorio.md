@@ -4,7 +4,7 @@ excerpt: "Como eu reduzi o tempo de resposta de um relatório de 34s para 3s."
 coverImage: "/assets/blog/melhorando-a-performance-de-um-relatorio/banner.png"
 date: "2024-02-12T08:48:28.942Z"
 keywords: C#, Performance, refatoração, 
-tags: ["C#", "Performance", "Refatoração", "BigQuery", "Otimização", "Desenvolvimento de Software"]
+tags: ["Performance"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
@@ -344,7 +344,7 @@ Com isso, chegamos a marca média dos........................................
 
 **3.2 segundos**
 
-![UHUL](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGI1bGRncWFtZTlmd2x1OGN6Y25uemI1c3I5ajVkOXo0NnMzcno5cCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy-downsized-large.gif)
+![UHUL](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExeTI5eTBmcHBjcWlkZnF0OGJjYm95aTlxd2xxaGk5bHZoeDNuZng5NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/t3sZxY5zS5B0z5zMIz/giphy-downsized-large.gif)
 
 
 Mas ainda faltava algo...

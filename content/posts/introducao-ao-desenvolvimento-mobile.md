@@ -9,6 +9,7 @@ author:
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
   url: "/assets/blog/introducao-ao-desenvolvimento-mobile/banner.png"
+tags: ["Mobile"]
 ---
 
 

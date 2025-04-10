@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/sistema-de-ponto/banner.png"
 ogImage:
     url: "/assets/challenges/sistema-de-ponto/banner.png"
 date: "2024-12-04T01:53:14.391Z"
+tags: ["React", "NodeJS"]
 ---
 
 

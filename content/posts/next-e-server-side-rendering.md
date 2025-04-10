@@ -4,7 +4,7 @@ excerpt: "Explore como o Server Side Rendering com Next.js pode transformar a pe
 coverImage: "/assets/blog/next-e-server-side-rendering/banner.png"
 date: "2024-04-24T00:41:28.383Z"
 keywords: programação, dev, desenvolvimento, Next.js SSR, Performance web, SEO com Next.js, SSR vantagens, Desenvolvimento eficiente, Experiência do usuário com SSR, Hulu SSR, Twitch desenvolvimento
-tags: ["Next.js", "SSR", "Performance", "SEO", "React", "Desenvolvimento Web", "Experiência do Usuário"]
+tags: ["Next.js", "SSR"]
 author:
   name: "racoelho"
   picture: "https://github.com/rafa-coelho.png"

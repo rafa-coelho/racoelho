@@ -4,7 +4,7 @@ excerpt: "Descubra como o TypeScript aprimora o JavaScript com tipagem estática
 coverImage: "/assets/blog/o-que-e-o-typescript/banner.png"
 date: "2024-02-27T23:07:15.541Z"
 keywords: programação, dev, desenvolvimento, TypeScript, JavaScript, Desenvolvimento Web, Tipagem Estática, Programação Orientada a Objetos, Microsoft, Transpilação de Código, Ferramentas de Desenvolvimento, Suporte Moderno do JavaScript
-tags: ["TypeScript", "JavaScript", "Desenvolvimento Web", "Tipagem Estática", "POO", "Microsoft", "Transpilação"]
+tags: ["TypeScript", "JavaScript"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

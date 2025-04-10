@@ -4,7 +4,7 @@ excerpt: "Descubra como hospedar facilmente seu app NextJS no GitHub Pages, uma 
 coverImage: "/assets/blog/como-hospedar-um-app-nextjs-no-github-pages/banner.png"
 date: "2024-04-10T21:30:32.456Z"
 keywords: programação, dev, desenvolvimento, Hospedar app NextJS, GitHub Pages deploy, Configuração NextJS GitHub Pages, Publicação gratuita GitHub, Deploy NextJS projeto, GitHub Pages tutorial, NextJS estático GitHub, Desenvolvimento web NextJS, SEO GitHub Pages, NextJS GitHub Pages guia
-tags: ["Next.js", "GitHub Pages", "Deploy", "Hospedagem", "Desenvolvimento Web", "Hospedagem Gratuita", "SEO"]
+tags: ["Next.js", "GitHub"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/controle-de-assinaturas/banner.png"
 ogImage:
     url: "/assets/challenges/controle-de-assinaturas/banner.png"
 date: "2025-01-07T19:07:43.636Z"
+tags: ["API", "Backend"]
 ---
 
 

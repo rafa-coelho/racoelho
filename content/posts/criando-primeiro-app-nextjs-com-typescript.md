@@ -4,7 +4,7 @@ excerpt: "Explore o universo do Next.js e dê vida ao seu primeiro app utilizand
 coverImage: "/assets/blog/criando-primeiro-app-nextjs-com-typescript/banner.png"
 date: "2024-03-28T12:40:02.353Z"
 keywords: programação, dev, desenvolvimento, Criando app Next.js, Tutorial Next.js TypeScript, Introdução ao Next.js, Desenvolvimento web Next.js, Next.js para iniciantes, Configuração Next.js TypeScript, Publicação de app Next.js, Vantagens do Next.js, Tipagem em Next.js com TypeScript, Next.js SSR e SSG
-tags: ["Next.js", "TypeScript", "React", "Desenvolvimento Web", "SSR", "SSG", "Roteamento", "Tutorial"]
+tags: ["Next.js", "TypeScript"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

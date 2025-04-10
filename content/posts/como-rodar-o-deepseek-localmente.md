@@ -9,6 +9,7 @@ author:
   picture: "https://github.com/rafa-coelho.png"
 ogImage:
   url: "/assets/blog/como-rodar-o-deepseek-localmente/banner.png"
+tags: ["IA", "Python"]
 ---
 
 Além de ser de graça e tão bom quanto o GPT, o **DeepSeek** ainda é OpenSource e pode ser usado localmente.

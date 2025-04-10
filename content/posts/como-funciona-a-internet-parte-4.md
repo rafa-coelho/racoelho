@@ -10,6 +10,7 @@ author:
   picture: "https://github.com/rafa-coelho.png"
 ogImage:
   url: "/assets/blog/como-funciona-a-internet-parte-4/banner.png"
+tags: ["Internet"]
 ---
 
 

@@ -9,6 +9,7 @@ author:
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
   url: "/assets/blog/criando-primeiro-app-flutter/banner.png"
+tags: ["Flutter", "Mobile"]
 ---
 
 
@@ -189,7 +190,7 @@ Por outro lado, **StatefulWidget** é projetado para widgets que precisam gere
 
 ### **Utilizando Provider e Riverpod**
 
-O **Provider** é uma ferramenta popular para o gerenciamento de estado em Flutter. Ele permite que os widgets ouçam as alterações de estado e se reconstruam quando necessário. Pode-se declarar um “ChangeNotifier”, que notificará os ouvintes quando variáveis mudarem.
+O **Provider** é uma ferramenta popular para o gerenciamento de estado em Flutter. Ele permite que os widgets ouçam as alterações de estado e se reconstruam quando necessário. Pode-se declarar um "ChangeNotifier", que notificará os ouvintes quando variáveis mudarem.
 
 **Riverpod** é uma evolução do Provider, oferecendo melhorias em segurança de tipo e design. Em vez de utilizar **`BuildContext`** para receber o estado, com Riverpod, os estados são acessados usando referências, o que possibilita uma maior flexibilidade e escalabilidade na gestão de estado.
 

@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/fila-de-espera/banner.png"
 ogImage:
     url: "/assets/challenges/fila-de-espera/banner.png"
 date: "2024-11-25T11:44:36.575Z"
+tags: ["RabbitMQ", "Queues"]
 ---
 
 

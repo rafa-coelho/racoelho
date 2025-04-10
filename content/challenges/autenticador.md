@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/autenticador/banner.png"
 ogImage:
     url: "/assets/challenges/autenticador/banner.png"
 date: "2024-12-09T19:58:43.317Z"
+tags: ["JWT", "Authentication"]
 ---
 
 

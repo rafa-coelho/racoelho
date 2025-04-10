@@ -4,7 +4,7 @@ excerpt: "Se você está querendo entrar no mundo do desenvolvimento web, esse g
 coverImage: "/assets/blog/introducao-ao-desenvolvimento-web/banner.png"
 date: "2024-02-19T15:18:17.250Z"
 keywords: programação, dev, desenvolvimento, web developer, como criar um site
-tags: ["HTML", "CSS", "JavaScript", "Desenvolvimento Web", "Front-end", "Iniciantes", "Tutorial"]
+tags: ["HTML", "CSS"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

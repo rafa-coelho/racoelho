@@ -10,6 +10,7 @@ author:
   picture: "https://github.com/rafa-coelho.png"
 ogImage:
   url: "/assets/blog/como-funciona-a-internet-parte-3/banner.png"
+tags: ["Internet"]
 ---
 
 Esse post é a continuação da série "Como funciona a internet".

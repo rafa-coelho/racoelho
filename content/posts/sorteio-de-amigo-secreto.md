@@ -4,7 +4,7 @@ excerpt: "Explorando a simplicidade na criação de projetos, este post mostra a
 coverImage: "/assets/blog/sorteio-de-amigo-secreto/banner.png"
 date: "2024-02-15T10:15:00.585Z"
 keywords: programação, dev, desenvolvimento, IndexedDB, base64, Next, React, Amigo Secreto
-tags: ["JavaScript", "IndexedDB", "Base64", "Next.js", "React", "Desenvolvimento Web", "Projetos Práticos"]
+tags: ["JavaScript", "React"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

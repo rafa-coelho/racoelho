@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/amigo-secreto/banner.png"
 ogImage:
     url: "/assets/challenges/amigo-secreto/banner.png"
 date: "2024-12-16T22:25:51.462Z"
+tags: ["JavaScript", "React"]
 ---
 
 

@@ -4,7 +4,7 @@ excerpt: "Aprenda como fazer seu próximo app com esse tutorial de como criar um
 coverImage: "/assets/blog/criando-um-app-com-react-e-typescript/banner.png"
 date: "2024-03-25T12:45:00.918Z"
 keywords: React, TypeScript, Desenvolvimento Web, Programação Front-end, Criação de Aplicativos, Tipagem Estática, Componentes React, Gerenciamento de Estado, Estilização de Aplicativos, CSS-in-JS, Styled Components, SASS/SCSS, Hooks React, Desenvolvimento de Software
-tags: ["React", "TypeScript", "Desenvolvimento Web", "Front-end", "Componentes", "Hooks", "Estilização"]
+tags: ["React", "TypeScript"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

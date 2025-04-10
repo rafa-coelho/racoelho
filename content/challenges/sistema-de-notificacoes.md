@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/sistema-de-notificacoes/banner.png"
 ogImage:
     url: "/assets/challenges/sistema-de-notificacoes/banner.png"
 date: "2024-11-18T10:56:59.896Z"
+tags: ["WebSockets", "Real-time"]
 ---
 
 # #2 Desafio de Programação: Sistema de Notificação 🚀

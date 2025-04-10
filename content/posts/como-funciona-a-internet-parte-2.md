@@ -9,6 +9,7 @@ author:
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"
 ogImage:
   url: "/assets/blog/como-funciona-a-internet-parte-2/banner.png"
+tags: ["Internet"]
 ---
 
 Esse post é a continuação da série "Como funciona a internet" onde vamos começar falando do HTTP: A lingagem da WEB

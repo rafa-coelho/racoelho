@@ -4,7 +4,7 @@ excerpt: "Descubra o poder dos Progressive Web Apps (PWA) e como eles estão red
 coverImage: "/assets/blog/o-que-e-uma-pwa/banner.png"
 date: "2024-03-22T01:47:30.579Z"
 keywords: programação, dev, desenvolvimento, Progressive Web Apps, PWAs, Desenvolvimento Web, Aplicativos Offline, Experiência do Usuário, Service Workers, Web App Manifest, Desenvolvimento Responsivo, Aplicações Web Modernas, Como criar um aplicativo
-tags: ["PWA", "Progressive Web Apps", "Desenvolvimento Web", "Service Workers", "Web App Manifest", "Responsividade", "Aplicativos Web"]
+tags: ["PWA"]
 author:
   name: "racoelho"
   picture: "https://ik.imagekit.io/wphcyip3g/racoelho_dev/1688439289672.jpeg?updatedAt=1701730648991"

@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/sistema-de-reservas-de-restaurante/banner.png"
 ogImage:
   url: "/assets/challenges/sistema-de-reservas-de-restaurante/banner.png"
 date: "2024-11-11T14:17:54.297Z"
+tags: ["API", "Backend"]
 ---
 
 

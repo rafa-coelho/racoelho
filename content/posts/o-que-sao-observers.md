@@ -9,6 +9,7 @@ author:
   picture: "https://github.com/rafa-coelho.png"
 ogImage:
   url: "/assets/blog/o-que-sao-observers/banner.png"
+tags: ["Design Patterns", "JavaScript"]
 ---
 
 

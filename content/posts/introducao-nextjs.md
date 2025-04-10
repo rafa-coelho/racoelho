@@ -3,7 +3,7 @@ title: "Introdução ao Next.js: O Framework React do Futuro"
 date: "2024-04-01"
 excerpt: "Aprenda os conceitos básicos do Next.js e por que ele é considerado o framework React do futuro"
 coverImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=1170&auto=format&fit=crop"
-tags: ["Next.js", "React", "JavaScript", "Web Development"]
+tags: ["Next.js", "React"]
 ---
 
 # Introdução ao Next.js

@@ -10,6 +10,7 @@ coverImage: "/assets/challenges/encurtador-de-links/banner.png"
 ogImage:
     url: "/assets/challenges/encurtador-de-links/banner.png"
 date: "2025-01-22T13:44:19.565Z"
+tags: ["Docker", "Backend"]
 ---
 
 
