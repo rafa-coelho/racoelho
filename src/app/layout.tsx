@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Analytics } from '@/components/Analytics';
+// import '@/styles/prism-theme.css';
+import { AnalyticsWrapper } from '@/components/Analytics';
 import { BLOG_NAME, DESCRIPTION } from '@/lib/config/constants';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://racoelho.com.br'),
   title: {
     default: BLOG_NAME,
     template: `%s | ${BLOG_NAME}`,
@@ -49,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        <Analytics />
+        <AnalyticsWrapper />
         <main>
           {children}
         </main>

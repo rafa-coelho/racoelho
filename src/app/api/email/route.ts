@@ -23,22 +23,6 @@ function validateEmailData(data: EmailData): string | null {
   return null;
 }
 
-// Função para enviar o email (simulada)
-async function sendEmail(data: EmailData): Promise<boolean> {
-  // Aqui você implementaria a lógica real de envio de email
-  // usando serviços como SendGrid, Mailchimp, etc.
-  
-  console.log('Enviando email:', {
-    to: data.to,
-    subject: data.subject,
-    from: data.from || 'noreply@seudominio.com',
-    text: data.text,
-    html: data.html
-  });
-  
-  // Simulando envio bem-sucedido
-  return true;
-}
 
 export async function POST(request: NextRequest) {
   try {

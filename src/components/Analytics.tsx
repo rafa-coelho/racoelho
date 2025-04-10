@@ -1,10 +1,13 @@
 'use client'
 
+import React from 'react';
+import Script from 'next/script';
 import { analyticsService } from '@/lib/services/analytics.service'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
+import { Suspense } from 'react';
 
-export function Analytics() {
+const Analytics = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -14,4 +17,14 @@ export function Analytics() {
   }, [pathname, searchParams])
 
   return null
-} 
+}
+
+export const AnalyticsWrapper = () => {
+  return (
+    <Suspense fallback={null}>
+      <Analytics />
+    </Suspense>
+  );
+};
+
+export default Analytics; 

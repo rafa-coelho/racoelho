@@ -58,7 +58,6 @@ export default async function DownloadPage({
   }
 
   const downloadUrl = `/assets/ebooks/${ebook.slug}/${ebook.slug}.pdf`;
-  console.log('downloadUrl', downloadUrl);
 
   return <DownloadClient ebook={ebook} downloadUrl={downloadUrl} />;
 } 

@@ -27,7 +27,6 @@ interface RegisterToFormParams {
  *   formId: '12345',
  *   tagId: '67890'
  * });
- * console.log(response.data);
  */
 export async function registerToForm({ name, email, formId, tagId }: RegisterToFormParams) {
   const data = JSON.stringify({

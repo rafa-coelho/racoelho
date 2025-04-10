@@ -18,8 +18,6 @@ export default function SetupContent({ items, categories }: SetupContentProps) {
     ? items.filter(item => item.category === selectedCategory)
     : items;
 
-  console.log(filteredItems);
-
   return (
     <Layout>
       <div className="content-container py-12">
