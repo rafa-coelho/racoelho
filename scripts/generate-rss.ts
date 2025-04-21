@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 import RSS from 'rss';
-import globby from 'globby';
+import { globby } from 'globby';
 import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
