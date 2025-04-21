@@ -42,7 +42,7 @@ export default function LinksContent({ socialLinks, linkItems }: LinksContentPro
     <Layout>
       <div className="content-container py-12">
         <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <div className="mb-8 text-center">
+          <div className="mb-4 text-center">
             <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-4 border-2 border-primary">
               <img
                 src="https://github.com/rafa-coelho.png"
@@ -53,12 +53,9 @@ export default function LinksContent({ socialLinks, linkItems }: LinksContentPro
                 }}
               />
             </div>
-            <h1 className="text-2xl font-bold mb-2">Dev Creator</h1>
-            <p className="text-muted-foreground mb-4">
-              Desenvolvedor & Criador de Conteúdo
-            </p>
+            <h1 className="text-2xl font-bold mb-4">Rafael Coelho</h1>
 
-            <div className="flex justify-center gap-4 mb-6">
+            <div className="flex justify-center gap-4 mb-2">
               {socialLinks.map((social) => {
                 return (
                   <a

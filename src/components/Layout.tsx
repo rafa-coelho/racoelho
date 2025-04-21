@@ -108,39 +108,33 @@ export default function Layout({ children }: LayoutProps) {
       {/* Footer */}
       <footer className="border-t">
         <div className="content-container py-8">
-
-          {/* Copyright */}
-          <div className="pt-8 text-center text-muted-foreground">
-            <div className="flex justify-center gap-4 mb-4">
-              
-            
-            {
-              SocialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-accent transition-colors"
-                  aria-label={social.name}
-                  title={social.name}
-                >
-                  {GetSocialIcon(social.name)}
-                </a>
-              ))
-            }
-            </div>
-            <p>
-              {BLOG_NAME} <br /> 2024{new Date().getFullYear() > 2024 ? `- ${new Date().getFullYear()}` : ''}
-
-            </p>
+          {/* Social Links */}
+          <div className="flex justify-center gap-4 mb-4">
+            {SocialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-accent transition-colors"
+                aria-label={social.name}
+                title={social.name}
+              >
+                {GetSocialIcon(social.name)}
+              </a>
+            ))}
           </div>
 
-          <footer className="mt-8 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-            <p>
-              © {new Date().getFullYear()} {packageJson.name} • v{packageJson.version} • Build: {packageJson.buildDate}
+          {/* Copyright and Version Info */}
+          <div className="text-center text-muted-foreground">
+            <p className="mb-2">
+              {BLOG_NAME} <br /> 
+              2024{new Date().getFullYear() > 2024 ? `- ${new Date().getFullYear()}` : ''}
             </p>
-          </footer>
+            <p className="text-sm">
+              v{packageJson.version} • Build: {packageJson.buildDate}
+            </p>
+          </div>
         </div>
       </footer>
     </div>
