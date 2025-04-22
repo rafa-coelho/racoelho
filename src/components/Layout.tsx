@@ -10,6 +10,9 @@ import { BLOG_NAME } from "@/lib/config/constants";
 import SocialLinks from "../../content/social-links.json";
 import { GetSocialIcon } from "./LinksContent";
 import packageJson from '../../package.json';
+import Script from 'next/script';
+import { GA_TRACKING_ID } from "@/lib/gtag";
+import { AnalyticsWrapper } from "./Analytics";
 
 interface LayoutProps {
   children: ReactNode;
@@ -35,6 +38,21 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Google Analytics */}
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_TRACKING_ID}');
+        `}
+      </Script>
+      <AnalyticsWrapper />
+
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="content-container">

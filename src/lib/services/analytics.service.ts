@@ -30,9 +30,15 @@ export class AnalyticsService {
 
   public pageview(url: string): void {
     if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('config', GA_TRACKING_ID, {
-        page_path: url,
-      })
+      try {
+        window.gtag('config', GA_TRACKING_ID, {
+          page_path: url,
+        })
+      } catch (error) {
+        console.error('[Analytics] Error tracking pageview:', error)
+      }
+    } else {
+      console.warn('[Analytics] gtag not available')
     }
   }
 
