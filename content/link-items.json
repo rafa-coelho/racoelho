@@ -1,0 +1,46 @@
+[
+  {
+    "title": "CodeCrafters",
+    "description": "Aprenda a programar com projetos práticos",
+    "type": "highlight",
+    "icon": "code",
+    "url": "https://app.codecrafters.io/join?via=rafa-coelho",
+    "image": "https://app.codecrafters.io/assets/7408d202b2bb110054fc.svg"
+  },
+  {
+    "title": "Melhorando o LinkedIn",
+    "description": "Aprenda de GRAÇA a arrumar seu LinkedIn do jeito certo",
+    "type": "highlight",
+    "icon": "linkedin",
+    "url": "/ebooks/melhorando-linkedin",
+    "image": "/assets/ebooks/melhorando-linkedin/banner.svg"
+  },
+  {
+    "title": "Desafios de Programação",
+    "description": "Desafios de programação para você se desafiar e criar um bom portfólio",
+    "type": "link",
+    "icon": "code",
+    "url": "/listas/desafios"
+  },
+  {
+    "title": "Newsletter de Tecnologia",
+    "description": "Se você não tem tempo de ler, eu compilo pra você!",
+    "type": "link",
+    "icon": "mail",
+    "url": "/newsletter"
+  },
+  {
+    "title": "Meu Blog",
+    "description": "Artigos sobre programação, tecnologia e desenvolvimento pessoal",
+    "type": "link",
+    "icon": "book",
+    "url": "/posts"
+  },
+  {
+    "title": "Meu setup",
+    "description": "Conheça as ferramentas que uso para criar conteúdo e desenvolver",
+    "type": "link",
+    "icon": "monitor",
+    "url": "/setup"
+  }
+] 

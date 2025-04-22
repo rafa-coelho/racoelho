@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Instagram",
+    "url": "https://www.instagram.com/racoelhoo",
+    "icon": "instagram"
+  },
+  {
+    "name": "Tiktok",
+    "url": "https://www.tiktok.com/@racoelhoo",
+    "icon": "tiktok"
+  },
+  {
+    "name": "YouTube",
+    "url": "https://www.youtube.com/@racoelhoo",
+    "icon": "youtube"
+  },
+  {
+    "name": "GitHub",
+    "url": "https://github.com/rafa-coelho",
+    "icon": "github"
+  },
+  {
+    "name": "LinkedIn",
+    "url": "https://www.linkedin.com/in/racoelhoo/",
+    "icon": "linkedin"
+  }
+]

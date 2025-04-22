@@ -1,15 +1,11 @@
-module.exports = {
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'ik.imagekit.io',
-          },
-          {
-            protocol: 'https',
-            hostname: 'github.com',
-          },
-        ],
-      },
-    
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    domains: ['images.unsplash.com'],
+  },
+  experimental: {
+    serverActions: true,
+  },
 };
+
+module.exports = nextConfig; 

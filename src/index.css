@@ -1,0 +1,183 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap');
+
+@layer base {
+  :root {
+    --background: 270 25% 12%;
+    --foreground: 225 25% 95%;
+    
+    --card: 270 25% 14%;
+    --card-foreground: 225 25% 95%;
+
+    --popover: 270 25% 12%;
+    --popover-foreground: 225 25% 95%;
+
+    --primary: 266 80% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 270 25% 20%;
+    --secondary-foreground: 225 25% 95%;
+
+    --muted: 270 25% 20%;
+    --muted-foreground: 240 10% 70%;
+
+    --accent: 290 50% 40%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 270 25% 20%;
+    --input: 270 25% 20%;
+    --ring: 290 50% 40%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 270 25% 8%;
+    --sidebar-foreground: 225 25% 95%;
+    --sidebar-primary: 266 80% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 290 50% 25%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 270 25% 16%;
+    --sidebar-ring: 266 80% 60%;
+  }
+
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 266 80% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 290 50% 40%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 266 80% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-medium tracking-tight;
+  }
+
+  code {
+    @apply font-mono text-sm;
+  }
+}
+
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 400ms, transform 400ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.glass-panel {
+  @apply bg-card/70 backdrop-blur-sm border border-white/10 shadow-glass transition-all duration-300;
+}
+
+.glass-panel:hover {
+  @apply shadow-glass-hover border-white/20;
+}
+
+.content-container {
+  @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Markdown content styling */
+.markdown-content h1 {
+  @apply text-3xl font-bold mt-8 mb-4;
+}
+
+.markdown-content h2 {
+  @apply text-2xl font-semibold mt-6 mb-3;
+}
+
+.markdown-content h3 {
+  @apply text-xl font-semibold mt-5 mb-2;
+}
+
+.markdown-content p {
+  @apply my-4 leading-relaxed;
+}
+
+.markdown-content ul, .markdown-content ol {
+  @apply my-4 pl-5;
+}
+
+.markdown-content li {
+  @apply mb-2;
+}
+
+.markdown-content pre {
+  @apply my-4 p-4 rounded-lg bg-muted font-mono text-sm overflow-auto;
+}
+
+.markdown-content code {
+  @apply px-1 py-0.5 rounded bg-muted font-mono text-sm;
+}
+
+.markdown-content pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown-content blockquote {
+  @apply border-l-4 border-muted pl-4 my-4 italic;
+}
+
+.markdown-content img {
+  @apply max-w-full h-auto rounded-lg my-6;
+}
+
+.markdown-content a {
+  @apply text-primary underline underline-offset-2 hover:text-primary/80 transition-colors;
+}
+
+.markdown-content hr {
+  @apply my-8 border-muted;
+}
