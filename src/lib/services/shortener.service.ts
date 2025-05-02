@@ -177,13 +177,13 @@ export async function getRedirectionUrls(shortId: string): Promise<[deepLink: st
                 } else if (url.pathname === '/watch' && url.searchParams.has('v')) {
                     // Vídeos
                     const videoId = url.searchParams.get('v');
-                    deepLink = `vnd.youtube:${videoId}`;
+                    deepLink = `vnd.youtube://${videoId}`;
                     fallbackUrl = `https://youtube.com/watch?v=${videoId}`;
                 } else if (url.pathname.startsWith('/playlist')) {
                     // Playlists
                     const playlistId = url.searchParams.get('list');
                     if (playlistId) {
-                        deepLink = `vnd.youtube:playlist/${playlistId}`;
+                        deepLink = `vnd.youtube://playlist/${playlistId}`;
                         fallbackUrl = `https://youtube.com/playlist?list=${playlistId}`;
                     }
                 } else {
