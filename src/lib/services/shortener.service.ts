@@ -1,6 +1,4 @@
 import { nanoid } from 'nanoid';
-import { db } from './firebase.service';
-import * as admin from 'firebase-admin';
 
 export enum SocialPrefix {
     YOUTUBE = 'yt',
@@ -50,114 +48,35 @@ export const SOCIAL_NETWORKS = {
     },
 };
 
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
 export async function generateShortUrl(url: string): Promise<string> {
-    const shortId = nanoid(8);
-    
-    try {
-        await db.collection('urls').doc(shortId).set({
-            url,
-            createdAt: new Date(),
-            clicks: 0
-        });
-        
-        return shortId;
-    } catch (error) {
-        console.error('Erro ao gerar URL curta:', error);
-        throw new Error('Erro ao encurtar URL');
+    const response = await fetch(`${BASE_URL}/api/url`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ url }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Erro ao encurtar URL');
     }
+
+    const data = await response.json();
+    return data.shortId;
 }
 
 export async function getOriginalUrl(shortId: string): Promise<string> {
-    try {
-        const doc = await db.collection('urls').doc(shortId).get();
-        
-        if (!doc.exists) {
-            return '';
-        }
-        
-        // Incrementa o contador de cliques
-        await db.collection('urls').doc(shortId).update({
-            clicks: admin.firestore.FieldValue.increment(1)
-        });
-        
-        return doc.data()?.originalUrl || '';
-    } catch (error) {
-        console.error('Erro ao obter URL original:', error);
+    const response = await fetch(`${BASE_URL}/api/url?id=${shortId}`);
+
+    if (!response.ok) {
         return '';
     }
-}
 
-export async function getRedirectionUrls(shortId: string): Promise<[deepLink: string, fallbackUrl: string]> {
-    const prefix = shortId.slice(0, 2).toUpperCase() as SocialPrefix;
-    
-    // Buscar a URL original
-    const originalUrl = await getOriginalUrl(shortId.substring(2));
-    if (!originalUrl) {
-        return ["", ""];
-    }
-
-    let deepLink = "";
-    let fallbackUrl = originalUrl; // Por padrão, usa a URL original como fallback
-
-    try {
-        const url = new URL(originalUrl);
-        console.log("url", url);
-        
-        switch (prefix.toLowerCase()) {
-            case SocialPrefix.YOUTUBE:
-                if (url.pathname.startsWith('/@')) {
-                    // Canais no formato @username
-                    const channelName = url.pathname.slice(2); // Remove o @
-                    deepLink = `vnd.youtube:channel/${channelName}`;
-                    fallbackUrl = `https://youtube.com/@${channelName}`;
-                } else if (url.pathname.startsWith('/channel/')) {
-                    // Canais com ID
-                    const channelId = url.pathname.split('/channel/')[1];
-                    deepLink = `vnd.youtube:channel/${channelId}`;
-                    fallbackUrl = `https://youtube.com/channel/${channelId}`;
-                } else if (url.pathname === '/watch' && url.searchParams.has('v')) {
-                    // Vídeos
-                    const videoId = url.searchParams.get('v');
-                    deepLink = `vnd.youtube:${videoId}`;
-                    fallbackUrl = `https://youtube.com/watch?v=${videoId}`;
-                } else if (url.pathname.startsWith('/playlist')) {
-                    // Playlists
-                    const playlistId = url.searchParams.get('list');
-                    if (playlistId) {
-                        deepLink = `vnd.youtube:playlist/${playlistId}`;
-                        fallbackUrl = `https://youtube.com/playlist?list=${playlistId}`;
-                    }
-                } else {
-                    // Outros formatos (como shorts, etc)
-                    fallbackUrl = originalUrl;
-                }
-                break;
-    
-            case SocialPrefix.INSTAGRAM:
-                debugger;
-                if (url.pathname.includes('/p/') || url.pathname.includes('/reel/')) {
-                    fallbackUrl = `https://instagram.com${url.pathname}`;
-                } else {
-                    const username = url.pathname.split('/').filter(Boolean)[0];
-                    deepLink = `instagram://user?username=${username}`;
-                    fallbackUrl = `https://instagram.com/${username}`;
-                }
-                break;
-    
-            case SocialPrefix.TIKTOK:
-                if (url.pathname.includes('/video/')) {
-                    fallbackUrl = `https://tiktok.com/${url.pathname}`;
-                } else {
-                    fallbackUrl = `https://tiktok.com/${url.pathname}`;
-                }
-                break;
-        }
-    } catch (error) {
-        console.error('Erro ao processar URL para redirecionamento:', error);
-        return ["", originalUrl];
-    }
-
-    return [deepLink, fallbackUrl];
+    const data = await response.json();
+    return data.url;
 }
 
 export function getSocialPrefix(url: string): SocialPrefix | null {
@@ -227,4 +146,74 @@ function hashString(str: string): string {
     
     // Converter para hexadecimal e remover o sinal negativo
     return Math.abs(hash).toString(16);
+}
+
+export async function getRedirectionUrls(shortId: string): Promise<[deepLink: string, fallbackUrl: string]> {
+    const prefix = shortId.slice(0, 2).toUpperCase() as SocialPrefix;
+    
+    const originalUrl = await getOriginalUrl(shortId);
+    if (!originalUrl) {
+        return ["", ""];
+    }
+
+    let deepLink = "";
+    let fallbackUrl = originalUrl;
+
+    try {
+        const url = new URL(originalUrl);
+        
+        switch (prefix.toLowerCase()) {
+            case SocialPrefix.YOUTUBE:
+                if (url.pathname.startsWith('/@')) {
+                    // Canais no formato @username
+                    const channelName = url.pathname.slice(2); // Remove o @
+                    deepLink = `vnd.youtube:channel/${channelName}`;
+                    fallbackUrl = `https://youtube.com/@${channelName}`;
+                } else if (url.pathname.startsWith('/channel/')) {
+                    // Canais com ID
+                    const channelId = url.pathname.split('/channel/')[1];
+                    deepLink = `vnd.youtube:channel/${channelId}`;
+                    fallbackUrl = `https://youtube.com/channel/${channelId}`;
+                } else if (url.pathname === '/watch' && url.searchParams.has('v')) {
+                    // Vídeos
+                    const videoId = url.searchParams.get('v');
+                    deepLink = `vnd.youtube:${videoId}`;
+                    fallbackUrl = `https://youtube.com/watch?v=${videoId}`;
+                } else if (url.pathname.startsWith('/playlist')) {
+                    // Playlists
+                    const playlistId = url.searchParams.get('list');
+                    if (playlistId) {
+                        deepLink = `vnd.youtube:playlist/${playlistId}`;
+                        fallbackUrl = `https://youtube.com/playlist?list=${playlistId}`;
+                    }
+                } else {
+                    // Outros formatos (como shorts, etc)
+                    fallbackUrl = originalUrl;
+                }
+                break;
+    
+            case SocialPrefix.INSTAGRAM:
+                if (url.pathname.includes('/p/') || url.pathname.includes('/reel/')) {
+                    fallbackUrl = `https://instagram.com${url.pathname}`;
+                } else {
+                    const username = url.pathname.split('/').filter(Boolean)[0];
+                    deepLink = `instagram://user?username=${username}`;
+                    fallbackUrl = `https://instagram.com/${username}`;
+                }
+                break;
+    
+            case SocialPrefix.TIKTOK:
+                if (url.pathname.includes('/video/')) {
+                    fallbackUrl = `https://tiktok.com/${url.pathname}`;
+                } else {
+                    fallbackUrl = `https://tiktok.com/${url.pathname}`;
+                }
+                break;
+        }
+    } catch (error) {
+        console.error('Erro ao processar URL para redirecionamento:', error);
+        return ["", originalUrl];
+    }
+
+    return [deepLink, fallbackUrl];
 }
