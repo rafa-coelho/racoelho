@@ -1,11 +1,11 @@
 [
   {
-    "title": "CodeCrafters",
-    "description": "Aprenda a programar com projetos práticos",
+    "title": "Toalha.Dev",
+    "description": "Participa do desafio de 42 dias pra concorrer a premios",
     "type": "highlight",
     "icon": "code",
-    "url": "https://app.codecrafters.io/join?via=rafa-coelho",
-    "image": "https://app.codecrafters.io/assets/7408d202b2bb110054fc.svg"
+    "url": "https://toalha.dev",
+    "image": "/assets/toalha.svg"
   },
   {
     "title": "Melhorando o LinkedIn",

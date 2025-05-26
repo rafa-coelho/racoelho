@@ -41,10 +41,26 @@
   },
   {
     "name": "Webcam Logitech C920e",
-    "category": "Áudio/Vídeo",
+    "category": "Vídeo",
     "description": "Webcam Full HD 1080p com obturador de privacidade, ideal para videoconferências e streaming.",
     "image": "https://tse4.mm.bing.net/th/id/OIP.uOXHsk-Hxv8EHiZ4bW-VaAHaHa?pid=Api",
     "price": "R$ 429,99",
     "url": "https://s.click.aliexpress.com/e/_oC9D4p1"
+  },
+  {
+    "name": "Câmera Canon T6",
+    "category": "Vídeo",
+    "description": "Câmera DSLR com sensor APS-C, ideal para fotografia e vídeo.",
+    "image": "https://www.cnet.com/a/img/resize/bb38ed53e7a6365cf7d8bddc4301d9e0bc4cb3e1/hub/2016/05/24/467263d6-ef67-4a6d-b868-7e5549b9c1c4/canon-eos-rebel-t6-13.jpg?auto=webp&width=768",
+    "price": "R$ 429,99",
+    "url": ""
+  },
+  {
+    "name": "Stream Dock AJAZZ AKP153",
+    "category": "Periféricos",
+    "description": "Dock de streaming com conexão HDMI e USB, ideal para transmissões ao vivo e gravações de vídeos.",
+    "image": "https://m.media-amazon.com/images/I/61s-PgW1E5L.jpg",
+    "price": "R$ 429,99",
+    "url": "https://s.click.aliexpress.com/e/_omzpXuO"
   }
 ]

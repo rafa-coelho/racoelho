@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+    <path
+      d="M14 16 Q18 12, 24 16 Q32 22, 40 16 Q46 12, 50 16 L54 44 Q50 48, 44 44 Q36 38, 28 44 Q22 48, 14 44 Z"
+      fill="#7C3AED"
+      stroke="#fff"
+      strokeWidth="3"
+    />
+    <polygon points="50,16 54,16 54,20" fill="#a78bfa" />
+    <line x1="16" y1="44" x2="16" y2="52" stroke="#fff" strokeWidth="2"/>
+    <line x1="24" y1="48" x2="24" y2="56" stroke="#fff" strokeWidth="2"/>
+    <line x1="32" y1="50" x2="32" y2="58" stroke="#fff" strokeWidth="2"/>
+    <line x1="40" y1="48" x2="40" y2="56" stroke="#fff" strokeWidth="2"/>
+    <line x1="48" y1="44" x2="48" y2="52" stroke="#fff" strokeWidth="2"/>
+    <text x="25" y="35" textAnchor="middle" fontSize="18" fill="#fff" fontFamily="monospace">&lt;&gt;</text>
+  </svg>

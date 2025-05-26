@@ -33,7 +33,6 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Desafios', href: '/listas/desafios' },
     { name: 'Setup', href: '/setup' },
     { name: 'Links', href: '/links' },
-    { name: 'Encurtador', href: '/links/curtos' },
     { name: 'Newsletter', href: '/newsletter' },
   ];
 
