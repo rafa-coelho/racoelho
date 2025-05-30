@@ -23,5 +23,10 @@
     "name": "LinkedIn",
     "url": "https://www.linkedin.com/in/racoelhoo/",
     "icon": "linkedin"
+  },
+  {
+    "name": "Email",
+    "url": "mailto:contato@racoelho.com.br",
+    "icon": "email"
   }
 ]

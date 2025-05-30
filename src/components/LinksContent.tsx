@@ -1,10 +1,8 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaYoutube, FaTiktok } from 'react-icons/fa';
-import { IconType } from 'react-icons';
-import { ExternalLink, Github, Twitter, Linkedin, Instagram, Youtube } from 'lucide-react';
-import Link from 'next/link';
+import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaYoutube, FaTiktok, FaEnvelope } from 'react-icons/fa';
+import { ExternalLink } from 'lucide-react';
 import Layout from './Layout';
 import { SocialLink, LinkTreeItem } from '@/lib/api';
 
@@ -27,6 +25,8 @@ export const GetSocialIcon = (iconName: string): ReactNode => {
       return <FaTiktok />;
     case 'youtube':
       return <FaYoutube />;
+    case 'email':
+      return <FaEnvelope />;
     default:
       return <FaGithub />;
   }
