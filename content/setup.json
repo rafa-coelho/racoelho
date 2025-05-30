@@ -4,7 +4,6 @@
     "category": "Áudio",
     "description": "Microfone dinâmico com conexão USB/XLR, ideal para gravação de podcasts e transmissões ao vivo.",
     "image": "https://tse1.mm.bing.net/th?id=OIP.2zEyLy7faGkqh6SvMNQWcAHaHa&pid=Api",
-    "price": "R$ 399,00",
     "url": "https://s.click.aliexpress.com/e/_oE2nV2R"
   },
   {
@@ -12,7 +11,6 @@
     "category": "Áudio",
     "description": "Mixer de áudio com efeitos de voz, conexão USB e entrada XLR, projetado para jogos e streaming.",
     "image": "https://tse2.mm.bing.net/th?id=OIP.bRnot2PBshlgBkfC94I1nwHaGJ&pid=Api",
-    "price": "R$ 249,99",
     "url": "https://s.click.aliexpress.com/e/_olwG3cj"
   },
   {
@@ -20,7 +18,6 @@
     "category": "Periféricos",
     "description": "Teclado mecânico para jogos com retroiluminação RGB e switches Outemu Blue.",
     "image": "https://tse4.mm.bing.net/th?id=OIP.nShe-5BGSlrGzbd93gFZxgHaD5&pid=Api",
-    "price": "R$ 245,00",
     "url": "https://s.click.aliexpress.com/e/_on7VBFZ"
   },
   {
@@ -28,7 +25,6 @@
     "category": "Periféricos",
     "description": "Mouse ergonômico vertical sem fio, projetado para reduzir a tensão no pulso durante o uso prolongado.",
     "image": "https://tse1.mm.bing.net/th?id=OIP.5dOQ-H-3RsMlS2FzOKFFFAHaHa&pid=Api",
-    "price": "R$ 379,90",
     "url": "https://s.click.aliexpress.com/e/_olOkIMz"
   },
   {
@@ -36,7 +32,6 @@
     "category": "Periféricos",
     "description": "Mouse gamer sem fio com DPI ajustável de até 8.000 e iluminação RGB.",
     "image": "https://tse2.mm.bing.net/th?id=OIP.UjI1_fsBx6RRY7SBzYq1lwHaHP&pid=Api",
-    "price": "R$ 135,00",
     "url": "https://s.click.aliexpress.com/e/_ootnbCT"
   },
   {
@@ -44,7 +39,6 @@
     "category": "Vídeo",
     "description": "Webcam Full HD 1080p com obturador de privacidade, ideal para videoconferências e streaming.",
     "image": "https://tse4.mm.bing.net/th/id/OIP.uOXHsk-Hxv8EHiZ4bW-VaAHaHa?pid=Api",
-    "price": "R$ 429,99",
     "url": "https://s.click.aliexpress.com/e/_oC9D4p1"
   },
   {
@@ -52,7 +46,6 @@
     "category": "Vídeo",
     "description": "Câmera DSLR com sensor APS-C, ideal para fotografia e vídeo.",
     "image": "https://www.cnet.com/a/img/resize/bb38ed53e7a6365cf7d8bddc4301d9e0bc4cb3e1/hub/2016/05/24/467263d6-ef67-4a6d-b868-7e5549b9c1c4/canon-eos-rebel-t6-13.jpg?auto=webp&width=768",
-    "price": "R$ 429,99",
     "url": ""
   },
   {
@@ -60,7 +53,27 @@
     "category": "Periféricos",
     "description": "Dock de streaming com conexão HDMI e USB, ideal para transmissões ao vivo e gravações de vídeos.",
     "image": "https://m.media-amazon.com/images/I/61s-PgW1E5L.jpg",
-    "price": "R$ 429,99",
     "url": "https://s.click.aliexpress.com/e/_omzpXuO"
+  },
+  {
+    "name": "Softbox Sokani x60",
+    "category": "Iluminação",
+    "description": "Softbox de iluminação com tamanho 60x60cm, ideal para gravações de vídeos e fotos.",
+    "image": "https://ae01.alicdn.com/kf/Sac01242edf22482f978256dfc7cf858cn.jpg",
+    "url": "https://s.click.aliexpress.com/e/_omeBOGS"
+  },
+  {
+    "name": "Softbox Sokani x25",
+    "category": "Iluminação",
+    "description": "Bastão de luz",
+    "image": "https://www.lumitecfoto.com.br/media/catalog/product/cache/1ef9ce0c30afabcfde8304b9a1519756/3/7/3780-0.webp",
+    "url": "https://s.click.aliexpress.com/e/_omtYKJo"
+  },
+  {
+    "name": "Softbox Sokani x8",
+    "category": "Iluminação",
+    "description": "Bastão de luz",
+    "image": "https://nalojinha.com.br/cdn/shop/products/Sa676ff548ddb4641a43b5a6eae4ec7a4W_800x.jpg?v=1693235900",
+    "url": "https://s.click.aliexpress.com/e/_omJNze6"
   }
 ]
