@@ -1,15 +1,15 @@
 import HomeContent from '@/components/HomeContent';
-import { getAllPosts, getAllChallenges } from '@/lib/api';
+import LinksContent from '@/components/LinksContent';
+import { getAllPosts, getAllChallenges, getLatestYoutubeVideos, getLinkTreeData } from '@/lib/api';
 
 export default async function Home() {
-  const posts = await getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 3);
-  const challenges = await getAllChallenges(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 3);
+  const posts = await getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 2);
+  const challenges = await getAllChallenges(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 2);
+  const videos = await getLatestYoutubeVideos(2);
+  const { socialLinks, linkItems } = getLinkTreeData();
 
-  return (
-    <>
-      <HomeContent posts={posts} challenges={challenges} />
-    </>
-  );
+  return <LinksContent socialLinks={socialLinks} linkItems={linkItems} posts={posts} challenges={challenges} videos={videos} />;
+  // <HomeContent posts={posts} challenges={challenges} videos={videos} socialLinks={socialLinks} linkItems={linkItems} />;
 }
 
 

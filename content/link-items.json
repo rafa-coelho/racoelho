@@ -16,18 +16,18 @@
     "image": "/assets/ebooks/melhorando-linkedin/banner.svg"
   },
   {
+    "title": "Vídeos no YT",
+    "description": "Se inscreva lá no YouTube",
+    "type": "link",
+    "icon": "code",
+    "url": "https://www.youtube.com/@racoelhoo"
+  },
+  {
     "title": "Desafios de Programação",
     "description": "Desafios de programação para você se desafiar e criar um bom portfólio",
     "type": "link",
     "icon": "code",
     "url": "/listas/desafios"
-  },
-  {
-    "title": "Newsletter de Tecnologia",
-    "description": "Se você não tem tempo de ler, eu compilo pra você!",
-    "type": "link",
-    "icon": "mail",
-    "url": "/newsletter"
   },
   {
     "title": "Meu Blog",

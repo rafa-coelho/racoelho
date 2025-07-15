@@ -44,7 +44,7 @@ export default function ContentCard({ item, type, LinkComponent = Link as unknow
       </div>
 
       {item.excerpt && (
-        <p className="text-muted-foreground mb-4">{item.excerpt}</p>
+        <p className="text-muted-foreground mb-4 line-clamp-3">{item.excerpt}</p>
       )}
 
       {item.tags && item.tags.length > 0 && (
@@ -65,7 +65,7 @@ export default function ContentCard({ item, type, LinkComponent = Link as unknow
   return (
     <LinkComponent
       href={href}
-      className="block p-6 border rounded-lg hover:border-primary transition-colors"
+      className="block p-6 border rounded-lg bg-card hover:border-primary transition-colors"
     >
       {content}
     </LinkComponent>

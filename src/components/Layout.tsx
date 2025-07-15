@@ -32,8 +32,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Blog', href: '/posts' },
     { name: 'Desafios', href: '/listas/desafios' },
     { name: 'Setup', href: '/setup' },
-    { name: 'Links', href: '/links' },
-    { name: 'Newsletter', href: '/newsletter' },
+    // { name: 'Newsletter', href: '/newsletter' },
   ];
 
   return (
