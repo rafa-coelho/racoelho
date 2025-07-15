@@ -4,33 +4,33 @@
  
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 220 35% 15%; /* dark navy */
+    --foreground: 215 33% 92%; /* texto claro */
 
-    --card: 223 47% 11%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 30% 25%;
+    --card-foreground: 215 33% 92%;
  
-    --popover: 223 47% 11%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 100% 99%;
+    --popover-foreground: 229 37% 15%;
  
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 230 96% 62%;
+    --primary-foreground: 0 0% 100%;
  
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 220 28% 18%;
+    --secondary-foreground: 215 27% 85%;
  
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 220 20% 25%;
+    --muted-foreground: 220 15% 70%;
  
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 220 25% 20%;
+    --accent-foreground: 215 33% 92%;
  
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --border: 220 20% 25%;
+    --input: 220 20% 22%;
+    --ring: 230 96% 62%;
  
     --radius: 0.5rem;
   }
@@ -72,15 +72,25 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(circle, hsl(var(--accent)/0.15) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .content-container {
+    @apply max-w-screen-lg mx-auto px-4;
   }
 }
 
-.glass-panel {
+/* .glass-panel {
   @apply bg-background/80 backdrop-blur-sm border border-border/50 shadow-md;
+} */
+
+.glass-panel {
+  @apply bg-card/70 backdrop-blur-sm border border-white/10 transition-all duration-300;
 }
 
-.content-container {
-  @apply container mx-auto px-4;
+.glass-panel:hover {
+  @apply border-white/20;
 }
 
 .hero-gradient {

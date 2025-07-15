@@ -1,8 +1,5 @@
-import { getLinkTreeData } from '@/lib/api';
-import LinksContent from '@/components/LinksContent';
+import { redirect } from 'next/navigation';
 
-export default async function Links() {
-  const { socialLinks, linkItems } = await getLinkTreeData();
-
-  return <LinksContent socialLinks={socialLinks} linkItems={linkItems} />;
+export default function Links() {
+  redirect('/');
 }

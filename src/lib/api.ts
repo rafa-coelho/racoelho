@@ -269,3 +269,47 @@ export function getAllSalesPages() {
   const slugs = getSalesPageSlugs();
   return slugs.map(slug => getSalesPageBySlug(slug));
 }
+
+export interface YoutubeVideo {
+  id: string;
+  title: string;
+  thumbnail: string;
+  link: string;
+  published: string;
+}
+
+export async function getLatestYoutubeVideos(max: number = 3): Promise<YoutubeVideo[]> {
+  try {
+    // ID do canal Rafael Coelho (@racoelhoo)
+    const channelId = 'UCXXClhhG-T-DKeT09EP8ZNg';
+    const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    const res = await fetch(feedUrl, { next: { revalidate: 60 * 60 } });
+    if (!res.ok) {
+      console.error('Failed to fetch YouTube RSS');
+      return [];
+    }
+    const xml = await res.text();
+
+    // Parse simples para extrair tags <entry>
+    const entries = xml.split('<entry>').slice(1);
+    const videos: YoutubeVideo[] = entries.slice(0, max).map((entry) => {
+      const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+      const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
+      const linkMatch = entry.match(/<link rel='alternate' href='([^']+)'/);
+      const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
+      const videoId = idMatch ? idMatch[1] : '';
+      return {
+        id: videoId,
+        title: titleMatch ? titleMatch[1] : 'Video',
+        thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+        link: linkMatch ? linkMatch[1] : `https://youtu.be/${videoId}`,
+        published: publishedMatch ? publishedMatch[1] : '',
+      };
+    });
+
+    return videos;
+  } catch (error) {
+    console.error('Error fetching YouTube videos', error);
+    return [];
+  }
+}

@@ -4,6 +4,13 @@ import { ContentMeta } from '@/lib/api';
 import ContentCard from '@/components/ContentCard';
 import { cn } from '@/lib/utils';
 import Layout from './Layout';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 
 interface BlogContentProps {
   posts: ContentMeta[];
@@ -45,32 +52,17 @@ export default function BlogContent({ posts, tags }: BlogContentProps) {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <button
-                  className={cn(
-                    "px-3 py-1 text-sm rounded-full transition-colors",
-                    selectedTag === null
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
-                  )}
-                  onClick={() => setSelectedTag(null)}
-                >
-                  Todos
-                </button>
-
-                {tags.map((tag) => (
-                  <button
-                    key={tag}
-                    className={cn(
-                      "px-3 py-1 text-sm rounded-full transition-colors",
-                      selectedTag === tag
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
-                    )}
-                    onClick={() => setSelectedTag(tag)}
-                  >
-                    {tag}
-                  </button>
-                ))}
+                <Select value={selectedTag ?? 'all'} onValueChange={(val) => setSelectedTag(val === 'all' ? null : val)}>
+                  <SelectTrigger className="w-56 min-w-[12rem]" aria-label="Filtrar por tag">
+                    <SelectValue placeholder={selectedTag ? selectedTag : 'Todas as tags'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas as tags</SelectItem>
+                    {tags.map((tag) => (
+                      <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>

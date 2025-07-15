@@ -5,6 +5,14 @@ import { ContentMeta } from '@/lib/api';
 import ContentCard from '@/components/ContentCard';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+
 interface ChallengesContentProps {
   challenges: ContentMeta[];
   tags: string[];
@@ -44,39 +52,24 @@ export default function ChallengesContent({ challenges, tags }: ChallengesConten
               />
             </div>
             
-            <div className="flex flex-wrap gap-2">
-              <button
-                className={cn(
-                  "px-3 py-1 text-sm rounded-full transition-colors",
-                  selectedTag === null
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-                onClick={() => setSelectedTag(null)}
-              >
-                Todos
-              </button>
-              
-              {tags.map((tag) => (
-                <button
-                  key={tag}
-                  className={cn(
-                    "px-3 py-1 text-sm rounded-full transition-colors",
-                    selectedTag === tag
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
-                  )}
-                  onClick={() => setSelectedTag(tag)}
-                >
-                  {tag}
-                </button>
-              ))}
+            <div className="flex flex-wrap gap-2 overflow-x-auto no-scrollbar py-1">
+              <Select value={selectedTag ?? 'all'} onValueChange={(val) => setSelectedTag(val === 'all' ? null : val)}>
+                <SelectTrigger className="w-56 min-w-[12rem]" aria-label="Filtrar por tag">
+                  <SelectValue placeholder={selectedTag ? selectedTag : 'Todas as tags'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas as tags</SelectItem>
+                  {tags.map((tag) => (
+                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
         
         {filteredChallenges.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  gap-6">
             {filteredChallenges.map((challenge) => (
               <ContentCard key={challenge.slug} item={challenge} type="challenge" />
             ))}
