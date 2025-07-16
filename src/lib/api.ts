@@ -289,23 +289,30 @@ export async function getLatestYoutubeVideos(max: number = 3): Promise<YoutubeVi
       return [];
     }
     const xml = await res.text();
-
+    console.log(xml);
     // Parse simples para extrair tags <entry>
     const entries = xml.split('<entry>').slice(1);
-    const videos: YoutubeVideo[] = entries.slice(0, max).map((entry) => {
-      const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+    const videos: YoutubeVideo[] = [];
+    for (const entry of entries) {
+      const linkMatch = entry.match(/<link rel=["']alternate["'] href=["']([^"']+)["']/);
       const titleMatch = entry.match(/<title>([^<]+)<\/title>/);
-      const linkMatch = entry.match(/<link rel='alternate' href='([^']+)'/);
+      const href = linkMatch ? linkMatch[1] : '';
+      const title = titleMatch ? titleMatch[1] : '';
+      if (/\/shorts\//.test(href)) {
+        continue;
+      }
+      const idMatch = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
       const publishedMatch = entry.match(/<published>([^<]+)<\/published>/);
       const videoId = idMatch ? idMatch[1] : '';
-      return {
+      videos.push({
         id: videoId,
-        title: titleMatch ? titleMatch[1] : 'Video',
+        title,
         thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-        link: linkMatch ? linkMatch[1] : `https://youtu.be/${videoId}`,
+        link: href || `https://openyoutu.be/${videoId}`,
         published: publishedMatch ? publishedMatch[1] : '',
-      };
-    });
+      });
+      if (videos.length >= max) break;
+    }
 
     return videos;
   } catch (error) {
