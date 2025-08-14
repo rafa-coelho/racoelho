@@ -1,5 +1,13 @@
 [
   {
+    "title": "Coders",
+    "description": "Agende a consultoria gratuita!",
+    "type": "highlight",
+    "icon": "code",
+    "url": "https://www.coders.com.br/consultoria-gratuita/?utm_source=Instagram&utm_term=Instagram_Rafael-Coelho&utm_medium=Instagram_Bio&utm_content=insta-bio-rafael-coelho&utm_campaign=Influencer_Rafael-Coelho&utm_id=",
+    "image": "/assets/logo-coders.png"
+  },
+  {
     "title": "Toalha.Dev",
     "description": "Participa do desafio de 42 dias pra concorrer a premios",
     "type": "highlight",

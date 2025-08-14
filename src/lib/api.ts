@@ -289,7 +289,6 @@ export async function getLatestYoutubeVideos(max: number = 3): Promise<YoutubeVi
       return [];
     }
     const xml = await res.text();
-    console.log(xml);
     // Parse simples para extrair tags <entry>
     const entries = xml.split('<entry>').slice(1);
     const videos: YoutubeVideo[] = [];
