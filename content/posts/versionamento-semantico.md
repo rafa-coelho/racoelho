@@ -4,6 +4,7 @@ excerpt: "O Versionamento Semantico é um jeito \"certo\" de versionar seus sist
 coverImage: "/assets/blog/versionamento-semantico/banner.png"
 date: "2025-09-24T21:25:08.303Z"
 keywords: programação, dev, desenvolvimento
+tags: ["Desenvolvimento de Software"]
 author:
   name: "racoelho"
   picture: "https://github.com/rafa-coelho.png"
