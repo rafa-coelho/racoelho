@@ -1,6 +1,6 @@
 ---
 title: "Versionamento Semântico"
-excerpt: "Lorem ipsum."
+excerpt: "O Versionamento Semantico é um jeito \"certo\" de versionar seus sistemas e deixar tudo mais claro."
 coverImage: "/assets/blog/versionamento-semantico/banner.png"
 date: "2025-09-24T21:25:08.303Z"
 keywords: programação, dev, desenvolvimento
@@ -117,6 +117,5 @@ Assim, cada número carrgea uma mensagem clara: se você quebrou compatibilidade
 
 Pra fechar, usar isso pode te ajudar a acompanhar seus builds, fazer tracking de bugs nos ambientes e até coordenar o time de desenvolvimento.
 
-Esse conteúdo foi extraido 
-
+Esse conteúdo foi extraido e adaptado do site [SemVer.org](https://semver.org)
 
