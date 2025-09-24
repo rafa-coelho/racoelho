@@ -15,7 +15,7 @@ function generatePost(title: string): void {
     .replace(/ /g, '-')
     .toLowerCase();
 
-  const contentDirectory = path.join(process.cwd(), 'src', 'content', 'posts');
+  const contentDirectory = path.join(process.cwd(), 'content', 'posts');
   const assetsDirectory = path.join(process.cwd(), 'public', 'assets', 'blog', normalizedTitle);
 
   const frontMatter = `---
