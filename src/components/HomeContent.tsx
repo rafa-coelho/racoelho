@@ -68,7 +68,7 @@ export default function HomeContent({
                   <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
                     Rafael Coelho
                   </span>
-                </h1>
+          </h1>
                 
                 <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed animate-fade-in max-w-3xl" style={{ animationDelay: '100ms' }}>
                   Compartilho o que aprendo sobre{' '}
@@ -81,11 +81,11 @@ export default function HomeContent({
                   <Link href="#content" className="btn-primary inline-flex items-center gap-2 text-lg px-8 py-4">
                     <TrendingUp size={24} />
                     Explorar Conteúdo
-                  </Link>
+            </Link>
                   <Link href="/links" className="btn-secondary inline-flex items-center gap-2 text-lg px-8 py-4">
                     Minhas Redes
                     <ArrowRight size={20} />
-                  </Link>
+            </Link>
                 </div>
 
                 {/* Stats/Social Proof */}
@@ -141,7 +141,7 @@ export default function HomeContent({
                     <div className="inline-flex items-center gap-2 text-sm font-medium text-post mb-4">
                       <Code2 size={18} />
                       <span>Artigo em Destaque</span>
-                    </div>
+              </div>
                     <h2 className="text-4xl md:text-5xl font-bold mb-4 group-hover:text-primary transition-colors">
                       {featuredPost.title}
                     </h2>
@@ -158,17 +158,17 @@ export default function HomeContent({
                     <div className="inline-flex items-center gap-2 text-primary font-semibold group">
                       Ler artigo
                       <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                    </div>
-                  </div>
-                </div>
               </div>
+            </div>
+          </div>
+        </div>
             </Link>
           )}
 
           {/* Bento Grid - Mix de Conteúdos */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {posts.slice(1, 3).map((post, idx) => (
-              <Link 
+            <Link
                 key={post.slug}
                 href={`/posts/${post.slug}`}
                 className="card-modern overflow-hidden group accent-post hover:scale-[1.02] transition-all duration-300"
@@ -192,7 +192,7 @@ export default function HomeContent({
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
                 </div>
-              </Link>
+            </Link>
             ))}
 
             {challenges.slice(0, 2).map((challenge, idx) => (
@@ -223,7 +223,7 @@ export default function HomeContent({
                     {challenge.title}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">{challenge.excerpt}</p>
-                </div>
+          </div>
               </Link>
             ))}
 
@@ -259,8 +259,8 @@ export default function HomeContent({
                   </h3>
                 </div>
               </a>
-            ))}
-          </div>
+              ))}
+            </div>
 
           {/* CTAs para Ver Mais */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -284,19 +284,19 @@ export default function HomeContent({
               <p className="text-muted-foreground mb-4">Vídeos sobre programação e tech</p>
               <ArrowRight size={24} className="mx-auto text-video" />
             </a>
-          </div>
+            </div>
         </div>
       </section>
 
       {/* Produtos/Ebooks - Se houver */}
       {highlightItems.length > 0 && (
         <section className="py-20 section-gradient-2">
-          <div className="content-container">
+        <div className="content-container">
             <div className="text-center mb-12">
               <h2 className="text-5xl font-bold mb-4">Recursos Premium</h2>
               <p className="text-xl text-muted-foreground">Materiais para acelerar seu aprendizado</p>
-            </div>
-            
+          </div>
+          
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {highlightItems.map((item, index) => (
                 <a
@@ -327,7 +327,7 @@ export default function HomeContent({
                 </a>
               ))}
             </div>
-          </div>
+            </div>
         </section>
       )}
 
@@ -364,19 +364,19 @@ export default function HomeContent({
             <h2 className="text-4xl md:text-5xl font-bold mb-6">Não Perca Nenhum Conteúdo</h2>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
               Receba novos artigos, desafios e dicas diretamente no seu email
-            </p>
-            <TrackedLink 
-              href="/newsletter" 
-              label="Inscrever na newsletter"
+          </p>
+          <TrackedLink 
+            href="/newsletter" 
+            label="Inscrever na newsletter"
               className="btn-primary inline-flex items-center gap-2 text-lg px-10 py-5"
-            >
+          >
               Assinar Newsletter Gratuitamente
               <ArrowRight size={24} />
-            </TrackedLink>
+          </TrackedLink>
           </div>
         </div>
       </section>
       )}
     </Layout>
   );
-}
+} 
