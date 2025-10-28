@@ -66,4 +66,13 @@ export const authorInfo = {
     twitter: 'https://twitter.com/racoelhodev',
     linkedin: 'https://linkedin.com/in/racoelhoo',
   }
+} as const;
+
+export const adsConfig = {
+  mockPriority: 0.7, // 70% chance de usar mockado quando disponível
+  googleAdsEnabled: true,
+  positions: {
+    post: ['sidebar-left', 'sidebar-right-1', 'content', 'sidebar-right-2'],
+    challenge: ['sidebar-1', 'sidebar-2']
+  }
 } as const; 

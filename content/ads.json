@@ -1,0 +1,59 @@
+{
+  "ads": [
+    {
+      "id": "ad-post-sidebar-1",
+      "position": "post:sidebar-left",
+      "image": "https://picsum.photos/300/300",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Sidebar Esquerda",
+      "altText": "Anúncio promocional - Sidebar esquerda do post",
+      "trackingLabel": "post_sidebar_left_ad"
+    },
+    {
+      "id": "ad-post-sidebar-right-1",
+      "position": "post:sidebar-right-1",
+      "image": "https://picsum.photos/300/300",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Sidebar Direita 1",
+      "altText": "Anúncio promocional - Sidebar direita topo",
+      "trackingLabel": "post_sidebar_right_top_ad"
+    },
+    {
+      "id": "ad-post-content",
+      "position": "post:content",
+      "image": "https://picsum.photos/728/90",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Conteúdo",
+      "altText": "Anúncio promocional - Meio do conteúdo",
+      "trackingLabel": "post_content_ad"
+    },
+    {
+      "id": "ad-post-sidebar-right-2",
+      "position": "post:sidebar-right-2",
+      "image": "https://picsum.photos/300/600",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Sidebar Direita 2",
+      "altText": "Anúncio promocional - Sidebar direita skyscraper",
+      "trackingLabel": "post_sidebar_right_skyscraper_ad"
+    },
+    {
+      "id": "ad-challenge-sidebar-1",
+      "position": "challenge:sidebar-1",
+      "image": "https://picsum.photos/300/300",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Desafio Sidebar 1",
+      "altText": "Anúncio promocional - Sidebar desafio topo",
+      "trackingLabel": "challenge_sidebar_top_ad"
+    },
+    {
+      "id": "ad-challenge-sidebar-2",
+      "position": "challenge:sidebar-2",
+      "image": "https://picsum.photos/300/600",
+      "link": "https://example.com",
+      "title": "Anúncio Exemplo - Desafio Sidebar 2",
+      "altText": "Anúncio promocional - Sidebar desafio skyscraper",
+      "trackingLabel": "challenge_sidebar_skyscraper_ad"
+    }
+  ]
+}
+

@@ -13,6 +13,7 @@ import packageJson from '../../package.json';
 import Script from 'next/script';
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { AnalyticsWrapper } from "./Analytics";
+import { useFeatureFlag } from "@/hooks/use-feature-flag";
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,6 +22,9 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  
+  // Feature Flags
+  const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
 
   // Close menu when route changes
   useEffect(() => {
@@ -181,6 +185,7 @@ export default function Layout({ children }: LayoutProps) {
                   </a>
                 ))}
               </div>
+              {newsletterEnabled && (
               <Link
                 href="/newsletter"
                 className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium transition-colors group"
@@ -190,6 +195,7 @@ export default function Layout({ children }: LayoutProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </Link>
+              )}
             </div>
           </div>
 

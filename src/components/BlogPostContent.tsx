@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Calendar, Clock, Share2, Twitter, Linkedin, Facebook, Copy, Check } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, Share2, MessageCircle, Linkedin, Copy, Check, AtSign } from 'lucide-react';
 import { useState } from 'react';
 import Layout from './Layout';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
@@ -9,6 +9,10 @@ import { ContentItem } from '@/lib/api';
 import { formatDate, calculateReadingTime } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
+import AdSlot from './AdSlot';
+import { generateShareLinks, openSharePopup } from '@/lib/utils/share';
+import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
+import ShareButtons from './ShareButtons';
 
 interface BlogPostContentProps {
   post: ContentItem;
@@ -19,17 +23,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   const readingTime = calculateReadingTime(post.content);
   const postUrl = typeof window !== 'undefined' ? window.location.href : '';
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(postUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  // Feature Flags
+  const { flags, loading: flagsLoading } = useFeatureFlags(['share', 'newsletter', 'ads']);
 
-  const shareLinks = {
-    twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`,
-    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`,
-  };
+
+
+  const shareLinks = generateShareLinks(post.title, postUrl);
 
   return (
     <Layout>
@@ -59,7 +58,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-6 leading-tight max-w-5xl">
               {post.title}
             </h1>
-            
+
             <div className="flex flex-wrap items-center gap-6 text-muted-foreground mb-8">
               <div className="flex items-center gap-2">
                 <Calendar size={18} />
@@ -79,73 +78,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             <aside className="hidden lg:block">
               <div className="sticky top-24 space-y-8">
                 {/* Share Buttons - Sticky */}
-                <div className="card-modern p-6">
-                  <h3 className="text-sm font-bold mb-4 text-muted-foreground uppercase tracking-wider">Compartilhar</h3>
-                  <div className="space-y-3">
-                    <a
-                      href={shareLinks.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open(shareLinks.twitter, '_blank', 'width=550,height=420');
-                      }}
-                    >
-                      <Twitter size={20} className="text-[#1DA1F2]" />
-                      <span className="text-sm font-medium group-hover:text-primary transition-colors">Twitter</span>
-                    </a>
-                    <a
-                      href={shareLinks.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open(shareLinks.linkedin, '_blank', 'width=550,height=420');
-                      }}
-                    >
-                      <Linkedin size={20} className="text-[#0A66C2]" />
-                      <span className="text-sm font-medium group-hover:text-primary transition-colors">LinkedIn</span>
-                    </a>
-                    <a
-                      href={shareLinks.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open(shareLinks.facebook, '_blank', 'width=550,height=420');
-                      }}
-                    >
-                      <Facebook size={20} className="text-[#1877F2]" />
-                      <span className="text-sm font-medium group-hover:text-primary transition-colors">Facebook</span>
-                    </a>
-                    <button
-                      onClick={handleCopyLink}
-                      className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left"
-                    >
-                      {copied ? (
-                        <Check size={20} className="text-green-500" />
-                      ) : (
-                        <Copy size={20} className="text-muted-foreground" />
-                      )}
-                      <span className="text-sm font-medium group-hover:text-primary transition-colors">
-                        {copied ? 'Copiado!' : 'Copiar link'}
-                      </span>
-                    </button>
-                  </div>
-                </div>
+                {flags.share && (
+                  <ShareButtons title={post.title} url={postUrl} variant="sidebar" />
+                )}
 
-                {/* Ad Slot 1 */}
-                <div className="card-modern p-6 bg-gradient-to-br from-primary/5 to-purple-600/5 border-2 border-dashed border-primary/20">
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground mb-2">PUBLICIDADE</p>
-                    <div className="aspect-square bg-secondary/50 rounded-lg flex items-center justify-center">
-                      <p className="text-sm text-muted-foreground">Ad 300x300</p>
-                    </div>
-                  </div>
-                </div>
+                {/* Ad Slot 1 - Sidebar Left */}
+                {flags.ads && <AdSlot position="post:sidebar-left" size="300x300" />}
               </div>
             </aside>
 
@@ -153,45 +91,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
             <article className="min-w-0">
 
               {/* Mobile Share Buttons */}
-              <div className="lg:hidden mb-8">
-                <div className="card-modern p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-muted-foreground">Compartilhar:</span>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.open(shareLinks.twitter, '_blank', 'width=550,height=420');
-                        }}
-                        className="p-2 rounded-lg hover:bg-secondary transition-colors"
-                      >
-                        <Twitter size={18} className="text-[#1DA1F2]" />
-                      </button>
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.open(shareLinks.linkedin, '_blank', 'width=550,height=420');
-                        }}
-                        className="p-2 rounded-lg hover:bg-secondary transition-colors"
-                      >
-                        <Linkedin size={18} className="text-[#0A66C2]" />
-                      </button>
-                      <button 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          window.open(shareLinks.facebook, '_blank', 'width=550,height=420');
-                        }}
-                        className="p-2 rounded-lg hover:bg-secondary transition-colors"
-                      >
-                        <Facebook size={18} className="text-[#1877F2]" />
-                      </button>
-                      <button onClick={handleCopyLink} className="p-2 rounded-lg hover:bg-secondary transition-colors">
-                        {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {flags.share && (
+                <ShareButtons title={post.title} url={postUrl} variant="inline" className="lg:hidden mb-8" />
+              )}
 
               {/* Conteúdo do Post */}
               <div className="prose prose-lg lg:prose-xl dark:prose-invert max-w-none 
@@ -209,15 +111,12 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 <MarkdownRenderer content={post.content} />
               </div>
 
-              {/* Ad Slot - No meio do conteúdo */}
-              <div className="my-12 card-modern p-6 bg-gradient-to-r from-primary/5 to-purple-600/5 border-2 border-dashed border-primary/20">
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground mb-4">PUBLICIDADE</p>
-                  <div className="aspect-[728/90] bg-secondary/50 rounded-lg flex items-center justify-center max-w-3xl mx-auto">
-                    <p className="text-sm text-muted-foreground">Ad 728x90 (Leaderboard)</p>
-                  </div>
+              {/* Ad Slot - Content */}
+              {flags.ads && (
+                <div className="my-12">
+                  <AdSlot position="post:content" size="728x90" />
                 </div>
-              </div>
+              )}
 
               {/* Tags */}
               {post.tags && post.tags.length > 0 && (
@@ -278,39 +177,27 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                   </Link>
                 </div>
 
-                {/* Ad Slot 2 */}
-                <div className="card-modern p-6 bg-gradient-to-br from-primary/5 to-purple-600/5 border-2 border-dashed border-primary/20">
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground mb-2">PUBLICIDADE</p>
-                    <div className="aspect-square bg-secondary/50 rounded-lg flex items-center justify-center">
-                      <p className="text-sm text-muted-foreground">Ad 300x300</p>
-                    </div>
-                  </div>
-                </div>
+                {/* Ad Slot 2 - Sidebar Right Top */}
+                {flags.ads && <AdSlot position="post:sidebar-right-1" size="300x300" />}
 
                 {/* Newsletter CTA */}
-                <div className="card-modern p-6 bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/20">
-                  <div className="text-center">
-                    <div className="text-4xl mb-4">📬</div>
-                    <h3 className="font-bold text-lg mb-2">Newsletter</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Receba novos artigos no seu email
-                    </p>
-                    <Link href="/newsletter" className="btn-primary w-full justify-center text-sm py-2">
-                      Assinar
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Ad Slot 3 */}
-                <div className="card-modern p-6 bg-gradient-to-br from-primary/5 to-purple-600/5 border-2 border-dashed border-primary/20">
-                  <div className="text-center">
-                    <p className="text-xs text-muted-foreground mb-2">PUBLICIDADE</p>
-                    <div className="aspect-[300/600] bg-secondary/50 rounded-lg flex items-center justify-center">
-                      <p className="text-sm text-muted-foreground">Ad 300x600</p>
+                {flags.newsletter && (
+                  <div className="card-modern p-6 bg-gradient-to-br from-primary/10 to-purple-600/10 border border-primary/20">
+                    <div className="text-center">
+                      <div className="text-4xl mb-4">📬</div>
+                      <h3 className="font-bold text-lg mb-2">Newsletter</h3>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Receba novos artigos no seu email
+                      </p>
+                      <Link href="/newsletter" className="btn-primary w-full justify-center text-sm py-2">
+                        Assinar
+                      </Link>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* Ad Slot 3 - Sidebar Right Skyscraper */}
+                {flags.ads && <AdSlot position="post:sidebar-right-2" size="300x600" />}
               </div>
             </aside>
           </div>

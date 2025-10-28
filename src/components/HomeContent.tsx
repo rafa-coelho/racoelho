@@ -5,6 +5,7 @@ import { ArrowRight, Code2, Zap, Youtube, Sparkles, TrendingUp } from 'lucide-re
 import Link from 'next/link';
 import Layout from './Layout';
 import { TrackedLink } from '@/components/TrackedLink';
+import { useFeatureFlag } from '@/hooks/use-feature-flag';
 
 interface HomeContentProps {
   posts: ContentMeta[];
@@ -27,6 +28,9 @@ export default function HomeContent({
 }: HomeContentProps) {
   const featuredPost = posts[0];
   const highlightItems = linkItems.filter(item => item.type === 'highlight');
+  
+  // Feature Flags
+  const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
 
   return (
     <Layout>
@@ -352,6 +356,7 @@ export default function HomeContent({
       </section>
 
       {/* Newsletter CTA - Final */}
+      {newsletterEnabled && (
       <section className="py-20 section-gradient-2">
         <div className="content-container">
           <div className="card-modern p-12 md:p-20 text-center max-w-3xl mx-auto border-2 border-primary/20">
@@ -371,6 +376,7 @@ export default function HomeContent({
           </div>
         </div>
       </section>
+      )}
     </Layout>
   );
 }
