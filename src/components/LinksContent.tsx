@@ -41,23 +41,32 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
   const regularLinks = linkItems.filter(item => item.type === 'link');
 
   return (
-    // <Layout>
-    <div className="content-container py-12">
-      <div className="max-w-2xl mx-auto flex flex-col items-center">
-        <div className="mb-4 text-center">
-          <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-4 border-2 border-primary">
-            <img
-              src="https://github.com/rafa-coelho.png"
-              alt="Profile"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.currentTarget.src = 'https://via.placeholder.com/200x200?text=Perfil';
-              }}
-            />
+    <Layout>
+    <div className="min-h-screen section-gradient-1 py-16">
+      <div className="content-container max-w-3xl mx-auto">
+        {/* Header Profile Section */}
+        <div className="text-center mb-12">
+          <div className="relative inline-block mb-6">
+            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-glow-pulse"></div>
+            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-primary/30 shadow-2xl">
+              <img
+                src="https://github.com/rafa-coelho.png"
+                alt="Rafael Coelho"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = 'https://via.placeholder.com/128x128?text=RC';
+                }}
+              />
+            </div>
           </div>
-          <h1 className="text-2xl font-bold mb-4">Rafael Coelho</h1>
+          
+          <h1 className="text-4xl font-bold mb-3 gradient-text">Rafael Coelho</h1>
+          <p className="text-lg text-muted-foreground mb-6">
+            Fullstack Developer • Tech Content Creator
+          </p>
 
-          <div className="flex justify-center gap-4 mb-2">
+          {/* Social Links */}
+          <div className="flex justify-center gap-3 mb-8">
             {socialLinks.map((social) => {
               return (
                 <a
@@ -65,7 +74,7 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full bg-secondary hover:bg-accent transition-colors"
+                  className="w-14 h-14 flex items-center justify-center rounded-xl bg-card/50 backdrop-blur-sm border border-white/10 hover:bg-primary hover:border-primary/50 hover:scale-110 transition-all duration-300 text-xl shadow-lg"
                   aria-label={social.name}
                   title={social.name}
                 >
@@ -77,18 +86,19 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
         </div>
 
         {/* Regular Links */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 w-full mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
           {
-            regularLinks.map((link) => (
+            regularLinks.map((link, index) => (
               <a
                 key={link.title}
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center flex-col gap-2 justify-center w-full px-4 py-3 rounded-lg glass-panel hover:scale-[1.02] transition-all duration-300"
+                className="card-modern p-5 text-center group animate-fade-in-up"
+                style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}
               >
-                {/* <ExternalLink size={16} /> */}
-                <span className="font-medium text-center w-full">{link.title}</span>
+                <span className="font-semibold group-hover:text-primary transition-colors">{link.title}</span>
+                <ExternalLink size={16} className="inline-block ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
               </a>
             ))
           }
@@ -98,49 +108,77 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
 
         {/* Highlight Items */}
         {
-          highlightItems.length > 0
-            ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full mb-8">
-                {highlightItems.map((item) => (
-                  <a
-                    key={item.title}
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="glass-panel rounded-lg p-4 text-center hover:shadow-glass-hover transition-all duration-300"
-                  >
-                    {item.image && (
-                      <div className="mb-3 flex justify-center">
-                        <img
-                          src={item.image}
-                          alt={item.title}
-                          className="h-12 w-auto object-contain"
-                        />
-                      </div>
-                    )}
-                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                    {item.description && (
-                      <p className="text-sm text-muted-foreground">{item.description}</p>
-                    )}
-                  </a>
-                ))}
+          highlightItems.length > 0 && (
+              <div className="mb-16">
+                <h2 className="text-2xl font-bold mb-6 text-center">Em Destaque</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {highlightItems.map((item, index) => (
+                    <a
+                      key={item.title}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="card-modern p-8 text-center group animate-scale-in"
+                      style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                    >
+                      {item.image && (
+                        <div className="mb-6 flex justify-center">
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            className="h-16 w-auto object-contain group-hover:scale-110 transition-transform duration-300"
+                          />
+                        </div>
+                      )}
+                      <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
+                      {item.description && (
+                        <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                      )}
+                    </a>
+                  ))}
+                </div>
               </div>
             )
-            : null}
+        }
 
         {/* Latest Videos */}
         {videos.length > 0 && (
-          <div className="w-full mt-16">
-            <div className="flex justify-between items-center mb-4">
+          <div className="mb-16">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Últimos Vídeos</h2>
-              <a href="https://www.youtube.com/@racoelhoo" target="_blank" className="text-sm text-primary hover:underline">Ver mais</a>
+              <a 
+                href="https://www.youtube.com/@racoelhoo" 
+                target="_blank"
+                rel="noopener noreferrer" 
+                className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+              >
+                Ver canal →
+              </a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {videos.map(video => (
-                <a key={video.id} href={video.link} target="_blank" rel="noopener noreferrer" className="block rounded-lg overflow-hidden border hover:border-primary transition-colors">
-                  <img src={video.thumbnail} alt={video.title} className="w-full h-40 object-cover" />
-                  <div className="p-3 bg-card">
-                    <p className="line-clamp-2 text-sm font-medium">{video.title}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {videos.map((video, index) => (
+                <a 
+                  key={video.id} 
+                  href={video.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="card-modern overflow-hidden group animate-fade-in-up"
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                >
+                  <div className="relative overflow-hidden">
+                    <img 
+                      src={video.thumbnail} 
+                      alt={video.title} 
+                      className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-110" 
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <FaYoutube className="text-white text-5xl" />
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className="line-clamp-2 font-medium group-hover:text-primary transition-colors">
+                      {video.title}
+                    </p>
                   </div>
                 </a>
               ))}
@@ -150,14 +188,25 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
 
         {/* Latest Challenges */}
         {challenges.length > 0 && (
-          <div className="w-full mt-16">
-            <div className="flex justify-between items-center mb-4">
+          <div className="mb-16">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Últimos Desafios</h2>
-              <a href="/listas/desafios" className="text-sm text-primary hover:underline">Ver mais</a>
+              <a 
+                href="/listas/desafios" 
+                className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+              >
+                Ver todos →
+              </a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {challenges.map(c => (
-                <ContentCard key={c.slug} item={c} type="challenge" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {challenges.map((c, index) => (
+                <div 
+                  key={c.slug}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                >
+                  <ContentCard item={c} type="challenge" />
+                </div>
               ))}
             </div>
           </div>
@@ -165,14 +214,25 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
 
         {/* Latest Posts */}
         {posts.length > 0 && (
-          <div className="w-full mt-16">
-            <div className="flex justify-between items-center mb-4">
+          <div className="mb-16">
+            <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Últimos Posts</h2>
-              <a href="/posts" className="text-sm text-primary hover:underline">Ver mais</a>
+              <a 
+                href="/posts" 
+                className="text-sm text-primary hover:text-primary/80 font-medium transition-colors"
+              >
+                Ver todos →
+              </a>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {posts.map(p => (
-                <ContentCard key={p.slug} item={p} type="post" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {posts.map((p, index) => (
+                <div 
+                  key={p.slug}
+                  className="animate-fade-in-up"
+                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                >
+                  <ContentCard item={p} type="post" />
+                </div>
               ))}
             </div>
           </div>
@@ -180,6 +240,6 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
 
       </div>
     </div>
-    // </Layout>
+    </Layout>
   );
 } 

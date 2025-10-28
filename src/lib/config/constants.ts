@@ -52,4 +52,18 @@ export const analyticsConfig = {
   categories: {
     navigation: 'navigation',
   },
+} as const;
+
+export const authorInfo = {
+  name: 'Rafael Coelho',
+  title: 'Fullstack Developer',
+  bio: 'Compartilhando conhecimento sobre programação e desenvolvimento.',
+  avatar: 'https://github.com/rafa-coelho.png',
+  email: 'contato@racoelho.com.br',
+  profileUrl: '/links',
+  social: {
+    github: 'https://github.com/rafa-coelho',
+    twitter: 'https://twitter.com/racoelhodev',
+    linkedin: 'https://linkedin.com/in/racoelhoo',
+  }
 } as const; 

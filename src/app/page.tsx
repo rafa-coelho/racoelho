@@ -1,15 +1,26 @@
 import HomeContent from '@/components/HomeContent';
-import LinksContent from '@/components/LinksContent';
 import { getAllPosts, getAllChallenges, getLatestYoutubeVideos, getLinkTreeData } from '@/lib/api';
 
 export default async function Home() {
-  const posts = await getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 2);
-  const challenges = await getAllChallenges(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage'], 2);
-  const videos = await getLatestYoutubeVideos(2);
+  // Busca todos para ter a contagem real
+  const allPosts = await getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage']);
+  const allChallenges = await getAllChallenges(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage']);
+  
+  // Mas passa apenas os primeiros 3 para exibir
+  const posts = allPosts.slice(0, 3);
+  const challenges = allChallenges.slice(0, 3);
+  const videos = await getLatestYoutubeVideos(3);
   const { socialLinks, linkItems } = getLinkTreeData();
 
-  return <LinksContent socialLinks={socialLinks} linkItems={linkItems} posts={posts} challenges={challenges} videos={videos} />;
-  // <HomeContent posts={posts} challenges={challenges} videos={videos} socialLinks={socialLinks} linkItems={linkItems} />;
+  return <HomeContent 
+    posts={posts} 
+    challenges={challenges} 
+    videos={videos} 
+    socialLinks={socialLinks} 
+    linkItems={linkItems}
+    totalPosts={allPosts.length}
+    totalChallenges={allChallenges.length}
+  />;
 }
 
 
