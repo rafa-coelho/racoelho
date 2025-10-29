@@ -1,8 +1,11 @@
-import { getAllPosts } from '@/lib/api';
+import { contentService } from '@/lib/services/content.service';
 import BlogContent from '@/components/BlogContent';
+import { isAdmin } from '@/lib/pocketbase-server';
 
 export default async function Blog() {
-  const posts = await getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage']);
+  const adminStatus = await isAdmin();
+  
+  const posts = await contentService.getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage', 'content'], adminStatus);
   const tags = Array.from(new Set(posts.flatMap(post => post.tags || [])));
   return <BlogContent posts={posts} tags={tags} />;
 }

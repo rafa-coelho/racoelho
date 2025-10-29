@@ -1,18 +1,22 @@
-import { getChallengeBySlug, getAllChallenges, ContentItem } from '@/lib/api';
+import { ContentItem } from '@/lib/api';
+import { challengeService } from '@/lib/services/challenge.service';
 import ChallengeContent from '@/components/ChallengeContent';
+import PreviewBanner from '@/components/PreviewBanner';
 import { Metadata } from 'next';
 import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
+import { isAdmin } from '@/lib/pocketbase-server';
 
 interface ChallengePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ChallengePageProps): Promise<Metadata> {
-  const challenge = await getChallengeBySlug(params.slug);
+  const { slug } = await params;
+  const challenge = await challengeService.getChallengeBySlug(slug, [], false);
   
   if (!challenge || !challenge.content) {
     return {
@@ -49,26 +53,38 @@ export async function generateMetadata({ params }: ChallengePageProps): Promise<
 }
 
 export async function generateStaticParams() {
-  const challenges = await getAllChallenges();
+  const challenges = await challengeService.getAllChallenges();
   return challenges.map((challenge) => ({
     slug: challenge.slug,
   }));
 }
 
 export default async function ChallengePage({ params }: ChallengePageProps) {
-  const challenge = await getChallengeBySlug(params.slug, [
+  const { slug } = await params;
+  const adminStatus = await isAdmin();
+  
+  const challenge = await challengeService.getChallengeBySlug(slug, [
     'title',
     'date',
     'content',
     'coverImage',
     'tags',
     'excerpt',
-    'slug'
-  ]);
+    'slug',
+    'status'
+  ], adminStatus);
   
   if (!challenge || !challenge.content) {
     notFound();
   }
 
-  return <ChallengeContent challenge={challenge as ContentItem} />;
+  const isDraft = challenge.status !== 'published';
+  const showPreview = adminStatus && isDraft;
+
+  return (
+    <>
+      {showPreview && <PreviewBanner />}
+      <ChallengeContent challenge={challenge as ContentItem} />
+    </>
+  );
 }

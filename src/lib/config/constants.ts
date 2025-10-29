@@ -52,4 +52,27 @@ export const analyticsConfig = {
   categories: {
     navigation: 'navigation',
   },
+} as const;
+
+export const authorInfo = {
+  name: 'Rafael Coelho',
+  title: 'Fullstack Developer',
+  bio: 'Compartilhando conhecimento sobre programação e desenvolvimento.',
+  avatar: 'https://github.com/rafa-coelho.png',
+  email: 'contato@racoelho.com.br',
+  profileUrl: '/links',
+  social: {
+    github: 'https://github.com/rafa-coelho',
+    twitter: 'https://twitter.com/racoelhodev',
+    linkedin: 'https://linkedin.com/in/racoelhoo',
+  }
+} as const;
+
+export const adsConfig = {
+  mockPriority: 0.7, // 70% chance de usar mockado quando disponível
+  googleAdsEnabled: true,
+  positions: {
+    post: ['sidebar-left', 'sidebar-right-1', 'content', 'sidebar-right-2'],
+    challenge: ['sidebar-1', 'sidebar-2']
+  }
 } as const; 
