@@ -60,8 +60,6 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.3.0",
-    "firebase": "^11.6.0",
-    "firebase-admin": "^13.2.0",
     "globby": "^14.0.0",
     "gray-matter": "^4.0.3",
     "input-otp": "^1.2.4",
