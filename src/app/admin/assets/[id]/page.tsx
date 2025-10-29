@@ -37,7 +37,7 @@ export default function EditAssetPackPage() {
           setExistingFiles(
             rec.files.map((fileName: string) => ({
               name: fileName,
-              url: `${pbUrl}/api/files/asset_packs/${rec.id}/${fileName}`,
+              url: `/api/assets-proxy/${rec.slug}/${encodeURIComponent(fileName)}`,
             }))
           );
         }

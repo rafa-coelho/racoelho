@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { X, Upload } from "lucide-react";
+import { X, Upload, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface FileUploadProps {
@@ -93,7 +93,16 @@ export default function FileUpload({
                         alt={file.name}
                         className="w-full h-full object-cover rounded-lg"
                       />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-between p-2">
+                        <a
+                          href={file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-white/90 hover:text-white text-xs bg-white/10 px-2 py-1 rounded"
+                          title="Abrir"
+                        >
+                          <ExternalLink className="h-3 w-3" /> Abrir
+                        </a>
                         <Button
                           variant="destructive"
                           size="sm"
@@ -105,7 +114,16 @@ export default function FileUpload({
                     </div>
                   ) : (
                     <div className="border border-white/10 rounded-lg p-3 bg-white/5 text-center">
-                      <p className="text-xs text-muted-foreground truncate">{file.name}</p>
+                      <p className="text-xs text-muted-foreground truncate mb-2">{file.name}</p>
+                      <a
+                        href={file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-primary hover:underline text-xs"
+                        title="Abrir"
+                      >
+                        <ExternalLink className="h-3 w-3" /> Abrir
+                      </a>
                     </div>
                   )}
                 </div>

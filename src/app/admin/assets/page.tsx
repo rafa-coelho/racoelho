@@ -66,11 +66,18 @@ export default function AssetsPage() {
             id: "actions",
             header: "Ações",
             cell: (row) => (
-              <Link href={`/admin/assets/${row.id}`}>
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex items-center gap-1">
+                <Link href={`/admin/assets/${row.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href={`/admin/assets/${row.id}/view`}>
+                  <Button variant="ghost" size="sm" title="Ver">
+                    <Folder className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             ),
             sortable: false,
           },

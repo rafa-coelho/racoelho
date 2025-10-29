@@ -3,7 +3,7 @@ import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
 import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
 import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Code2, Pencil, Calendar } from "lucide-react";
+import { Plus, Code2, Pencil, Calendar, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
@@ -67,11 +67,27 @@ export default function AdminChallengesPage() {
             id: "actions",
             header: "Ações",
             cell: (row) => (
-              <Link href={`/admin/editor/challenges/${row.id}`}>
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex items-center gap-1">
+                <Link href={`/admin/editor/challenges/${row.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href={`/admin/editor/challenges/${row.id}/view`}>
+                  <Button variant="ghost" size="sm" title="Ver">
+                    <Code2 className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <a
+                  href={`/listas/desafios/${row.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex ml-1"
+                  title="Ver"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
             ),
             sortable: false,
           },

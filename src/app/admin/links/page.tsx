@@ -3,7 +3,7 @@ import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
 import { pbBulkDelete } from "@/lib/pb-bulk";
 import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Link as LinkIcon, Pencil, Star } from "lucide-react";
+import { Plus, Link as LinkIcon, Pencil, Star, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -69,11 +69,27 @@ export default function LinkItemsPage() {
             id: "actions",
             header: "Ações",
             cell: (row) => (
-              <Link href={`/admin/links/${row.id}`}>
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex items-center gap-1">
+                <Link href={`/admin/links/${row.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href={`/admin/links/${row.id}/view`}>
+                  <Button variant="ghost" size="sm" title="Ver">
+                    <LinkIcon className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <a
+                  href={`/links`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex"
+                  title="Ver"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
             ),
             sortable: false,
           },

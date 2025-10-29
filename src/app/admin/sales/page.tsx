@@ -3,7 +3,7 @@ import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
 import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
 import { DataTable } from "@/components/admin/DataTable";
-import { Plus, ShoppingCart, Pencil } from "lucide-react";
+import { Plus, ShoppingCart, Pencil, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -54,11 +54,27 @@ export default function SalesPagesPage() {
             id: "actions",
             header: "Ações",
             cell: (row) => (
-              <Link href={`/admin/sales/${row.id}`}>
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </Link>
+              <div className="flex items-center gap-1">
+                <Link href={`/admin/sales/${row.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link href={`/admin/sales/${row.id}/view`}>
+                  <Button variant="ghost" size="sm" title="Ver">
+                    <ShoppingCart className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <a
+                  href={`/venda/${row.slug}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex"
+                  title="Ver"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
             ),
             sortable: false,
           },
