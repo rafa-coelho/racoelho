@@ -67,11 +67,12 @@ export class MemoryCache implements ICacheService {
 
     const keysToDelete: string[] = [];
 
-    for (const key of this.cache.keys()) {
+    // Evita iteração de MapIterator para compatibilidade com targets < ES2015
+    Array.from(this.cache.keys()).forEach((key) => {
       if (regex.test(key)) {
         keysToDelete.push(key);
       }
-    }
+    });
 
     for (const key of keysToDelete) {
       this.cache.delete(key);
@@ -125,11 +126,11 @@ export class MemoryCache implements ICacheService {
   private estimateMemoryUsage(): number {
     let totalSize = 0;
 
-    for (const [key, item] of this.cache.entries()) {
+    Array.from(this.cache.entries()).forEach(([key, item]) => {
       // Estimativa aproximada
       totalSize += key.length * 2; // Unicode chars
       totalSize += JSON.stringify(item).length * 2;
-    }
+    });
 
     return totalSize;
   }

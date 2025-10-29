@@ -157,8 +157,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       // Lê o arquivo
       const fileBuffer = await fs.readFile(filePath);
 
-      // Retorna o arquivo
-      return new NextResponse(fileBuffer, {
+      // Retorna o arquivo (converter para Uint8Array para compatibilidade de tipos)
+      const byteArray = new Uint8Array(fileBuffer.buffer, fileBuffer.byteOffset, fileBuffer.byteLength);
+      return new NextResponse(byteArray as any, {
         headers: {
           'Content-Type': 'application/pdf',
           'Content-Disposition': `attachment; filename="${slug}.pdf"`,
