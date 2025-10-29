@@ -84,6 +84,7 @@ type DataTableProps<T = any> = {
   getRowId: (row: T) => string;
   emptyMessage?: string;
   emptyAction?: React.ReactNode;
+  onRefetch?: () => void; // Callback para forçar refetch externo
 };
 
 export function DataTable<T extends { id?: string }>({
@@ -95,6 +96,7 @@ export function DataTable<T extends { id?: string }>({
   getRowId,
   emptyMessage = "Nenhum item encontrado",
   emptyAction,
+  onRefetch,
 }: DataTableProps<T>) {
   const { toast } = useToast();
   const [data, setData] = useState<T[]>([]);
@@ -179,6 +181,17 @@ export function DataTable<T extends { id?: string }>({
       setLoading(false);
     }
   }, [page, perPage, sort, sortDirection, buildFilter, fetcher, toast]);
+
+  // Escutar evento de refetch externo
+  useEffect(() => {
+    const handleRefetch = () => {
+      loadData();
+    };
+    window.addEventListener('datatable:refetch', handleRefetch);
+    return () => {
+      window.removeEventListener('datatable:refetch', handleRefetch);
+    };
+  }, [loadData]);
 
   useEffect(() => {
     // Reset page when filters change

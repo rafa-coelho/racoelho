@@ -1,12 +1,21 @@
 "use client";
+import { useState } from "react";
 import Link from "next/link";
-import { pbList } from "@/lib/pocketbase";
+import { pbList, pbUpdate } from "@/lib/pocketbase";
 import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
 import { DataTable } from "@/components/admin/DataTable";
-import { Plus, ToggleLeft, Pencil } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type FeatureFlag = {
   id: string;
@@ -16,6 +25,17 @@ type FeatureFlag = {
 };
 
 export default function FeatureFlagsPage() {
+  const { toast } = useToast();
+  const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
+  const [confirmDialog, setConfirmDialog] = useState<{
+    open: boolean;
+    flag: FeatureFlag | null;
+    newValue: boolean;
+  }>({
+    open: false,
+    flag: null,
+    newValue: false,
+  });
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
@@ -46,11 +66,27 @@ export default function FeatureFlagsPage() {
           {
             id: "enabled",
             header: "Status",
-            cell: (row) => (
-              <Badge variant={row.enabled ? 'default' : 'secondary'} className="capitalize">
-                {row.enabled ? 'Ativo' : 'Inativo'}
-              </Badge>
-            ),
+            cell: (row) => {
+              const isToggling = togglingIds.has(row.id);
+              return (
+                <div className="flex items-center gap-2">
+                  <Switch
+                    checked={row.enabled}
+                    disabled={isToggling}
+                    onCheckedChange={(checked) => {
+                      setConfirmDialog({
+                        open: true,
+                        flag: row,
+                        newValue: checked,
+                      });
+                    }}
+                  />
+                  <span className="text-sm text-muted-foreground">
+                    {row.enabled ? 'Ativo' : 'Inativo'}
+                  </span>
+                </div>
+              );
+            },
             sortable: true,
           },
           {
@@ -117,6 +153,69 @@ export default function FeatureFlagsPage() {
           </Link>
         }
       />
+
+      {/* Dialog de Confirmação */}
+      <Dialog open={confirmDialog.open} onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {confirmDialog.flag?.enabled ? 'Desativar' : 'Ativar'} Feature Flag
+            </DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja {confirmDialog.flag?.enabled ? 'desativar' : 'ativar'} a feature flag{' '}
+              <strong>{confirmDialog.flag?.key}</strong>?
+              {confirmDialog.flag?.metadata?.description && (
+                <div className="mt-2 text-sm">
+                  {confirmDialog.flag.metadata.description}
+                </div>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setConfirmDialog({ open: false, flag: null, newValue: false })}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={async () => {
+                if (!confirmDialog.flag) return;
+
+                const flag = confirmDialog.flag;
+                setConfirmDialog({ open: false, flag: null, newValue: false });
+                setTogglingIds((prev) => new Set(prev).add(flag.id));
+                
+                try {
+                  await pbUpdate("feature_flags", flag.id, { enabled: confirmDialog.newValue });
+                  toast({
+                    title: "Sucesso",
+                    description: `Feature flag "${flag.key}" ${confirmDialog.newValue ? 'ativada' : 'desativada'}`,
+                  });
+                  // Recarregar dados automaticamente
+                  setTimeout(() => {
+                    window.dispatchEvent(new CustomEvent('datatable:refetch'));
+                  }, 100);
+                } catch (error: any) {
+                  toast({
+                    title: "Erro",
+                    description: error.message || "Falha ao atualizar feature flag",
+                    variant: "destructive",
+                  });
+                } finally {
+                  setTogglingIds((prev) => {
+                    const next = new Set(prev);
+                    next.delete(flag.id);
+                    return next;
+                  });
+                }
+              }}
+            >
+              Confirmar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
