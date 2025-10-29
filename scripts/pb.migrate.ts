@@ -28,9 +28,9 @@ async function ensureCollection(pb: PocketBase, name: string, payload: any) {
 }
 
 async function main() {
-    const pbUrl = process.env.NEXT_PUBLIC_PB_URL!;
-    const adminEmail = process.env.NEXT_PUBLIC_PB_ADMIN_EMAIL!;
-    const adminPass = process.env.NEXT_PUBLIC_PB_ADMIN_PASSWORD!;
+    const pbUrl = process.env.PB_URL || process.env.NEXT_PUBLIC_PB_URL!;
+    const adminEmail = process.env.PB_ADMIN_EMAIL!;
+    const adminPass = process.env.PB_ADMIN_PASSWORD!;
 
     const pb = new PocketBase(pbUrl);
     await pb.admins.authWithPassword(adminEmail, adminPass);

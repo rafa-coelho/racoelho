@@ -4,14 +4,14 @@ import PocketBase from 'pocketbase';
 import matter from 'gray-matter';
 import 'dotenv/config';
 
-const pb = new PocketBase(process.env.NEXT_PUBLIC_PB_URL);
+const pb = new PocketBase(process.env.PB_URL || process.env.NEXT_PUBLIC_PB_URL);
 
 // Login com admin
 async function login() {
   try {
     await pb.admins.authWithPassword(
-      process.env.NEXT_PUBLIC_PB_ADMIN_EMAIL!,
-      process.env.NEXT_PUBLIC_PB_ADMIN_PASSWORD!
+      process.env.PB_ADMIN_EMAIL!,
+      process.env.PB_ADMIN_PASSWORD!
     );
     console.log('✅ Logado no PocketBase');
   } catch (error) {
