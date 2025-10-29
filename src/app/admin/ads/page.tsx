@@ -1,8 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { pbList, pbDelete } from "@/lib/pocketbase";
-import { Plus, Image, Trash2 } from "lucide-react";
+import { pbList } from "@/lib/pocketbase";
+import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
+import { DataTable } from "@/components/admin/DataTable";
+import { Plus, Image, Trash2, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 type Ad = {
   id: string;
@@ -14,33 +17,6 @@ type Ad = {
 };
 
 export default function AdsPage() {
-  const [items, setItems] = useState<Ad[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadAds();
-  }, []);
-
-  const loadAds = async () => {
-    try {
-      const res = await pbList("ads", { page: 1, perPage: 100 }); 
-      setItems(res.items as any);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja deletar este anúncio?')) return;
-    
-    try {
-      await pbDelete("ads", id);
-      loadAds();
-    } catch (error: any) {
-      alert('Erro ao deletar: ' + error.message);
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
@@ -53,60 +29,125 @@ export default function AdsPage() {
         </Link>
       </div>
 
-      {loading ? (
-        <div>Carregando...</div>
-      ) : items.length === 0 ? (
-        <div className="card-modern p-12 text-center">
-          <Image className="mx-auto mb-4 text-muted-foreground" size={48} />
-          <p className="text-muted-foreground">Nenhum anúncio encontrado</p>
+      <DataTable<Ad>
+        columns={[
+          {
+            id: "title",
+            header: "Título",
+            cell: (row) => <div className="font-medium">{row.title}</div>,
+            sortable: true,
+          },
+          {
+            id: "status",
+            header: "Status",
+            cell: (row) => (
+              <Badge variant={row.status === 'active' ? 'default' : 'secondary'} className="capitalize">
+                {row.status}
+              </Badge>
+            ),
+            sortable: true,
+          },
+          {
+            id: "targets",
+            header: "Targets",
+            cell: (row) => (
+              <div className="text-sm">
+                {Array.isArray(row.targets) ? row.targets.join(', ') : ''}
+              </div>
+            ),
+          },
+          {
+            id: "priority",
+            header: "Prioridade",
+            cell: (row) => <div className="text-sm">{row.priority ?? 0}</div>,
+            sortable: true,
+          },
+          {
+            id: "clickUrl",
+            header: "Link",
+            cell: (row) => (
+              <a href={row.clickUrl} target="_blank" rel="noopener" className="text-primary hover:underline text-sm truncate max-w-xs block">
+                {row.clickUrl}
+              </a>
+            ),
+          },
+          {
+            id: "actions",
+            header: "Ações",
+            cell: (row) => (
+              <div className="flex items-center justify-end gap-2">
+                <Link href={`/admin/ads/${row.id}`}>
+                  <Button variant="ghost" size="sm">
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            ),
+            sortable: false,
+          },
+        ]}
+        fetcher={async ({ page, perPage, filter, sort }) => {
+          const res = await pbList("ads", { page, perPage, filter, sort });
+          return {
+            items: res.items as unknown as Ad[],
+            page: res.page,
+            perPage: res.perPage,
+            totalItems: res.totalItems,
+            totalPages: res.totalPages,
+          };
+        }}
+        bulkActions={[
+          {
+            label: "Excluir selecionados",
+            variant: "destructive",
+            icon: <Trash2 className="h-4 w-4" />,
+            action: async (selected) => {
+              await pbBulkDelete("ads", selected.map((s) => s.id));
+            },
+          },
+          {
+            label: "Ativar",
+            action: async (selected) => {
+              await pbBulkUpdate("ads", selected.map((s) => s.id), { status: "active" });
+            },
+          },
+          {
+            label: "Pausar",
+            action: async (selected) => {
+              await pbBulkUpdate("ads", selected.map((s) => s.id), { status: "paused" });
+            },
+          },
+          {
+            label: "Arquivar",
+            action: async (selected) => {
+              await pbBulkUpdate("ads", selected.map((s) => s.id), { status: "archived" });
+            },
+          },
+        ]}
+        defaultSort="-priority"
+        filtersSchema={{
+          q: {
+            placeholder: "Buscar por título...",
+            searchFields: ["title"],
+          },
+          status: {
+            placeholder: "Status",
+            options: [
+              { label: "Rascunho", value: "draft" },
+              { label: "Ativo", value: "active" },
+              { label: "Pausado", value: "paused" },
+              { label: "Arquivado", value: "archived" },
+            ],
+          },
+        }}
+        getRowId={(row) => row.id}
+        emptyMessage="Nenhum anúncio encontrado"
+        emptyAction={
           <Link href="/admin/ads/new" className="btn-primary mt-4 inline-flex">
             Criar primeiro anúncio
           </Link>
-        </div>
-      ) : (
-        <div className="card-modern">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4">Título</th>
-                <th className="text-left p-4">Status</th>
-                <th className="text-left p-4">Targets</th>
-                <th className="text-left p-4">Prioridade</th>
-                <th className="text-left p-4">Link</th>
-                <th className="text-right p-4">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-4">{item.title}</td>
-                  <td className="p-4 capitalize">{item.status}</td>
-                  <td className="p-4">{Array.isArray(item.targets) ? item.targets.join(', ') : ''}</td>
-                  <td className="p-4">{item.priority ?? 0}</td>
-                  <td className="p-4">
-                    <a href={item.clickUrl} target="_blank" rel="noopener" className="text-primary hover:underline">
-                      {item.clickUrl}
-                    </a>
-                  </td>
-                  <td className="p-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link href={`/admin/ads/${item.id}`} className="px-3 py-1 text-sm rounded border border-white/10 hover:bg-white/5">
-                        Editar
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 text-sm rounded border border-red-500/30 text-red-500 hover:bg-red-500/10 flex items-center gap-1"
-                      >
-                        <Trash2 size={14} /> Deletar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        }
+      />
     </div>
   );
 }

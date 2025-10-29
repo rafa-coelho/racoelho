@@ -1,15 +1,18 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { pbGetById, pbUpdate } from "@/lib/pocketbase";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { calculateReadingTime, slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type Step = 'metadata' | 'content';
 
 export default function EditPostPage() {
   const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
   const id = String(params?.id || "");
   const [step, setStep] = useState<Step>('metadata');
   const [title, setTitle] = useState("");
@@ -81,10 +84,18 @@ export default function EditPostPage() {
 
       await pbUpdate("posts", id, postData);
       
-      window.location.href = "/admin/editor/posts";
+      toast({
+        title: "Sucesso",
+        description: "Post atualizado com sucesso",
+      });
+      router.push("/admin/editor/posts");
     } catch (error: any) {
       console.error('Error updating post:', error);
-      alert('Erro ao atualizar post: ' + error.message);
+      toast({
+        title: "Erro ao salvar",
+        description: error.message || "Ocorreu um erro ao atualizar o post",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }

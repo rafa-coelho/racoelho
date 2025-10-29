@@ -1,36 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
-import { Plus, Calendar, FileText } from "lucide-react";
+import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
+import { DataTable } from "@/components/admin/DataTable";
+import { Plus, FileText, Pencil, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { formatDate } from "@/lib/utils";
 
 type Post = {
   id: string;
   title: string;
   slug: string;
-  status?: string;
+  status?: 'draft' | 'published';
   date?: string;
 };
 
 export default function AdminPostsPage() {
-  const [items, setItems] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const res = await pbList("posts", { page: 1, perPage: 50, sort: "-date" });
-        if (mounted) setItems(res.items as any);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
@@ -42,37 +28,107 @@ export default function AdminPostsPage() {
           <Plus size={18} /> Novo Post
         </Link>
       </div>
-      {loading ? (
-        <div>Carregando...</div>
-      ) : items.length === 0 ? (
-        <div className="card-modern p-12 text-center">
-          <FileText className="mx-auto mb-4 text-muted-foreground" size={48} />
-          <p className="text-muted-foreground">Nenhum post encontrado</p>
+
+      <DataTable<Post>
+        columns={[
+          {
+            id: "title",
+            header: "Título",
+            cell: (row) => (
+              <div>
+                <div className="font-medium">{row.title}</div>
+                <div className="text-xs text-muted-foreground">/{row.slug}</div>
+              </div>
+            ),
+            sortable: true,
+          },
+          {
+            id: "status",
+            header: "Status",
+            cell: (row) => (
+              <Badge variant={row.status === 'published' ? 'default' : 'secondary'} className="capitalize">
+                {row.status || 'draft'}
+              </Badge>
+            ),
+            sortable: true,
+          },
+          {
+            id: "date",
+            header: "Data",
+            cell: (row) => (
+              <div className="text-sm text-muted-foreground flex items-center gap-1">
+                <Calendar className="h-3 w-3" />
+                {row.date ? formatDate(row.date) : '-'}
+              </div>
+            ),
+            sortable: true,
+          },
+          {
+            id: "actions",
+            header: "Ações",
+            cell: (row) => (
+              <Link href={`/admin/editor/posts/${row.id}`}>
+                <Button variant="ghost" size="sm">
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </Link>
+            ),
+            sortable: false,
+          },
+        ]}
+        fetcher={async ({ page, perPage, filter, sort }) => {
+          const res = await pbList("posts", { page, perPage, filter, sort });
+          return {
+            items: res.items as unknown as Post[],
+            page: res.page,
+            perPage: res.perPage,
+            totalItems: res.totalItems,
+            totalPages: res.totalPages,
+          };
+        }}
+        bulkActions={[
+          {
+            label: "Excluir selecionados",
+            variant: "destructive",
+            action: async (selected) => {
+              await pbBulkDelete("posts", selected.map((s) => s.id));
+            },
+          },
+          {
+            label: "Publicar",
+            action: async (selected) => {
+              await pbBulkUpdate("posts", selected.map((s) => s.id), { status: "published" });
+            },
+          },
+          {
+            label: "Despublicar",
+            action: async (selected) => {
+              await pbBulkUpdate("posts", selected.map((s) => s.id), { status: "draft" });
+            },
+          },
+        ]}
+        defaultSort="-date"
+        filtersSchema={{
+          q: {
+            placeholder: "Buscar por título ou slug...",
+            searchFields: ["title", "slug"],
+          },
+          status: {
+            placeholder: "Status",
+            options: [
+              { label: "Rascunho", value: "draft" },
+              { label: "Publicado", value: "published" },
+            ],
+          },
+        }}
+        getRowId={(row) => row.id}
+        emptyMessage="Nenhum post encontrado"
+        emptyAction={
           <Link href="/admin/editor/posts/new" className="btn-primary mt-4 inline-flex">
             Criar primeiro post
           </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((item) => (
-            <Link key={item.id} href={`/admin/editor/posts/${item.id}`} className="card-modern p-4 hover:scale-[1.02] transition-all group">
-              <div className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
-                <div className={`px-2 py-1 rounded ${item.status === 'published' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'}`}>
-                  {item.status || "draft"}
-                </div>
-                {item.date && (
-                  <span className="flex items-center gap-1">
-                    <Calendar size={12} />
-                    {new Date(item.date).toLocaleDateString("pt-BR")}
-                  </span>
-                )}
-              </div>
-              <div className="font-medium text-lg mb-1 group-hover:text-primary transition-colors">{item.title}</div>
-              <div className="text-xs opacity-70">/{item.slug}</div>
-            </Link>
-          ))}
-        </div>
-      )}
+        }
+      />
     </div>
   );
 }

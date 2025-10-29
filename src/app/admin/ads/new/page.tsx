@@ -5,8 +5,12 @@ import { Check } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 export default function NewAdPage() {
+    const { toast } = useToast();
+    const router = useRouter();
     const [title, setTitle] = useState("");
     const [status, setStatus] = useState<'draft' | 'active' | 'paused' | 'archived'>('draft');
     const [targets, setTargets] = useState<string[]>([]);
@@ -26,7 +30,11 @@ export default function NewAdPage() {
 
     const onSave = async () => {
         if (!title || !clickUrl || targets.length === 0) {
-            alert('Preencha todos os campos obrigatórios');
+            toast({
+                title: "Campos obrigatórios",
+                description: "Preencha todos os campos obrigatórios",
+                variant: "destructive",
+            });
             return;
         }
 
@@ -52,9 +60,17 @@ export default function NewAdPage() {
             if (creativeMobileBanner) data.creative_mobile_banner = creativeMobileBanner;
 
             await pbCreate("ads", data);
-            window.location.href = "/admin/ads";
+            toast({
+                title: "Sucesso",
+                description: "Anúncio criado com sucesso",
+            });
+            router.push("/admin/ads");
         } catch (error: any) {
-            alert('Erro ao salvar: ' + error.message);
+            toast({
+                title: "Erro ao salvar",
+                description: error.message || "Ocorreu um erro ao criar o anúncio",
+                variant: "destructive",
+            });
         } finally {
             setSaving(false);
         }

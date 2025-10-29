@@ -1,14 +1,17 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { pbGetById, pbUpdate } from "@/lib/pocketbase";
 import { Check } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export default function EditAdPage() {
   const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
   const id = String(params?.id || "");
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState<'draft' | 'active' | 'paused' | 'archived'>('draft');
@@ -50,7 +53,11 @@ export default function EditAdPage() {
 
   const onSave = async () => {
     if (!title || !clickUrl || targets.length === 0) {
-      alert('Preencha todos os campos obrigatórios');
+      toast({
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos obrigatórios",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -70,9 +77,17 @@ export default function EditAdPage() {
       };
 
       await pbUpdate("ads", id, data);
-      window.location.href = "/admin/ads";
+      toast({
+        title: "Sucesso",
+        description: "Anúncio atualizado com sucesso",
+      });
+      router.push("/admin/ads");
     } catch (error: any) {
-      alert('Erro ao salvar: ' + error.message);
+      toast({
+        title: "Erro ao salvar",
+        description: error.message || "Ocorreu um erro ao atualizar o anúncio",
+        variant: "destructive",
+      });
     } finally {
       setSaving(false);
     }

@@ -38,7 +38,9 @@ export default function Sidebar() {
             <nav className="space-y-1">
                 {navItems.map((item) => {
                     const Icon = item.icon;
-                    const isActive = pathname === item.href || pathname?.startsWith(item.href + '/');
+                    const isActive = item.href === '/admin'
+                        ? pathname === '/admin'
+                        : pathname === item.href || pathname?.startsWith(item.href + '/');
                     
                     return (
                         <Link

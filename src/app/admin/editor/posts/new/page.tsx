@@ -1,13 +1,17 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { pbList, pbCreate } from "@/lib/pocketbase";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { calculateReadingTime, slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type Step = 'metadata' | 'content';
 
 export default function NewPostPage() {
+    const router = useRouter();
+    const { toast } = useToast();
     const [step, setStep] = useState<Step>('metadata');
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
@@ -47,11 +51,18 @@ export default function NewPostPage() {
             // Use the SDK to create the post
             await pbCreate("posts", postData);
             
-            // Redirect to posts list
-            window.location.href = "/admin/editor/posts";
+            toast({
+                title: "Sucesso",
+                description: "Post criado com sucesso",
+            });
+            router.push("/admin/editor/posts");
         } catch (error: any) {
             console.error('Error saving post:', error);
-            alert('Erro ao salvar post: ' + error.message);
+            toast({
+                title: "Erro ao salvar",
+                description: error.message || "Ocorreu um erro ao criar o post",
+                variant: "destructive",
+            });
         } finally {
             setSaving(false);
         }

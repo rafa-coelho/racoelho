@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { pbList, pbDelete } from "@/lib/pocketbase";
-import { Plus, Share2, Trash2 } from "lucide-react";
+import { pbList } from "@/lib/pocketbase";
+import { pbBulkDelete } from "@/lib/pb-bulk";
+import { DataTable } from "@/components/admin/DataTable";
+import { Plus, Share2, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type SocialLink = {
   id: string;
@@ -12,33 +14,6 @@ type SocialLink = {
 };
 
 export default function SocialLinksPage() {
-  const [items, setItems] = useState<SocialLink[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadLinks();
-  }, []);
-
-  const loadLinks = async () => {
-    try {
-      const res = await pbList("social_links", { page: 1, perPage: 100, sort: "order" }); 
-      setItems(res.items as any);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja deletar este link?')) return;
-    
-    try {
-      await pbDelete("social_links", id);
-      loadLinks();
-    } catch (error: any) {
-      alert('Erro ao deletar: ' + error.message);
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
@@ -51,56 +26,79 @@ export default function SocialLinksPage() {
         </Link>
       </div>
 
-      {loading ? (
-        <div>Carregando...</div>
-      ) : items.length === 0 ? (
-        <div className="card-modern p-12 text-center">
-          <Share2 className="mx-auto mb-4 text-muted-foreground" size={48} />
-          <p className="text-muted-foreground">Nenhum link social encontrado</p>
+      <DataTable<SocialLink>
+        columns={[
+          {
+            id: "name",
+            header: "Nome",
+            cell: (row) => <div className="font-medium">{row.name}</div>,
+            sortable: true,
+          },
+          {
+            id: "url",
+            header: "URL",
+            cell: (row) => (
+              <a href={row.url} target="_blank" rel="noopener" className="text-primary hover:underline text-sm truncate max-w-xs block">
+                {row.url}
+              </a>
+            ),
+          },
+          {
+            id: "icon",
+            header: "Ícone",
+            cell: (row) => (
+              <div className="text-sm text-muted-foreground">
+                {row.icon || "—"}
+              </div>
+            ),
+          },
+          {
+            id: "actions",
+            header: "Ações",
+            cell: (row) => (
+              <Link href={`/admin/social/${row.id}`}>
+                <Button variant="ghost" size="sm">
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </Link>
+            ),
+            sortable: false,
+          },
+        ]}
+        fetcher={async ({ page, perPage, filter, sort }) => {
+          const res = await pbList("social_links", { page, perPage, filter, sort });
+          return {
+            items: res.items as unknown as SocialLink[],
+            page: res.page,
+            perPage: res.perPage,
+            totalItems: res.totalItems,
+            totalPages: res.totalPages,
+          };
+        }}
+        bulkActions={[
+          {
+            label: "Excluir selecionados",
+            variant: "destructive",
+            action: async (selected) => {
+              await pbBulkDelete("social_links", selected.map((s) => s.id));
+            },
+          },
+        ]}
+        defaultSort="order"
+        filtersSchema={{
+          q: {
+            placeholder: "Buscar por nome...",
+            searchFields: ["name"],
+          },
+        }}
+        getRowId={(row) => row.id}
+        emptyMessage="Nenhum link social encontrado"
+        emptyAction={
           <Link href="/admin/social/new" className="btn-primary mt-4 inline-flex">
             Adicionar primeiro link
           </Link>
-        </div>
-      ) : (
-        <div className="card-modern">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/10">
-                <th className="text-left p-4">Nome</th>
-                <th className="text-left p-4">URL</th>
-                <th className="text-left p-4">Ícone</th>
-                <th className="text-right p-4">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-4 font-medium">{item.name}</td>
-                  <td className="p-4">
-                    <a href={item.url} target="_blank" rel="noopener" className="text-primary hover:underline">
-                      {item.url}
-                    </a>
-                  </td>
-                  <td className="p-4 text-muted-foreground">{item.icon || "—"}</td>
-                  <td className="p-4">
-                    <div className="flex items-center justify-end gap-2">
-                      <Link href={`/admin/social/${item.id}`} className="px-3 py-1 text-sm rounded border border-white/10 hover:bg-white/5">
-                        Editar
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        className="px-3 py-1 text-sm rounded border border-red-500/30 text-red-500 hover:bg-red-500/10 flex items-center gap-1"
-                      >
-                        <Trash2 size={14} /> Deletar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        }
+      />
     </div>
   );
 }

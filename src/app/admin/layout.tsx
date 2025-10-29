@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { checkAuth, signOut } from "@/lib/auth";
 import { Loader, LogOut } from "lucide-react";
 import Sidebar from "@/components/admin/Sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
@@ -84,6 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {children}
                 </main>
             </div>
+            <Toaster />
         </div>
     );
 }

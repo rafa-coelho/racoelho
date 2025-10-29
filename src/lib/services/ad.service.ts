@@ -112,7 +112,7 @@ export const adService = {
       async () => {
         try {
           const res = await pbList('ads', {
-            sort: '-created',
+            sort: '',
             perPage: 100,
           });
 
