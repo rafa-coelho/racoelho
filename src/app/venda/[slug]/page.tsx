@@ -27,9 +27,24 @@ export async function generateMetadata({ params }: SalesPageProps): Promise<Meta
       };
     }
     
+    const description = salesPage.blocks.find(block => block.type === 'text')?.content?.replace(/<[^>]*>/g, '').substring(0, 160) || ''
     return {
       title: salesPage.title,
-      description: salesPage.blocks.find(block => block.type === 'text')?.content?.replace(/<[^>]*>/g, '').substring(0, 160) || '',
+      description,
+      alternates: {
+        canonical: `${process.env.NEXT_PUBLIC_SITE_URL}/venda/${salesPage.slug}`,
+      },
+      openGraph: {
+        title: salesPage.title,
+        description,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL}/venda/${salesPage.slug}`,
+        type: 'website',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: salesPage.title,
+        description,
+      },
     };
   } catch (error) {
     return {
@@ -56,6 +71,16 @@ export default async function SalesPage({ params }: SalesPageProps) {
     return (
       <>
         {showPreview && <PreviewBanner />}
+        {/* JSON-LD: Product (básico) */}
+        <script type="application/ld+json" suppressHydrationWarning>
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: salesPage.title,
+            description: salesPage.blocks.find((b:any) => b.type==='text')?.content?.replace(/<[^>]*>/g, '') || '',
+            url: `${process.env.NEXT_PUBLIC_SITE_URL}/venda/${salesPage.slug}`,
+          })}
+        </script>
         <Layout>
           <div className="content-container py-12">
             <div className="max-w-4xl mx-auto">

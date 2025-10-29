@@ -29,6 +29,9 @@ export async function generateMetadata({ params }: ChallengePageProps): Promise<
   return {
     title: challenge.title,
     description,
+    alternates: {
+      canonical: `${SITE_URL}/listas/desafios/${challenge.slug}`,
+    },
     openGraph: {
       title: challenge.title,
       description,
@@ -84,6 +87,29 @@ export default async function ChallengePage({ params }: ChallengePageProps) {
   return (
     <>
       {showPreview && <PreviewBanner />}
+      {/* JSON-LD: CreativeWork + Breadcrumb */}
+      <script type="application/ld+json" suppressHydrationWarning>
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CreativeWork',
+          name: challenge.title,
+          description: challenge.excerpt || '',
+          image: challenge.coverImage ? [challenge.coverImage] : undefined,
+          datePublished: challenge.date,
+          mainEntityOfPage: `${SITE_URL}/listas/desafios/${challenge.slug}`,
+        })}
+      </script>
+      <script type="application/ld+json" suppressHydrationWarning>
+        {JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Desafios', item: `${SITE_URL}/listas/desafios` },
+            { '@type': 'ListItem', position: 3, name: challenge.title, item: `${SITE_URL}/listas/desafios/${challenge.slug}` },
+          ],
+        })}
+      </script>
       <ChallengeContent challenge={challenge as ContentItem} />
     </>
   );
