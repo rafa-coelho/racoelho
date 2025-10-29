@@ -1,12 +1,17 @@
 'use client';
 
 import { useAd } from '@/hooks/use-ad';
-import { AdPosition } from '@/lib/types/ads';
 import { adService } from '@/lib/services/ad.service';
 import { cn } from '@/lib/utils';
+import { Placement } from '@/lib/services/adOrchestrator';
+import { useEffect } from 'react';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 interface AdSlotProps {
-  position: AdPosition;
+  // legado
+  position?: string;
+  // novo fluxo: quando fornecer placement, ignora o hook legado
+  placement?: Placement;
   size?: '300x300' | '728x90' | '300x600';
   className?: string;
 }
@@ -20,8 +25,9 @@ interface AdSlotProps {
  * <AdSlot position="post:sidebar-left" size="300x300" />
  * ```
  */
-export default function AdSlot({ position, size = '300x300', className }: AdSlotProps) {
-  const { adConfig, loading, error } = useAd(position);
+export default function AdSlot({ position, placement, size = '300x300', className }: AdSlotProps) {
+  const useLegacy = !!position && !placement;
+  const { adConfig, loading, error } = useLegacy ? useAd(position as any) : { adConfig: null as any, loading: false, error: null } as any;
 
   // Determina dimensões baseado no tamanho
   const dimensions = {
@@ -33,8 +39,16 @@ export default function AdSlot({ position, size = '300x300', className }: AdSlot
   // Classes base para o container - mais discreto
   const baseClasses = 'rounded-lg bg-card/30 backdrop-blur-sm border border-white/5';
 
+  // track impressão para novo fluxo
+  useEffect(() => {
+    if (placement) {
+      const label = placement.kind === 'internal' ? `${placement.adId}:${placement.slotType}` : `google:${placement.slotType}`;
+      analyticsService.event('ad_impression', 'ads', label);
+    }
+  }, [placement?.kind, (placement as any)?.adId, (placement as any)?.slotType]);
+
   // Loading state
-  if (loading) {
+  if (useLegacy && loading) {
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
@@ -51,7 +65,7 @@ export default function AdSlot({ position, size = '300x300', className }: AdSlot
   }
 
   // Error state
-  if (error || !adConfig) {
+  if (useLegacy && (error || !adConfig)) {
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
@@ -68,7 +82,7 @@ export default function AdSlot({ position, size = '300x300', className }: AdSlot
   }
 
   // Custom Ad (mockado)
-  if (adConfig.type === 'custom' && adConfig.data) {
+  if (useLegacy && adConfig.type === 'custom' && adConfig.data) {
     const ad = adConfig.data;
 
     const handleClick = () => {
@@ -102,7 +116,7 @@ export default function AdSlot({ position, size = '300x300', className }: AdSlot
   }
 
   // Google Ads
-  if (adConfig.type === 'google') {
+  if (useLegacy && adConfig.type === 'google') {
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
@@ -126,7 +140,51 @@ export default function AdSlot({ position, size = '300x300', className }: AdSlot
     );
   }
 
-  // Fallback (não deve acontecer)
+  // Novo fluxo via placement
+  if (placement) {
+    if (placement.kind === 'internal') {
+      const clickLabel = `${placement.adId}:${placement.slotType}`;
+      return (
+        <div className={cn(baseClasses, 'overflow-hidden', className)}>
+          <p className="text-[10px] text-muted-foreground/50 text-center pt-2 pb-1 uppercase tracking-wider">Publicidade</p>
+          <a
+            href={placement.clickUrl}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="block hover:opacity-90 transition-opacity"
+            title={placement.title}
+            onClick={() => analyticsService.event('ad_click', 'ads', clickLabel)}
+          >
+            <img
+              src={placement.imageUrl}
+              alt={placement.title}
+              className="w-full h-auto object-cover"
+              style={{ maxHeight: dimensions.height }}
+            />
+          </a>
+        </div>
+      );
+    }
+
+    // google fallback
+    return (
+      <div className={cn(baseClasses, 'p-3', className)}>
+        <div className="text-center">
+          <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
+          <div 
+            className="bg-secondary/30 rounded flex items-center justify-center"
+            style={{ height: dimensions.height }}
+          >
+            <div className="text-center">
+              <p className="text-xs text-muted-foreground/50 mb-1">Google Ads</p>
+              <p className="text-[10px] text-muted-foreground/40">{size}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return null;
 }
 

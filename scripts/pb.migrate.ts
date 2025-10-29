@@ -129,17 +129,27 @@ async function main() {
         ],
     });
 
-    // ads
+    // ads (novo schema)
     await ensureCollection(pb, 'ads', {
         name: 'ads',
         type: 'base',
         schema: [
-            { name: 'position', type: 'text', required: true },
-            { name: 'image', type: 'file', options: { maxSelect: 1 } },
-            { name: 'link', type: 'text' },
-            { name: 'title', type: 'text' },
-            { name: 'altText', type: 'text' },
-            { name: 'trackingLabel', type: 'text' },
+            { name: 'title', type: 'text', required: true },
+            { name: 'status', type: 'select', required: true, options: { values: ['draft', 'active', 'paused', 'archived'] } },
+            { name: 'targets', type: 'select', required: true, options: { values: ['posts', 'challenges'], maxSelect: 2 } },
+            { name: 'priority', type: 'number' },
+            { name: 'startAt', type: 'date' },
+            { name: 'endAt', type: 'date' },
+            { name: 'clickUrl', type: 'text', required: true },
+            { name: 'utmSource', type: 'text' },
+            { name: 'utmCampaign', type: 'text' },
+            { name: 'utmMedium', type: 'text' },
+            { name: 'notes', type: 'text' },
+            { name: 'creative_leaderboard', type: 'file', options: { maxSelect: 1 } },
+            { name: 'creative_rectangle', type: 'file', options: { maxSelect: 1 } },
+            { name: 'creative_skyscraper', type: 'file', options: { maxSelect: 1 } },
+            { name: 'creative_square', type: 'file', options: { maxSelect: 1 } },
+            { name: 'creative_mobile_banner', type: 'file', options: { maxSelect: 1 } },
         ],
         listRule: null,
         viewRule: null,
@@ -147,9 +157,33 @@ async function main() {
         updateRule: "@request.auth.id != ''",
         deleteRule: "@request.auth.id != ''",
         indexes: [
-            'CREATE INDEX ads_position_idx ON ads (position)'
+            'CREATE INDEX ads_status_idx ON ads (status)',
+            'CREATE INDEX ads_priority_idx ON ads (priority)'
         ],
     });
+
+    // Backfill básico de registros existentes (se vierem do schema antigo)
+    try {
+        const adsList = await pb.collection('ads').getList(1, 200);
+        for (const rec of adsList.items) {
+            const updates: any = {};
+            if (typeof (rec as any).position === 'string') {
+                const pos: string = (rec as any).position;
+                if (pos.startsWith('post:')) updates.targets = ['posts'];
+                else if (pos.startsWith('challenge:')) updates.targets = ['challenges'];
+            }
+            if ((rec as any).link && !(rec as any).clickUrl) updates.clickUrl = (rec as any).link;
+            if ((rec as any).image) {
+                // move imagem antiga para rectangle por padrão
+                updates.creative_rectangle = (rec as any).image;
+            }
+            if (Object.keys(updates).length > 0) {
+                await pb.collection('ads').update(rec.id, updates);
+            }
+        }
+    } catch (e) {
+        console.warn('Backfill de ads não aplicado:', e);
+    }
 
     // setup_items
     await ensureCollection(pb, 'setup_items', {

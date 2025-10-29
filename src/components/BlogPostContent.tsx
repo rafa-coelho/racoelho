@@ -10,6 +10,8 @@ import { formatDate, calculateReadingTime } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
 import AdSlot from './AdSlot';
+import { useAds } from '@/hooks/use-ads';
+import { SlotType } from '@/lib/services/adOrchestrator';
 import { generateShareLinks, openSharePopup } from '@/lib/utils/share';
 import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
@@ -25,10 +27,11 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
 
   // Feature Flags
   const { flags, loading: flagsLoading } = useFeatureFlags(['share', 'newsletter', 'ads']);
+  // Slots que realmente existem na página de posts
+  // sidebar-mid (topo direita) tem prioridade mais alta, então vem primeiro
+  const postSlots: SlotType[] = ['sidebar-mid', 'sidebar-top', 'inline', 'sidebar-bottom'];
+  const { placements, loading: adsLoading } = useAds('posts', postSlots);
 
-
-
-  const shareLinks = generateShareLinks(post.title, postUrl);
 
   return (
     <Layout>
@@ -83,7 +86,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 )}
 
                 {/* Ad Slot 1 - Sidebar Left */}
-                {flags.ads && <AdSlot position="post:sidebar-left" size="300x300" />}
+                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-top']} size="300x300" />}
               </div>
             </aside>
 
@@ -112,9 +115,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               </div>
 
               {/* Ad Slot - Content */}
-              {flags.ads && (
+              {flags.ads && !adsLoading && (
                 <div className="my-12">
-                  <AdSlot position="post:content" size="728x90" />
+                  <AdSlot placement={placements['inline']} size="728x90" />
                 </div>
               )}
 
@@ -178,7 +181,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 </div>
 
                 {/* Ad Slot 2 - Sidebar Right Top */}
-                {flags.ads && <AdSlot position="post:sidebar-right-1" size="300x300" />}
+                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-mid']} size="300x300" />}
 
                 {/* Newsletter CTA */}
                 {flags.newsletter && (
@@ -197,7 +200,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 )}
 
                 {/* Ad Slot 3 - Sidebar Right Skyscraper */}
-                {flags.ads && <AdSlot position="post:sidebar-right-2" size="300x600" />}
+                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-bottom']} size="300x600" />}
               </div>
             </aside>
           </div>

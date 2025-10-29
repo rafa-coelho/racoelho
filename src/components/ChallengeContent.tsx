@@ -9,6 +9,8 @@ import { formatDate } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
 import AdSlot from './AdSlot';
+import { useAds } from '@/hooks/use-ads';
+import { SlotType } from '@/lib/services/adOrchestrator';
 import { generateShareLinks } from '@/lib/utils/share';
 import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
@@ -40,6 +42,9 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
 
   // Feature Flags
   const { flags, loading: flagsLoading } = useFeatureFlags(['share', 'newsletter', 'ads']);
+  // Slots que realmente existem na página de challenges
+  const challengeSlots: SlotType[] = ['inline', 'footer'];
+  const { placements, loading: adsLoading } = useAds('challenges', challengeSlots);
   const { flag: shareFlag } = useFeatureFlagWithMetadata('share');
   const allowedNetworks: string[] = Array.isArray(shareFlag?.metadata?.networks)
     ? (shareFlag!.metadata!.networks as string[])
@@ -200,8 +205,8 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
                   <ShareButtons title={challenge.title} url={challengeUrl} variant="sidebar" />
                 )}
 
-                {/* Ad Slot 1 */}
-                {flags.ads && <AdSlot position="challenge:sidebar-1" size="300x300" />}
+                {/* Ad Inline (conteúdo curto para desafios) */}
+                {flags.ads && !adsLoading && <AdSlot placement={placements['inline']} size="300x300" />}
 
                 {/* Newsletter CTA */}
                 {flags.newsletter && (
@@ -220,8 +225,8 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
                   </div>
                 )}
 
-                {/* Ad Slot 2 - Skyscraper */}
-                {flags.ads && <AdSlot position="challenge:sidebar-2" size="300x600" />}
+                {/* Ad Footer */}
+                {flags.ads && !adsLoading && <AdSlot placement={placements['footer']} size="300x600" />}
               </div>
             </aside>
           </div>

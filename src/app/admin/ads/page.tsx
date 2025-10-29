@@ -6,9 +6,11 @@ import { Plus, Image, Trash2 } from "lucide-react";
 
 type Ad = {
   id: string;
-  position: string;
   title: string;
-  link: string;
+  status: 'draft' | 'active' | 'paused' | 'archived';
+  targets: string[];
+  priority?: number;
+  clickUrl: string;
 };
 
 export default function AdsPage() {
@@ -66,8 +68,10 @@ export default function AdsPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/10">
-                <th className="text-left p-4">Posição</th>
                 <th className="text-left p-4">Título</th>
+                <th className="text-left p-4">Status</th>
+                <th className="text-left p-4">Targets</th>
+                <th className="text-left p-4">Prioridade</th>
                 <th className="text-left p-4">Link</th>
                 <th className="text-right p-4">Ações</th>
               </tr>
@@ -75,11 +79,13 @@ export default function AdsPage() {
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-4">{item.position}</td>
                   <td className="p-4">{item.title}</td>
+                  <td className="p-4 capitalize">{item.status}</td>
+                  <td className="p-4">{Array.isArray(item.targets) ? item.targets.join(', ') : ''}</td>
+                  <td className="p-4">{item.priority ?? 0}</td>
                   <td className="p-4">
-                    <a href={item.link} target="_blank" rel="noopener" className="text-primary hover:underline">
-                      {item.link}
+                    <a href={item.clickUrl} target="_blank" rel="noopener" className="text-primary hover:underline">
+                      {item.clickUrl}
                     </a>
                   </td>
                   <td className="p-4">
