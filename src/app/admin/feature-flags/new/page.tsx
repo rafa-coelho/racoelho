@@ -90,7 +90,7 @@ export default function NewFeatureFlagPage() {
                             value={metadata}
                             onChange={e => setMetadata(e.target.value)} 
                         />
-                        <p className="text-xs text-muted-foreground mt-1">Ex: {"{"}"networks": ["threads", "x"], "provider": "google"}{"}"}</p>
+                        <p className="text-xs text-muted-foreground mt-1">Ex: {"{"}"networks": ["threads", "x"], "provider": "google"{"}"}</p>
                     </div>
 
                     <div className="flex gap-4 pt-4 border-t border-white/10">

@@ -35,20 +35,11 @@ export type {
   YoutubeVideo
 };
 
-// Função para buscar um ebook pelo slug
-export function getEbookBySlug(slug: string): Ebook | null {
-  // Simula a busca do ebook no banco de dados
-  const ebooks: Ebook[] = [
-    {
-      slug: 'melhorando-linkedin',
-      title: 'Melhorando seu LinkedIn para Desenvolvedores',
-      description: 'Aprenda a criar um perfil profissional no LinkedIn que se destaque e atraia as melhores oportunidades.',
-      coverImage: '/assets/ebooks/melhorando-linkedin-cover.jpg',
-      downloadUrl: 'melhorando-linkedin.pdf',
-    },
-  ];
-
-  return ebooks.find((ebook) => ebook.slug === slug) || null;
+// Função para buscar um ebook pelo slug (deprecated - use ebook.service.ts)
+// Mantida apenas para compatibilidade - re-exporta do serviço
+export async function getEbookBySlug(slug: string): Promise<Ebook | null> {
+  const { getEbookBySlug: getEbook } = await import('@/lib/services/ebook.service');
+  return getEbook(slug);
 }
 
 // Definindo diretórios

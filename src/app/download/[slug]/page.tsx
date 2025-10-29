@@ -16,7 +16,7 @@ interface DownloadPageProps {
 export async function generateMetadata({
   params,
 }: DownloadPageProps): Promise<Metadata> {
-  const ebook = getEbookBySlug(params.slug);
+  const ebook = await getEbookBySlug(params.slug);
 
   if (!ebook) {
     return {
@@ -42,7 +42,7 @@ export default async function DownloadPage({
     notFound();
   }
 
-  const ebook = getEbookBySlug(slug);
+  const ebook = await getEbookBySlug(slug);
 
   if (!ebook) {
     notFound();
@@ -57,7 +57,21 @@ export default async function DownloadPage({
     notFound();
   }
 
-  const downloadUrl = `/assets/ebooks/${ebook.slug}/${ebook.slug}.pdf`;
+  // Gerar URL de download baseada no asset pack
+  const { assetService } = await import('@/lib/services/asset.service');
+  const assetPack = await assetService.getAssetPackBySlug(slug);
+  
+  let downloadUrl = '';
+  if (assetPack) {
+    const pdfFile = assetService.getAssetFileByType(assetPack, 'pdf');
+    if (pdfFile) {
+      // Usa o endpoint de download com o token e o nome do arquivo
+      downloadUrl = `/api/download/${slug}?token=${token}&file=${encodeURIComponent(pdfFile)}`;
+    } else if (assetPack.files && assetPack.files.length > 0) {
+      // Se não tem PDF, usa o primeiro arquivo disponível
+      downloadUrl = `/api/download/${slug}?token=${token}&file=${encodeURIComponent(assetPack.files[0])}`;
+    }
+  }
 
   return <DownloadClient ebook={ebook} downloadUrl={downloadUrl} />;
 } 

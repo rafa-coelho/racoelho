@@ -1,17 +1,33 @@
 import type { Ebook } from '@/lib/types';
+import { assetService } from './asset.service';
 
-export function getEbookBySlug(slug: string): Ebook | null {
-  const ebooks: Ebook[] = [
-    {
-      slug: 'melhorando-linkedin',
-      title: 'Melhorando seu LinkedIn para Desenvolvedores',
-      description: 'Aprenda a criar um perfil profissional no LinkedIn que se destaque e atraia as melhores oportunidades.',
-      coverImage: '/assets/ebooks/melhorando-linkedin-cover.jpg',
-      downloadUrl: 'melhorando-linkedin.pdf',
-    },
-  ];
+export async function getEbookBySlug(slug: string): Promise<Ebook | null> {
+  const assetPack = await assetService.getAssetPackBySlug(slug);
+  if (!assetPack) {
+    return null;
+  }
 
-  return ebooks.find((ebook) => ebook.slug === slug) || null;
+  // Filtrar apenas assets do tipo ebook se houver metadata
+  if (assetPack.metadata?.type && assetPack.metadata.type !== 'ebook') {
+    return null;
+  }
+
+  // Buscar banner (prioridade: png, svg, qualquer imagem)
+  const bannerUrl = assetService.getAssetFileUrlByType(assetPack, 'png') ||
+                    assetService.getAssetFileUrlByType(assetPack, 'svg') ||
+                    assetService.getAssetFileUrlByType(assetPack, 'jpg');
+
+  // Buscar PDF para download
+  const pdfFile = assetService.getAssetFileByType(assetPack, 'pdf');
+  const downloadUrl = pdfFile || '';
+
+  return {
+    slug: assetPack.slug,
+    title: assetPack.title,
+    description: assetPack.description || '',
+    coverImage: bannerUrl || '',
+    downloadUrl,
+  };
 }
 
 

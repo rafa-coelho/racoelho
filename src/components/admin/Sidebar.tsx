@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -16,6 +16,7 @@ const navItems: NavItem[] = [
     { title: "Desafios", href: "/admin/editor/challenges", icon: Code2 },
     { title: "Anúncios", href: "/admin/ads", icon: Image },
     { title: "Páginas de Venda", href: "/admin/sales", icon: ShoppingCart },
+    { title: "Asset Packs", href: "/admin/assets", icon: Folder },
     { title: "Setup", href: "/admin/setup", icon: Settings },
     { title: "Links do Site", href: "/admin/links", icon: LinkIcon },
     { title: "Links Sociais", href: "/admin/social", icon: Share2 },

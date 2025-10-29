@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { db } from './firebase.service';
+import { getPocketBaseServer } from '@/lib/pocketbase-server';
 
 // Interface para os parâmetros de busca de token
 interface FindTokenParams {
@@ -38,20 +38,13 @@ interface TokenData {
  */
 export async function findTokenByEmailAndSlug({ email, slug }: FindTokenParams): Promise<string | null> {
   try {
-    const querySnapshot = await db.collection('ebook_tokens')
-      .where('email', '==', email)
-      .where('slug', '==', slug)
-      .where('valid', '==', true)
-      .limit(1)
-      .get();
-
-    if (querySnapshot.empty) {
-      return null;
-    }
-
-    return querySnapshot.docs[0].id;
+    const pb = await getPocketBaseServer();
+    const nowIso = new Date().toISOString();
+    const rec = await pb.collection('access_tokens').getFirstListItem(
+      `email = "${email}" && slug = "${slug}" && valid = true && expiresAt > "${nowIso}"`
+    );
+    return rec?.id || null;
   } catch (error) {
-    console.error('Erro ao buscar token:', error);
     return null;
   }
 }
@@ -65,29 +58,28 @@ export async function findTokenByEmailAndSlug({ email, slug }: FindTokenParams):
  */
 export async function registerEbookToken({ name, email, slug }: RegisterTokenParams): Promise<string> {
   try {
-    // Primeiro, verifica se já existe um token para esse e-mail/slug
+    // Reutiliza token válido existente
     const existingToken = await findTokenByEmailAndSlug({ email, slug });
     if (existingToken) {
-      return existingToken; // Retorna o token antigo
+      return existingToken;
     }
 
-    // Caso não exista, cria um novo token
-    const token = uuidv4();
+    const pb = await getPocketBaseServer();
     const tokenData: TokenData = {
       email,
       name,
       slug,
       valid: true,
       createdAt: new Date().toISOString(),
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() // 7 dias
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 dias
     };
-    
-    await db.collection('ebook_tokens').doc(token).set(tokenData);
-    
-    return token;
+
+    const created = await pb.collection('access_tokens').create(tokenData as any);
+    // Usa o id do PocketBase como token
+    return created.id as string;
   } catch (error) {
     console.error('Erro ao registrar token:', error);
-    throw new Error('Falha ao registrar token para download do ebook');
+    throw new Error('Falha ao registrar token para acesso');
   }
 }
 
@@ -99,29 +91,16 @@ export async function registerEbookToken({ name, email, slug }: RegisterTokenPar
  */
 export async function validateEbookToken({ token, slug }: ValidateTokenParams): Promise<boolean> {
   try {
-    const docRef = db.collection('ebook_tokens').doc(token);
-    const doc = await docRef.get();
+    const pb = await getPocketBaseServer();
+    const rec = await pb.collection('access_tokens').getOne(token);
+    if (!rec) return false;
 
-    if (!doc.exists) {
-      return false;
-    }
+    const valid = !!rec.valid;
+    const sameSlug = rec.slug === slug;
+    const notExpired = rec.expiresAt ? new Date(rec.expiresAt) > new Date() : true;
 
-    const data = doc.data() as TokenData;
-    
-    // Verifica se o token é válido e corresponde ao slug
-    if (!data.valid || data.slug !== slug) {
-      return false;
-    }
-
-    // Verifica se o token não expirou
-    const expiresAt = new Date(data.expiresAt);
-    if (expiresAt < new Date()) {
-      return false;
-    }
-
-    return true;
+    return Boolean(valid && sameSlug && notExpired);
   } catch (error) {
-    console.error('Erro ao validar token:', error);
     return false;
   }
-} 
+}

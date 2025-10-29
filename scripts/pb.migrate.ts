@@ -248,6 +248,50 @@ async function main() {
         ],
     });
 
+    // asset_packs
+    await ensureCollection(pb, 'asset_packs', {
+        name: 'asset_packs',
+        type: 'base',
+        schema: [
+            { name: 'slug', type: 'text', required: true, options: { min: 1, max: 200, pattern: '' } },
+            { name: 'title', type: 'text', required: true },
+            { name: 'description', type: 'text' },
+            { name: 'files', type: 'file', options: { maxSelect: 10 } },
+            { name: 'metadata', type: 'json' },
+            { name: 'status', type: 'select', options: { values: ['draft', 'published'] } },
+        ],
+        listRule: "status = 'published' || @request.auth.id != ''",
+        viewRule: "status = 'published' || @request.auth.id != ''",
+        createRule: "@request.auth.id != ''",
+        updateRule: "@request.auth.id != ''",
+        deleteRule: "@request.auth.id != ''",
+        indexes: [
+            'CREATE UNIQUE INDEX asset_packs_slug_idx ON asset_packs (slug)'
+        ],
+    });
+
+    // access_tokens (genérico para downloads/acessos protegidos)
+    await ensureCollection(pb, 'access_tokens', {
+        name: 'access_tokens',
+        type: 'base',
+        schema: [
+            { name: 'email', type: 'text', required: true },
+            { name: 'name', type: 'text' },
+            { name: 'slug', type: 'text', required: true },
+            { name: 'valid', type: 'bool' },
+            { name: 'expiresAt', type: 'date' },
+            { name: 'meta', type: 'json' },
+        ],
+        listRule: null,
+        viewRule: null,
+        createRule: "@request.auth.id != ''",
+        updateRule: "@request.auth.id != ''",
+        deleteRule: "@request.auth.id != ''",
+        indexes: [
+            'CREATE INDEX access_tokens_email_slug_idx ON access_tokens (email, slug)'
+        ],
+    });
+
     console.log('Migração concluída.');
 }
 

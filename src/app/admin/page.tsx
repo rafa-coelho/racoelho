@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder } from "lucide-react";
 
 const adminModules = [
     {
@@ -58,6 +58,14 @@ const adminModules = [
         icon: Share2,
         color: "from-indigo-500/20 to-indigo-600/20",
         borderColor: "border-indigo-500/30"
+    },
+    {
+        title: "Asset Packs",
+        description: "Gerenciar pacotes de arquivos (ebooks, banners, etc)",
+        href: "/admin/assets",
+        icon: Folder,
+        color: "from-emerald-500/20 to-emerald-600/20",
+        borderColor: "border-emerald-500/30"
     },
     {
         title: "Feature Flags",

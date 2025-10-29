@@ -89,3 +89,16 @@ export interface YoutubeVideo {
   published: string;
 }
 
+export interface AssetPack {
+  id: string;
+  slug: string;
+  title: string;
+  description?: string;
+  files?: string[];
+  metadata?: {
+    type?: string;
+    [key: string]: any;
+  };
+  status?: 'draft' | 'published';
+}
+
