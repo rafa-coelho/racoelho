@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AdPosition, AdConfig } from '@/lib/types/ads';
-import { adService } from '@/lib/services/ads';
+import { adService } from '@/lib/services/ad.service';
 
 /**
  * Hook customizado para gerenciar carregamento de anúncios.

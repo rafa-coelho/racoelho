@@ -1,5 +1,7 @@
 /**
  * Internal API for fetching and processing markdown content
+ * DEPRECATED: Agora os dados vêm dos services (content.service, challenge.service, etc)
+ * Este arquivo mantém apenas tipos e funções auxiliares (getLatestYoutubeVideos, getEbookBySlug)
  */
 
 import { useState, useEffect } from 'react';
@@ -7,87 +9,31 @@ import fs from 'fs';
 import path from 'path';
 import { parseMarkdownFile } from './markdown';
 
-// Types for content items
-export interface ContentMeta {
-  title: string;
-  slug: string;
-  date: string;
-  excerpt: string;
-  coverImage?: string;
-  tags?: string[];
-}
+// Import types
+import type {
+  ContentMeta,
+  ContentItem,
+  SocialLink,
+  LinkTreeItem,
+  SetupItem,
+  SalesPageBlock,
+  SalesPage,
+  Ebook,
+  YoutubeVideo
+} from './types';
 
-export interface ContentItem extends ContentMeta {
-  content: string;
-}
-
-// Type for social links
-export interface SocialLink {
-  name: string;
-  url: string;
-  icon: string;
-}
-
-// Types for linktree items
-export interface LinkTreeItem {
-  title: string;
-  url: string;
-  description?: string;
-  type: 'link' | 'highlight';
-  icon?: string;
-  image?: string;
-}
-
-// Type for setup items
-export interface SetupItem {
-  name: string;
-  category: string;
-  description: string;
-  image: string;
-  url?: string;
-  price?: string;
-}
-
-// Types for sales page blocks
-export interface SalesPageBlock {
-  type: 'header' | 'text' | 'image' | 'pricing' | 'features' | 'testimonials' | 'cta' | 'faq' | 'form';
-  title?: string;
-  content?: string;
-  image?: string;
-  price?: string;
-  items?: Array<{
-    title: string;
-    description: string;
-  }>;
-  apiUrl?: string;
-  fields?: Array<{
-    name: string;
-    label: string;
-    type?: string;
-    required?: boolean;
-    placeholder?: string;
-  }>;
-  submitText?: string;
-  successMessage?: string;
-}
-
-export interface SalesPage {
-  title: string;
-  slug: string;
-  blocks: SalesPageBlock[];
-  ctaText: string;
-  ctaUrl: string;
-  paymentUrl: string;
-}
-
-// Interface para os ebooks
-export interface Ebook {
-  slug: string;
-  title: string;
-  description: string;
-  coverImage: string;
-  downloadUrl: string;
-}
+// Re-export types for backward compatibility
+export type {
+  ContentMeta,
+  ContentItem,
+  SocialLink,
+  LinkTreeItem,
+  SetupItem,
+  SalesPageBlock,
+  SalesPage,
+  Ebook,
+  YoutubeVideo
+};
 
 // Função para buscar um ebook pelo slug
 export function getEbookBySlug(slug: string): Ebook | null {
@@ -268,14 +214,6 @@ export function getSalesPageBySlug(slug: string): SalesPage {
 export function getAllSalesPages() {
   const slugs = getSalesPageSlugs();
   return slugs.map(slug => getSalesPageBySlug(slug));
-}
-
-export interface YoutubeVideo {
-  id: string;
-  title: string;
-  thumbnail: string;
-  link: string;
-  published: string;
 }
 
 export async function getLatestYoutubeVideos(max: number = 3): Promise<YoutubeVideo[]> {

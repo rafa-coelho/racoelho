@@ -17,18 +17,18 @@ interface HomeContentProps {
   totalChallenges?: number;
 }
 
-export default function HomeContent({ 
-  posts, 
-  challenges, 
-  videos = [], 
-  socialLinks = [], 
+export default function HomeContent({
+  posts,
+  challenges,
+  videos = [],
+  socialLinks = [],
   linkItems = [],
   totalPosts = posts.length,
   totalChallenges = challenges.length
 }: HomeContentProps) {
   const featuredPost = posts[0];
   const highlightItems = linkItems.filter(item => item.type === 'highlight');
-  
+
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
 
@@ -37,7 +37,7 @@ export default function HomeContent({
       {/* Hero Section - Pessoal e Conectado */}
       <section className="relative pt-20 pb-32 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-600/5 to-transparent"></div>
-        
+
         <div className="content-container relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row gap-12 items-center">
@@ -45,8 +45,8 @@ export default function HomeContent({
               <div className="flex-shrink-0 animate-fade-in">
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-purple-600/30 rounded-3xl blur-2xl group-hover:blur-3xl transition-all duration-500 animate-glow-pulse"></div>
-                  <img 
-                    src="https://github.com/rafa-coelho.png" 
+                  <img
+                    src="https://github.com/rafa-coelho.png"
                     alt="Rafael Coelho"
                     className="relative w-48 h-48 md:w-56 md:h-56 rounded-3xl object-cover border-4 border-primary/20 shadow-2xl group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
@@ -62,30 +62,30 @@ export default function HomeContent({
                   <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
                   <span className="text-sm font-medium text-primary">Desenvolvedor Fullstack</span>
                 </div>
-                
+
                 <h1 className="text-5xl md:text-6xl lg:text-7xl font-black mb-4 leading-tight animate-fade-in-up">
                   <span className="text-muted-foreground text-3xl md:text-4xl font-normal block mb-2">Oi, eu sou</span>
                   <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
                     Rafael Coelho
                   </span>
-          </h1>
-                
+                </h1>
+
                 <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed animate-fade-in max-w-3xl" style={{ animationDelay: '100ms' }}>
                   Compartilho o que aprendo sobre{' '}
                   <span className="text-foreground font-semibold">programação</span>,{' '}
                   <span className="text-primary font-semibold">desafios práticos</span> e{' '}
                   <span className="text-foreground font-semibold">dicas de carreira</span> em tech
                 </p>
-                
+
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start animate-fade-in" style={{ animationDelay: '200ms' }}>
                   <Link href="#content" className="btn-primary inline-flex items-center gap-2 text-lg px-8 py-4">
                     <TrendingUp size={24} />
                     Explorar Conteúdo
-            </Link>
+                  </Link>
                   <Link href="/links" className="btn-secondary inline-flex items-center gap-2 text-lg px-8 py-4">
                     Minhas Redes
                     <ArrowRight size={20} />
-            </Link>
+                  </Link>
                 </div>
 
                 {/* Stats/Social Proof */}
@@ -129,8 +129,8 @@ export default function HomeContent({
                 <div className="grid md:grid-cols-2 gap-0">
                   {featuredPost.coverImage && (
                     <div className="relative h-[400px] md:h-auto overflow-hidden">
-                      <img 
-                        src={featuredPost.coverImage} 
+                      <img
+                        src={featuredPost.coverImage}
                         alt={featuredPost.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
@@ -141,7 +141,7 @@ export default function HomeContent({
                     <div className="inline-flex items-center gap-2 text-sm font-medium text-post mb-4">
                       <Code2 size={18} />
                       <span>Artigo em Destaque</span>
-              </div>
+                    </div>
                     <h2 className="text-4xl md:text-5xl font-bold mb-4 group-hover:text-primary transition-colors">
                       {featuredPost.title}
                     </h2>
@@ -158,17 +158,17 @@ export default function HomeContent({
                     <div className="inline-flex items-center gap-2 text-primary font-semibold group">
                       Ler artigo
                       <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </div>
             </Link>
           )}
 
           {/* Bento Grid - Mix de Conteúdos */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             {posts.slice(1, 3).map((post, idx) => (
-            <Link
+              <Link
                 key={post.slug}
                 href={`/posts/${post.slug}`}
                 className="card-modern overflow-hidden group accent-post hover:scale-[1.02] transition-all duration-300"
@@ -176,8 +176,8 @@ export default function HomeContent({
               >
                 {post.coverImage && (
                   <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={post.coverImage} 
+                    <img
+                      src={post.coverImage}
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -192,11 +192,11 @@ export default function HomeContent({
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">{post.excerpt}</p>
                 </div>
-            </Link>
+              </Link>
             ))}
 
             {challenges.slice(0, 2).map((challenge, idx) => (
-              <Link 
+              <Link
                 key={challenge.slug}
                 href={`/listas/desafios/${challenge.slug}`}
                 className="card-modern overflow-hidden group accent-challenge hover:scale-[1.02] transition-all duration-300"
@@ -204,8 +204,8 @@ export default function HomeContent({
               >
                 {challenge.coverImage && (
                   <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={challenge.coverImage} 
+                    <img
+                      src={challenge.coverImage}
                       alt={challenge.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -223,12 +223,12 @@ export default function HomeContent({
                     {challenge.title}
                   </h3>
                   <p className="text-sm text-muted-foreground line-clamp-2">{challenge.excerpt}</p>
-          </div>
+                </div>
               </Link>
             ))}
 
             {videos.slice(0, 1).map((video, idx) => (
-              <a 
+              <a
                 key={video.id}
                 href={video.link}
                 target="_blank"
@@ -237,8 +237,8 @@ export default function HomeContent({
                 style={{ animationDelay: `${(idx + 5) * 100}ms` }}
               >
                 <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={video.thumbnail} 
+                  <img
+                    src={video.thumbnail}
                     alt={video.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -259,8 +259,8 @@ export default function HomeContent({
                   </h3>
                 </div>
               </a>
-              ))}
-            </div>
+            ))}
+          </div>
 
           {/* CTAs para Ver Mais */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -284,19 +284,19 @@ export default function HomeContent({
               <p className="text-muted-foreground mb-4">Vídeos sobre programação e tech</p>
               <ArrowRight size={24} className="mx-auto text-video" />
             </a>
-            </div>
+          </div>
         </div>
       </section>
 
       {/* Produtos/Ebooks - Se houver */}
       {highlightItems.length > 0 && (
         <section className="py-20 section-gradient-2">
-        <div className="content-container">
+          <div className="content-container">
             <div className="text-center mb-12">
               <h2 className="text-5xl font-bold mb-4">Recursos Premium</h2>
               <p className="text-xl text-muted-foreground">Materiais para acelerar seu aprendizado</p>
-          </div>
-          
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {highlightItems.map((item, index) => (
                 <a
@@ -327,7 +327,7 @@ export default function HomeContent({
                 </a>
               ))}
             </div>
-            </div>
+          </div>
         </section>
       )}
 
@@ -357,25 +357,25 @@ export default function HomeContent({
 
       {/* Newsletter CTA - Final */}
       {newsletterEnabled && (
-      <section className="py-20 section-gradient-2">
-        <div className="content-container">
-          <div className="card-modern p-12 md:p-20 text-center max-w-3xl mx-auto border-2 border-primary/20">
-            <div className="text-5xl mb-6">📬</div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">Não Perca Nenhum Conteúdo</h2>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Receba novos artigos, desafios e dicas diretamente no seu email
-          </p>
-          <TrackedLink 
-            href="/newsletter" 
-            label="Inscrever na newsletter"
-              className="btn-primary inline-flex items-center gap-2 text-lg px-10 py-5"
-          >
-              Assinar Newsletter Gratuitamente
-              <ArrowRight size={24} />
-          </TrackedLink>
+        <section className="py-20 section-gradient-2">
+          <div className="content-container">
+            <div className="card-modern p-12 md:p-20 text-center max-w-3xl mx-auto border-2 border-primary/20">
+              <div className="text-5xl mb-6">📬</div>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Não Perca Nenhum Conteúdo</h2>
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                Receba novos artigos, desafios e dicas diretamente no seu email
+              </p>
+              <TrackedLink
+                href="/newsletter"
+                label="Inscrever na newsletter"
+                className="btn-primary inline-flex items-center gap-2 text-lg px-10 py-5"
+              >
+                Assinar Newsletter Gratuitamente
+                <ArrowRight size={24} />
+              </TrackedLink>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
     </Layout>
   );

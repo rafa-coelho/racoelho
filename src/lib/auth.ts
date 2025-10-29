@@ -23,21 +23,35 @@ export async function signInWithOAuth(provider: string) {
 export async function signInWithPassword(email: string, password: string) {
   console.log('[Auth] Attempting login with:', email);
   
-  const pb = getPocketBase();
-  
   try {
-    const authData = await pb.admins.authWithPassword(email, password);
+    // Usar API route para salvar cookie no servidor
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Login failed');
+    }
+
+    const data = await response.json();
     console.log('[Auth] Login successful');
     
-    // Save auth data to localStorage
+    // Salvar também no localStorage para client-side
     if (typeof window !== 'undefined') {
+      const pb = getPocketBase();
+      pb.authStore.save(data.token, { id: '', email } as any);
       localStorage.setItem('pb_auth', JSON.stringify({
-        token: pb.authStore.token,
-        model: pb.authStore.model,
+        token: data.token,
+        model: { id: '', email },
       }));
     }
     
-    return authData;
+    return data;
   } catch (error: any) {
     console.error('[Auth] Login failed:', error);
     throw new Error(error?.message || 'Login failed');
@@ -46,6 +60,13 @@ export async function signInWithPassword(email: string, password: string) {
 
 export async function signOut() {
   if (typeof window === 'undefined') return;
+  
+  // Limpar cookie via API
+  try {
+    await fetch('/api/auth/logout', { method: 'POST' });
+  } catch (error) {
+    console.error('[Auth] Error logging out:', error);
+  }
   
   const pb = getPocketBase();
   pb.authStore.clear();

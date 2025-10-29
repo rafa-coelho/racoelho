@@ -1,18 +1,22 @@
-import { getChallengeBySlug, getAllChallenges, ContentItem } from '@/lib/api';
+import { ContentItem } from '@/lib/api';
+import { challengeService } from '@/lib/services/challenge.service';
 import ChallengeContent from '@/components/ChallengeContent';
+import PreviewBanner from '@/components/PreviewBanner';
 import { Metadata } from 'next';
 import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
 
 interface ChallengePageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: ChallengePageProps): Promise<Metadata> {
-  const challenge = await getChallengeBySlug(params.slug);
+  const { slug } = await params;
+  const challenge = await challengeService.getChallengeBySlug(slug, [], false);
   
   if (!challenge || !challenge.content) {
     return {
@@ -49,14 +53,18 @@ export async function generateMetadata({ params }: ChallengePageProps): Promise<
 }
 
 export async function generateStaticParams() {
-  const challenges = await getAllChallenges();
+  const challenges = await challengeService.getAllChallenges();
   return challenges.map((challenge) => ({
     slug: challenge.slug,
   }));
 }
 
-export default async function ChallengePage({ params }: ChallengePageProps) {
-  const challenge = await getChallengeBySlug(params.slug, [
+export default async function ChallengePage({ params, searchParams }: ChallengePageProps) {
+  const { slug } = await params;
+  const { preview } = await searchParams;
+  const isPreview = preview === 'true';
+  
+  const challenge = await challengeService.getChallengeBySlug(slug, [
     'title',
     'date',
     'content',
@@ -64,11 +72,16 @@ export default async function ChallengePage({ params }: ChallengePageProps) {
     'tags',
     'excerpt',
     'slug'
-  ]);
+  ], isPreview);
   
   if (!challenge || !challenge.content) {
     notFound();
   }
 
-  return <ChallengeContent challenge={challenge as ContentItem} />;
+  return (
+    <>
+      {isPreview && <PreviewBanner />}
+      <ChallengeContent challenge={challenge as ContentItem} />
+    </>
+  );
 }

@@ -1,6 +1,6 @@
 import { pbListWithPreview, pbFirstByFilterWithPreview } from '@/lib/pocketbase-server';
 import { ContentItem, ContentMeta } from '@/lib/api';
-import { getCached, cacheKey, cacheListKey } from '@/lib/cache/cache.service';
+import { getCached, cacheKey, cacheListKey, cacheFilterKey } from '@/lib/cache/cache.service';
 
 // Mappers PB -> tipos locais
 function mapPbToContentMeta(rec: any): ContentMeta {
@@ -26,18 +26,18 @@ function fileUrl(rec: any, filename: string) {
   return `${base}/api/files/${rec.collectionId || rec.collection}/${rec.id}/${filename}`;
 }
 
-export const contentService = {
-  async getAllPosts(fields: string[] = [], isPreview: boolean = false): Promise<ContentMeta[]> {
+export const challengeService = {
+  async getAllChallenges(fields: string[] = [], isPreview: boolean = false): Promise<ContentMeta[]> {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
     // Buscar com cache
-    const cacheKeyData = cacheListKey('posts');
-
+    const cacheKeyData = cacheListKey('challenges');
+    
     return await getCached(
       cacheKeyData,
       async () => {
-        const res = await pbListWithPreview('posts', {
+        const res = await pbListWithPreview('challenges', {
           filter: isAdminPreview ? undefined : "status='published'",
           sort: '-date',
         }, isPreview);
@@ -48,12 +48,12 @@ export const contentService = {
     );
   },
 
-  async getPostBySlug(slug: string, fields: string[] = [], isPreview: boolean = false): Promise<ContentItem | null> {
+  async getChallengeBySlug(slug: string, fields: string[] = [], isPreview: boolean = false): Promise<ContentItem | null> {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
     // Buscar com cache
-    const cacheKeyData = cacheKey('posts', slug);
+    const cacheKeyData = cacheKey('challenges', slug);
 
     return await getCached(
       cacheKeyData,
@@ -63,7 +63,7 @@ export const contentService = {
           : `slug='${slug}' && status='published'`;
 
         try {
-          const rec = await pbFirstByFilterWithPreview('posts', filter, undefined, isPreview);
+          const rec = await pbFirstByFilterWithPreview('challenges', filter, undefined, isPreview);
           return rec ? mapPbToContentItem(rec) : null;
         } catch (error) {
           return null;
@@ -72,18 +72,5 @@ export const contentService = {
       3600000 // 1 hora
     );
   },
-
-  async getAllChallenges(fields: string[] = [], isPreview: boolean = false): Promise<ContentMeta[]> {
-    // Re-exporta do challenge.service para manter compatibilidade
-    const { challengeService } = await import('./challenge.service');
-    return challengeService.getAllChallenges(fields, isPreview);
-  },
-
-  async getChallengeBySlug(slug: string, fields: string[] = [], isPreview: boolean = false): Promise<ContentItem | null> {
-    // Re-exporta do challenge.service para manter compatibilidade
-    const { challengeService } = await import('./challenge.service');
-    return challengeService.getChallengeBySlug(slug, fields, isPreview);
-  },
 };
-
 

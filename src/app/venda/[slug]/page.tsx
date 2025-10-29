@@ -2,19 +2,33 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import Layout from '@/components/Layout';
 import SaleContent from '@/components/SaleContent';
-import { getSalesPageBySlug, getSalesPageSlugs } from '@/lib/api';
+import PreviewBanner from '@/components/PreviewBanner';
+import { salesService } from '@/lib/services/sales.service';
 import type { SalesPage } from '@/lib/api';
 import { Metadata } from 'next';
-
+import { notFound } from 'next/navigation';
+import { isAdmin } from '@/lib/services/auth.service';
 interface SalesPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
-export async function generateMetadata({ params }: SalesPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: SalesPageProps): Promise<Metadata> {
   try {
-    const salesPage = getSalesPageBySlug(params.slug);
+    const { slug } = await params;
+    const { preview } = await searchParams;
+    const adminStatus = await isAdmin();
+    const isPreview = adminStatus || preview === 'true';
+    const salesPage = await salesService.getSalesPageBySlug(slug, isPreview);
+    
+    if (!salesPage) {
+      return {
+        title: 'Página não encontrada',
+        description: 'A página de vendas que você está procurando não existe ou foi removida.',
+      };
+    }
     
     return {
       title: salesPage.title,
@@ -28,20 +42,31 @@ export async function generateMetadata({ params }: SalesPageProps): Promise<Meta
   }
 }
 
-export default function SalesPage({ params }: SalesPageProps) {
-  const { slug } = params;
+export default async function SalesPage({ params, searchParams }: SalesPageProps) {
+  const { slug } = await params;
+  const { preview } = await searchParams;
+  const adminStatus = await isAdmin();
+  // Preview se for admin OU se tiver ?preview=true na URL
+  const isPreview = adminStatus || preview === 'true';
   
   try {
-    const salesPage = getSalesPageBySlug(slug);
+    const salesPage = await salesService.getSalesPageBySlug(slug, isPreview);
+    
+    if (!salesPage) {
+      notFound();
+    }
     
     return (
-      <Layout>
-        <div className="content-container py-12">
-          <div className="max-w-4xl mx-auto">
-            <SaleContent salesPage={salesPage} />
+      <>
+        {isPreview && <PreviewBanner />}
+        <Layout>
+          <div className="content-container py-12">
+            <div className="max-w-4xl mx-auto">
+              <SaleContent salesPage={salesPage} />
+            </div>
           </div>
-        </div>
-      </Layout>
+        </Layout>
+      </>
     );
   } catch (error) {
     console.error('Error loading sales page:', error);
@@ -65,7 +90,7 @@ export default function SalesPage({ params }: SalesPageProps) {
 }
 
 export async function generateStaticParams() {
-  const slugs = getSalesPageSlugs();
+  const slugs = await salesService.getSalesPageSlugs();
   
   return slugs.map((slug) => ({
     slug,

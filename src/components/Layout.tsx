@@ -7,8 +7,8 @@ import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { BLOG_NAME } from "@/lib/config/constants";
-import SocialLinks from "../../content/social-links.json";
 import { GetSocialIcon } from "./LinksContent";
+import { SocialLink } from '@/lib/api';
 import packageJson from '../../package.json';
 import Script from 'next/script';
 import { GA_TRACKING_ID } from "@/lib/gtag";
@@ -21,10 +21,19 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const pathname = usePathname();
   
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
+
+  // Fetch social links from API
+  useEffect(() => {
+    fetch('/api/social-links')
+      .then(res => res.json())
+      .then(data => setSocialLinks(data))
+      .catch(err => console.error('Error loading social links:', err));
+  }, []);
 
   // Close menu when route changes
   useEffect(() => {
@@ -171,9 +180,9 @@ export default function Layout({ children }: LayoutProps) {
             <div>
               <h3 className="font-semibold text-foreground mb-4">Conecte-se</h3>
               <div className="flex gap-3 mb-6">
-                {SocialLinks.slice(0, 5).map((social) => (
+                {socialLinks.slice(0, 5).map((social, index) => (
                   <a
-                    key={social.name}
+                    key={`${social.name}-${social.url}-${index}`}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"

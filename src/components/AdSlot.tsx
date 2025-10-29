@@ -2,7 +2,7 @@
 
 import { useAd } from '@/hooks/use-ad';
 import { AdPosition } from '@/lib/types/ads';
-import { adService } from '@/lib/services/ads';
+import { adService } from '@/lib/services/ad.service';
 import { cn } from '@/lib/utils';
 
 interface AdSlotProps {

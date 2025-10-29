@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getEbookBySlug } from '@/lib/api';
+import { getEbookBySlug } from '@/lib/services/ebook.service';
 import { validateEbookToken } from '@/lib/services/data.service';
 import DownloadClient from '@/components/DownloadClient';
 

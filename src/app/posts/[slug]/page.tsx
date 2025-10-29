@@ -1,18 +1,22 @@
-import { getPostBySlug, getAllPosts, ContentItem } from '@/lib/api';
+import { ContentItem } from '@/lib/api';
+import { contentService } from '@/lib/services/content.service';
 import BlogPostContent from '@/components/BlogPostContent';
+import PreviewBanner from '@/components/PreviewBanner';
 import { Metadata } from 'next';
 import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
+  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await contentService.getPostBySlug(slug, [], false);
   
   if (!post || !post.content) {
     return {
@@ -49,14 +53,18 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 }
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts();
+  const posts = await contentService.getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 
-export default async function PostPage({ params }: PostPageProps) {
-  const post = await getPostBySlug(params.slug, [
+export default async function PostPage({ params, searchParams }: PostPageProps) {
+  const { slug } = await params;
+  const { preview } = await searchParams;
+  const isPreview = preview === 'true';
+  
+  const post = await contentService.getPostBySlug(slug, [
     'title',
     'date',
     'content',
@@ -64,11 +72,16 @@ export default async function PostPage({ params }: PostPageProps) {
     'tags',
     'excerpt',
     'slug'
-  ]);
+  ], isPreview);
   
   if (!post || !post.content) {
     notFound();
   }
 
-  return <BlogPostContent post={post as ContentItem} />;
+  return (
+    <>
+      {isPreview && <PreviewBanner />}
+      <BlogPostContent post={post as ContentItem} />
+    </>
+  );
 }

@@ -1,5 +1,4 @@
 import { IAdProvider } from './IAdProvider';
-import { JsonAdProvider } from './JsonAdProvider';
 import { GoogleAdProvider } from './GoogleAdProvider';
 import { AdPosition, AdConfig, Ad } from '@/lib/types/ads';
 import { analyticsService } from '../analytics.service';
@@ -12,14 +11,12 @@ import { analyticsService } from '../analytics.service';
 export class AdService {
   private static instance: AdService;
   private providers: IAdProvider[];
-  private jsonProvider: JsonAdProvider;
   private googleProvider: GoogleAdProvider;
   private mockPriority: number;
 
   private constructor(mockPriority: number = 0.7) {
-    this.jsonProvider = new JsonAdProvider();
     this.googleProvider = new GoogleAdProvider();
-    this.providers = [this.jsonProvider, this.googleProvider];
+    this.providers = [this.googleProvider];
     this.mockPriority = mockPriority;
   }
 
@@ -50,27 +47,7 @@ export class AdService {
    */
   async getAdConfig(position: AdPosition): Promise<AdConfig> {
     try {
-      // Busca ads mockados para a posição
-      const mockAds = await this.jsonProvider.getAds(position);
-
-      // Se houver ads mockados disponíveis
-      if (mockAds.length > 0) {
-        const random = Math.random();
-        
-        // mockPriority% de chance de usar ad mockado
-        if (random < this.mockPriority) {
-          // Se múltiplos ads, escolhe aleatoriamente
-          const selectedAd = this.selectRandomAd(mockAds);
-          
-          // Tracking
-          this.trackAdImpression(selectedAd, 'custom');
-          
-          return {
-            type: 'custom',
-            data: selectedAd
-          };
-        }
-      }
+      // Sem ads mockados via JSON; usar Google Ads
 
       // Fallback para Google Ads
       const googleAdSlot = this.googleProvider.getDefaultAdSlot();
@@ -148,11 +125,9 @@ export class AdService {
     googleAdsConfigured: boolean;
     mockPriority: number;
   }> {
-    const allMockAds = await this.jsonProvider.getAllAds();
-    
     return {
       providersCount: this.providers.length,
-      mockAdsCount: allMockAds.length,
+      mockAdsCount: 0,
       googleAdsConfigured: this.googleProvider.isConfigured(),
       mockPriority: this.mockPriority
     };

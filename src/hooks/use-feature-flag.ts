@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FeatureFlagKey, FeatureFlag } from '@/lib/types/feature-flags';
-import { featureFlagService } from '@/lib/services/feature-flags';
+import { featureFlagService } from '@/lib/services/feature-flag.service';
 
 /**
  * Hook para verificar se uma feature flag está habilitada.
