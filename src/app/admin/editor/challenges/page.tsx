@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
-import { Plus, Calendar, FileText } from "lucide-react";
+import { Plus, Calendar, Code2 } from "lucide-react";
 
-type Post = {
+type Challenge = {
   id: string;
   title: string;
   slug: string;
@@ -12,15 +12,15 @@ type Post = {
   date?: string;
 };
 
-export default function AdminPostsPage() {
-  const [items, setItems] = useState<Post[]>([]);
+export default function AdminChallengesPage() {
+  const [items, setItems] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const res = await pbList("posts", { page: 1, perPage: 50, sort: "-date" });
+        const res = await pbList("challenges", { page: 1, perPage: 50, sort: "-date" }); 
         if (mounted) setItems(res.items as any);
       } finally {
         if (mounted) setLoading(false);
@@ -35,27 +35,27 @@ export default function AdminPostsPage() {
     <div className="container mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-semibold">Posts</h1>
-          <p className="text-sm text-muted-foreground">Gerenciar artigos do blog</p>
+          <h1 className="text-2xl font-semibold">Desafios</h1>
+          <p className="text-sm text-muted-foreground">Gerenciar desafios de programação</p>
         </div>
-        <Link href="/admin/editor/posts/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} /> Novo Post
+        <Link href="/admin/editor/challenges/new" className="btn-primary flex items-center gap-2">
+          <Plus size={18} /> Novo Desafio
         </Link>
       </div>
       {loading ? (
         <div>Carregando...</div>
       ) : items.length === 0 ? (
         <div className="card-modern p-12 text-center">
-          <FileText className="mx-auto mb-4 text-muted-foreground" size={48} />
-          <p className="text-muted-foreground">Nenhum post encontrado</p>
-          <Link href="/admin/editor/posts/new" className="btn-primary mt-4 inline-flex">
-            Criar primeiro post
+          <Code2 className="mx-auto mb-4 text-muted-foreground" size={48} />
+          <p className="text-muted-foreground">Nenhum desafio encontrado</p>
+          <Link href="/admin/editor/challenges/new" className="btn-primary mt-4 inline-flex">
+            Criar primeiro desafio
           </Link>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {items.map((item) => (
-            <Link key={item.id} href={`/admin/editor/posts/${item.id}`} className="card-modern p-4 hover:scale-[1.02] transition-all group">
+            <Link key={item.id} href={`/admin/editor/challenges/${item.id}`} className="card-modern p-4 hover:scale-[1.02] transition-all group">
               <div className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
                 <div className={`px-2 py-1 rounded ${item.status === 'published' ? 'bg-green-500/20 text-green-500' : 'bg-yellow-500/20 text-yellow-500'}`}>
                   {item.status || "draft"}
@@ -76,5 +76,4 @@ export default function AdminPostsPage() {
     </div>
   );
 }
-
 

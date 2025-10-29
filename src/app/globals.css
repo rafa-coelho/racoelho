@@ -85,6 +85,16 @@
       radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.12) 0px, transparent 50%);
     background-attachment: fixed;
   }
+
+  /* Fix select options contrast */
+  select {
+    color: hsl(var(--foreground));
+  }
+  
+  option {
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+  }
   
   /* Category accent colors */
   .accent-post { border-left: 4px solid hsl(var(--color-post)); }

@@ -8,7 +8,7 @@ import { ChevronRight, ChevronLeft, Check } from "lucide-react";
 
 type Step = 'metadata' | 'content';
 
-export default function EditPostPage() {
+export default function EditChallengePage() {
   const params = useParams();
   const id = String(params?.id || "");
   const [step, setStep] = useState<Step>('metadata');
@@ -20,6 +20,7 @@ export default function EditPostPage() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [tags, setTags] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [difficulty, setDifficulty] = useState("medium");
   const [loading, setLoading] = useState(true);
   const [cover, setCover] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -32,7 +33,7 @@ export default function EditPostPage() {
     let mounted = true;
     (async () => {
       try {
-        const rec = await pbGetById("posts", id);
+        const rec = await pbGetById("challenges", id);
         if (!mounted) return;
         setTitle(rec.title || "");
         setSlug(rec.slug || "");
@@ -42,13 +43,14 @@ export default function EditPostPage() {
         // Formatar data corretamente
         const dateValue = rec.date ? new Date(rec.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
         setDate(dateValue);
+        setDifficulty(rec.difficulty || "medium");
         setTags(Array.isArray(rec.tags) ? rec.tags.join(', ') : '');
         setKeywords(rec.keywords || '');
         
         // Carregar preview da imagem existente
         if (rec.coverImage) {
           const pbUrl = process.env.NEXT_PUBLIC_PB_URL || '';
-          setCoverPreview(`${pbUrl}/api/files/posts/${rec.id}/${rec.coverImage}`);
+          setCoverPreview(`${pbUrl}/api/files/challenges/${rec.id}/${rec.coverImage}`);
         }
       } finally {
         if (mounted) setLoading(false);
@@ -60,10 +62,9 @@ export default function EditPostPage() {
   const onSave = async () => {
     setSaving(true);
     try {
-      const rt = readingTime;
       const tagsArray = tags.split(',').map(t => t.trim()).filter(Boolean);
       
-      const postData: any = {
+      const challengeData: any = {
         title,
         slug: slug || slugify(title),
         excerpt,
@@ -72,19 +73,18 @@ export default function EditPostPage() {
         date,
         tags: tagsArray,
         keywords,
-        readingTime: rt
+        difficulty
       };
 
       if (cover) {
-        postData.coverImage = cover;
+        challengeData.coverImage = cover;
       }
 
-      await pbUpdate("posts", id, postData);
-      
-      window.location.href = "/admin/editor/posts";
+      await pbUpdate("challenges", id, challengeData);
+      window.location.href = "/admin/editor/challenges";
     } catch (error: any) {
-      console.error('Error updating post:', error);
-      alert('Erro ao atualizar post: ' + error.message);
+      console.error('Error updating challenge:', error);
+      alert('Erro ao atualizar desafio: ' + error.message);
     } finally {
       setSaving(false);
     }
@@ -96,14 +96,13 @@ export default function EditPostPage() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin mx-auto mb-4 text-primary" style={{ width: 48, height: 48 }}>⏳</div>
-        <p className="text-muted-foreground">Carregando post...</p>
+        <p className="text-muted-foreground">Carregando desafio...</p>
       </div>
     </div>
   );
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header fixo com ações */}
       <div className="sticky top-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-b border-white/5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -111,23 +110,18 @@ export default function EditPostPage() {
             <div>
               <div className="text-sm text-muted-foreground">Editor - Etapa {step === 'metadata' ? '1' : '2'} de 2</div>
               <h1 className="text-xl font-semibold">
-                {step === 'metadata' ? 'Informações do Post' : 'Conteúdo do Post'}
+                {step === 'metadata' ? 'Informações do Desafio' : 'Conteúdo do Desafio'}
               </h1>
             </div>
           </div>
-          {step === 'content' && (
-            <span className="text-xs px-2 py-1 rounded bg-white/5 border border-white/10">{readingTime} min</span>
-          )}
         </div>
         
-        {/* Progress bar */}
         <div className="flex items-center gap-2 mt-4">
           <div className={`flex-1 h-1 rounded-full ${step === 'metadata' ? 'bg-primary' : 'bg-primary/30'}`} />
           <div className={`flex-1 h-1 rounded-full ${step === 'content' ? 'bg-primary' : 'bg-white/10'}`} />
         </div>
       </div>
 
-      {/* Form principal baseado na etapa */}
       <div className="mt-6">
         {step === 'metadata' ? (
           <div className="card-modern p-8 max-w-3xl mx-auto">
@@ -136,9 +130,9 @@ export default function EditPostPage() {
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">Título *</label>
                 <input 
                   className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
-                  placeholder="Ex: Como funciona a Internet"
+                  placeholder="Ex: Criar um TODO List"
                   value={title}
-                  onChange={e => { setTitle(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} 
+                  onChange={e => setTitle(e.target.value)} 
                 />
               </div>
 
@@ -150,14 +144,14 @@ export default function EditPostPage() {
                   value={slug}
                   onChange={e => setSlug(slugify(e.target.value))} 
                 />
-                <p className="text-xs text-muted-foreground mt-1">URL: /posts/{slug || 'seu-slug'}</p>
+                <p className="text-xs text-muted-foreground mt-1">URL: /listas/desafios/{slug || 'seu-slug'}</p>
               </div>
 
               <div>
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">Resumo (opcional)</label>
                 <textarea 
                   className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none" 
-                  placeholder="Breve descrição do post..."
+                  placeholder="Breve descrição do desafio..."
                   rows={3}
                   value={excerpt}
                   onChange={e => setExcerpt(e.target.value)} 
@@ -179,14 +173,27 @@ export default function EditPostPage() {
                 <label className="text-sm font-medium text-muted-foreground mb-2 block">Keywords (opcional)</label>
                 <input 
                   className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
-                  placeholder="programação, dev, desenvolvimento"
+                  placeholder="desafios, programação, portfolio"
                   value={keywords}
                   onChange={e => setKeywords(e.target.value)} 
                 />
                 <p className="text-xs text-muted-foreground mt-1">Palavras-chave para SEO</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground mb-2 block">Dificuldade</label>
+                  <select 
+                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                    value={difficulty} 
+                    onChange={e => setDifficulty(e.target.value)}
+                  >
+                    <option value="easy">Fácil</option>
+                    <option value="medium">Médio</option>
+                    <option value="hard">Difícil</option>
+                  </select>
+                </div>
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground mb-2 block">Data</label>
                   <input 
@@ -262,7 +269,6 @@ export default function EditPostPage() {
         )}
       </div>
 
-      {/* Footer fixo com ações */}
       <div className="sticky bottom-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-t border-white/5 mt-6">
         <div className="flex items-center justify-between">
           <button 
@@ -294,7 +300,7 @@ export default function EditPostPage() {
                   onClick={onSave} 
                   disabled={saving}
                 >
-                  {saving ? "Salvando..." : "Salvar Post"} <Check size={18} />
+                  {saving ? "Salvando..." : "Salvar Desafio"} <Check size={18} />
                 </button>
               </>
             )}
@@ -304,3 +310,4 @@ export default function EditPostPage() {
     </div>
   );
 }
+

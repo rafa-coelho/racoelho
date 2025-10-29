@@ -19,7 +19,8 @@
     "generate:rss": "npx ts-node --project tsconfig.scripts.json scripts/generate-rss.ts",
     "generate:sitemap": "npx ts-node --project tsconfig.scripts.json scripts/generate-sitemap.ts",
     "generate:all": "npm run generate:rss && npm run generate:sitemap",
-    "pb:migrate": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.ts"
+    "pb:migrate": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.ts",
+    "pb:import-assets": "npx ts-node --project tsconfig.scripts.json scripts/import-assets.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
