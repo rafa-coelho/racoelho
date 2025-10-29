@@ -1,6 +1,7 @@
 import { pbListWithPreview, pbFirstByFilterWithPreview } from '@/lib/pocketbase-server';
 import { ContentItem, ContentMeta } from '@/lib/api';
 import { getCached, cacheKey, cacheListKey } from '@/lib/cache/cache.service';
+import { calculateReadingTime } from '../utils';
 
 // Mappers PB -> tipos locais
 function mapPbToContentMeta(rec: any): ContentMeta {
@@ -11,6 +12,8 @@ function mapPbToContentMeta(rec: any): ContentMeta {
     excerpt: rec.excerpt || '',
     coverImage: rec.coverImage ? fileUrl(rec, rec.coverImage) : undefined,
     tags: rec.tags || [],
+    status: rec.status || undefined,
+    readingTime: calculateReadingTime(rec.content || ''),
   };
 }
 

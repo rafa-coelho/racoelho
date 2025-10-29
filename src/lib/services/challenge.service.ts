@@ -11,6 +11,7 @@ function mapPbToContentMeta(rec: any): ContentMeta {
     excerpt: rec.excerpt || '',
     coverImage: rec.coverImage ? fileUrl(rec, rec.coverImage) : undefined,
     tags: rec.tags || [],
+    status: rec.status || undefined,
   };
 }
 

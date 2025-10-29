@@ -9,6 +9,8 @@ export interface ContentMeta {
   excerpt: string;
   coverImage?: string;
   tags?: string[];
+  status?: 'draft' | 'published';
+  readingTime?: number;
 }
 
 export interface ContentItem extends ContentMeta {
@@ -68,6 +70,7 @@ export interface SalesPage {
   ctaText: string;
   ctaUrl: string;
   paymentUrl: string;
+  status?: 'draft' | 'published';
 }
 
 export interface Ebook {

@@ -6,12 +6,12 @@ import { Metadata } from 'next';
 import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
+import { isAdmin } from '@/lib/pocketbase-server';
 
 interface ChallengePageProps {
   params: Promise<{
     slug: string;
   }>;
-  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: ChallengePageProps): Promise<Metadata> {
@@ -59,10 +59,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ChallengePage({ params, searchParams }: ChallengePageProps) {
+export default async function ChallengePage({ params }: ChallengePageProps) {
   const { slug } = await params;
-  const { preview } = await searchParams;
-  const isPreview = preview === 'true';
+  const adminStatus = await isAdmin();
   
   const challenge = await challengeService.getChallengeBySlug(slug, [
     'title',
@@ -71,16 +70,20 @@ export default async function ChallengePage({ params, searchParams }: ChallengeP
     'coverImage',
     'tags',
     'excerpt',
-    'slug'
-  ], isPreview);
+    'slug',
+    'status'
+  ], adminStatus);
   
   if (!challenge || !challenge.content) {
     notFound();
   }
 
+  const isDraft = challenge.status !== 'published';
+  const showPreview = adminStatus && isDraft;
+
   return (
     <>
-      {isPreview && <PreviewBanner />}
+      {showPreview && <PreviewBanner />}
       <ChallengeContent challenge={challenge as ContentItem} />
     </>
   );

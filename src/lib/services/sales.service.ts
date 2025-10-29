@@ -11,6 +11,7 @@ function mapPbToSalesPage(rec: any): SalesPage {
     ctaText: rec.ctaText || '',
     ctaUrl: rec.ctaUrl || '',
     paymentUrl: rec.paymentUrl || '',
+    status: rec.status || 'draft',
   };
 }
 

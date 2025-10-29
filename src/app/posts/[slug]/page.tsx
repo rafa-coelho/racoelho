@@ -6,12 +6,12 @@ import { Metadata } from 'next';
 import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
+import { isAdmin } from '@/lib/pocketbase-server';
 
 interface PostPageProps {
   params: Promise<{
     slug: string;
   }>;
-  searchParams: Promise<{ preview?: string }>;
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
@@ -59,10 +59,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function PostPage({ params, searchParams }: PostPageProps) {
+export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
-  const { preview } = await searchParams;
-  const isPreview = preview === 'true';
+  const adminStatus = await isAdmin();
   
   const post = await contentService.getPostBySlug(slug, [
     'title',
@@ -71,16 +70,20 @@ export default async function PostPage({ params, searchParams }: PostPageProps) 
     'coverImage',
     'tags',
     'excerpt',
-    'slug'
-  ], isPreview);
+    'slug',
+    'status'
+  ], adminStatus);
   
   if (!post || !post.content) {
     notFound();
   }
 
+  const isDraft = post.status !== 'published';
+  const showPreview = adminStatus && isDraft;
+
   return (
     <>
-      {isPreview && <PreviewBanner />}
+      {showPreview && <PreviewBanner />}
       <BlogPostContent post={post as ContentItem} />
     </>
   );

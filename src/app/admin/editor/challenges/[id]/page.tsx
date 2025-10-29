@@ -73,7 +73,8 @@ export default function EditChallengePage() {
         date,
         tags: tagsArray,
         keywords,
-        difficulty
+        difficulty,
+        readingTime: readingTime
       };
 
       if (cover) {

@@ -193,7 +193,7 @@ export default function BlogContent({ posts, tags }: BlogContentProps) {
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock size={14} />
-                          <span>{post.content ? `${calculateReadingTime(post.content)} min` : '—'}</span>
+                          <span>{post.readingTime ? `${post.readingTime} min` : '—'}</span>
                         </div>
                       </div>
 
@@ -228,7 +228,7 @@ export default function BlogContent({ posts, tags }: BlogContentProps) {
                         <div className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2 text-muted-foreground">
                             <Clock size={16} />
-                            <span>Leitura: {post.content ? `${calculateReadingTime(post.content)} min` : '—'}</span>
+                            <span>Leitura: {post.readingTime ? `${post.readingTime} min` : '—'}</span>
                           </div>
                           <span className="text-post font-medium group-hover:translate-x-1 transition-transform inline-block">
                             Ler →

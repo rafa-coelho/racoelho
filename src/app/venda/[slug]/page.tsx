@@ -7,21 +7,18 @@ import { salesService } from '@/lib/services/sales.service';
 import type { SalesPage } from '@/lib/api';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { isAdmin } from '@/lib/services/auth.service';
+import { isAdmin } from '@/lib/pocketbase-server';
 interface SalesPageProps {
   params: Promise<{
     slug: string;
   }>;
-  searchParams: Promise<{ preview?: string }>;
 }
 
-export async function generateMetadata({ params, searchParams }: SalesPageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: SalesPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
-    const { preview } = await searchParams;
     const adminStatus = await isAdmin();
-    const isPreview = adminStatus || preview === 'true';
-    const salesPage = await salesService.getSalesPageBySlug(slug, isPreview);
+    const salesPage = await salesService.getSalesPageBySlug(slug, adminStatus);
     
     if (!salesPage) {
       return {
@@ -42,23 +39,23 @@ export async function generateMetadata({ params, searchParams }: SalesPageProps)
   }
 }
 
-export default async function SalesPage({ params, searchParams }: SalesPageProps) {
+export default async function SalesPage({ params }: SalesPageProps) {
   const { slug } = await params;
-  const { preview } = await searchParams;
   const adminStatus = await isAdmin();
-  // Preview se for admin OU se tiver ?preview=true na URL
-  const isPreview = adminStatus || preview === 'true';
   
   try {
-    const salesPage = await salesService.getSalesPageBySlug(slug, isPreview);
+    const salesPage = await salesService.getSalesPageBySlug(slug, adminStatus);
     
     if (!salesPage) {
       notFound();
     }
     
+    const isDraft = salesPage.status !== 'published';
+    const showPreview = adminStatus && isDraft;
+    
     return (
       <>
-        {isPreview && <PreviewBanner />}
+        {showPreview && <PreviewBanner />}
         <Layout>
           <div className="content-container py-12">
             <div className="max-w-4xl mx-auto">

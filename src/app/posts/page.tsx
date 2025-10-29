@@ -1,12 +1,11 @@
 import { contentService } from '@/lib/services/content.service';
 import BlogContent from '@/components/BlogContent';
+import { isAdmin } from '@/lib/pocketbase-server';
 
 export default async function Blog() {
-  // Busca com suporte a preview
-  const searchParams = await import('next/navigation').then(m => m).catch(() => null);
-  const isPreview = false; // TODO: Implementar detecção de preview via query params ou headers
+  const adminStatus = await isAdmin();
   
-  const posts = await contentService.getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage', 'content'], isPreview);
+  const posts = await contentService.getAllPosts(['title', 'slug', 'date', 'excerpt', 'tags', 'coverImage', 'content'], adminStatus);
   const tags = Array.from(new Set(posts.flatMap(post => post.tags || [])));
   return <BlogContent posts={posts} tags={tags} />;
 }
