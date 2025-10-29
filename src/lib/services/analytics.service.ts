@@ -21,6 +21,12 @@ export class AnalyticsService {
 
   private constructor() {}
 
+  private isAdminPath(): boolean {
+    if (typeof window === 'undefined') return false
+    const path = window.location?.pathname || ''
+    return path.startsWith('/admin')
+  }
+
   public static getInstance(): AnalyticsService {
     if (!AnalyticsService.instance) {
       AnalyticsService.instance = new AnalyticsService()
@@ -29,6 +35,7 @@ export class AnalyticsService {
   }
 
   public pageview(url: string): void {
+    if (this.isAdminPath()) return
     if (typeof window !== 'undefined' && window.gtag) {
       try {
         window.gtag('config', GA_TRACKING_ID, {
@@ -43,6 +50,7 @@ export class AnalyticsService {
   }
 
   public event(action: string, category: string, label?: string, value?: number): void {
+    if (this.isAdminPath()) return
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', action, {
         event_category: category,
