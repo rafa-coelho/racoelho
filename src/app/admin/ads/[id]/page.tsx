@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { pbGetById, pbUpdate } from "@/lib/pocketbase";
 import { Check } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 export default function EditAdPage() {
   const params = useParams();
@@ -13,6 +14,7 @@ export default function EditAdPage() {
   const [altText, setAltText] = useState("");
   const [trackingLabel, setTrackingLabel] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -28,6 +30,12 @@ export default function EditAdPage() {
         setLink(rec.link || "");
         setAltText(rec.altText || "");
         setTrackingLabel(rec.trackingLabel || "");
+        
+        // Carregar preview da imagem existente
+        if (rec.image) {
+          const pbUrl = process.env.NEXT_PUBLIC_PB_URL || '';
+          setExistingImageUrl(`${pbUrl}/api/files/ads/${rec.id}/${rec.image}`);
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -111,15 +119,13 @@ export default function EditAdPage() {
             />
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-muted-foreground mb-2 block">Nova Imagem (opcional)</label>
-            <input 
-              className="w-full text-sm" 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => setImage(e.target.files?.[0] || null)} 
-            />
-          </div>
+          <ImageUpload 
+            image={image}
+            setImage={setImage}
+            existingImageUrl={existingImageUrl}
+            collection="ads"
+            recordId={id}
+          />
 
           <div>
             <label className="text-sm font-medium text-muted-foreground mb-2 block">Alt Text</label>

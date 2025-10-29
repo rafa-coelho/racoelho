@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { pbGetById, pbUpdate } from "@/lib/pocketbase";
 import { Check } from "lucide-react";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 export default function EditLinkItemPage() {
   const params = useParams();
@@ -13,6 +14,7 @@ export default function EditLinkItemPage() {
   const [type, setType] = useState("link");
   const [icon, setIcon] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -28,6 +30,12 @@ export default function EditLinkItemPage() {
         setDescription(rec.description || "");
         setType(rec.type || "link");
         setIcon(rec.icon || "");
+        
+        // Carregar preview da imagem existente
+        if (rec.image) {
+          const pbUrl = process.env.NEXT_PUBLIC_PB_URL || '';
+          setExistingImageUrl(`${pbUrl}/api/files/link_items/${rec.id}/${rec.image}`);
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -121,15 +129,13 @@ export default function EditLinkItemPage() {
             </div>
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-muted-foreground mb-2 block">Nova Imagem (opcional)</label>
-            <input 
-              className="w-full text-sm" 
-              type="file" 
-              accept="image/*" 
-              onChange={(e) => setImage(e.target.files?.[0] || null)} 
-            />
-          </div>
+          <ImageUpload 
+            image={image}
+            setImage={setImage}
+            existingImageUrl={existingImageUrl}
+            collection="link_items"
+            recordId={id}
+          />
 
           <div className="flex gap-4 pt-4 border-t border-white/10">
             <button onClick={() => history.back()} className="flex-1 px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5">
