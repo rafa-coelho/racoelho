@@ -37,11 +37,7 @@ export const mailerConfig = {
   },
 };
 
-export const firebaseConfig = {
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  clientEmail: process.env.NEXT_PUBLIC_FIREBASE_CLIENT_EMAIL,
-  key: process.env.NEXT_PUBLIC_FIREBASE_API_KEY
-};
+// Firebase removido do projeto
 
 export const analyticsConfig = {
   trackingId: process.env.NEXT_PUBLIC_GA_ID || '',

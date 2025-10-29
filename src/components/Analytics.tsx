@@ -13,7 +13,10 @@ const Analytics = () => {
 
   useEffect(() => {
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
-    analyticsService.pageview(url)
+    // Evita track no admin
+    if (!pathname?.startsWith('/admin')) {
+      analyticsService.pageview(url)
+    }
   }, [pathname, searchParams])
 
   return null
