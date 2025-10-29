@@ -3,9 +3,9 @@
 
 import PocketBase from 'pocketbase';
 
-const PB_URL = process.env.NEXT_PUBLIC_PB_URL || '';
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_PB_ADMIN_EMAIL || '';
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_PB_ADMIN_PASSWORD || '';
+const PB_URL = process.env.PB_URL || process.env.NEXT_PUBLIC_PB_URL || '';
+const ADMIN_EMAIL = process.env.PB_ADMIN_EMAIL || '';
+const ADMIN_PASSWORD = process.env.PB_ADMIN_PASSWORD || '';
 
 // Cache de instância do cliente para evitar múltiplas conexões
 let serverClient: PocketBase | null = null;

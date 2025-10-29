@@ -11,9 +11,14 @@ NEXT_PUBLIC_CONTENT_SOURCE=pb
 # URL do PocketBase
 NEXT_PUBLIC_PB_URL=http://127.0.0.1:8090
 
-# Credenciais admin do PocketBase
-NEXT_PUBLIC_PB_ADMIN_EMAIL=seu-email@admin.com
-NEXT_PUBLIC_PB_ADMIN_PASSWORD=sua-senha
+# Credenciais admin do PocketBase (server-only)
+PB_URL=http://127.0.0.1:8090
+PB_ADMIN_EMAIL=seu-email@admin.com
+PB_ADMIN_PASSWORD=sua-senha
+
+# (Opcional) URL pública do PocketBase para gerar links de arquivos
+# Use apenas se precisar construir URLs públicas no cliente
+NEXT_PUBLIC_PB_URL=http://127.0.0.1:8090
 ```
 
 ## Como Migrar para PocketBase
