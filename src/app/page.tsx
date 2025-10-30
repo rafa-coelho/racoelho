@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+import { BLOG_NAME, DESCRIPTION, SITE_URL } from '@/lib/config/constants';
+
+export const metadata: Metadata = {
+  title: BLOG_NAME,
+  description: DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+};
 import HomeContent from '@/components/HomeContent';
 import { getLatestYoutubeVideos } from '@/lib/services/youtube.service';
 import { contentService } from '@/lib/services/content.service';
