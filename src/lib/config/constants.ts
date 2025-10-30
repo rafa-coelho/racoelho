@@ -1,9 +1,10 @@
 export const EXAMPLE_PATH = 'blog-starter';
 export const CMS_NAME = 'Markdown';
 export const HOME_OG_IMAGE_URL = 'https://github.com/rafa-coelho.png';
-export const BLOG_NAME = 'Rafael Coelho';
+export const BLOG_NAME = 'Racoelho';
+export const SITE_TITLE = 'Racoelho | Blog Pessoal';
 export const KEYWORDS = 'dev, blog, tech, tecnologia, programador, programação, developer, Racoelho, Rafael Coelho';
-export const DESCRIPTION = 'Rafael Coelho, o Racoelho. Sou desenvolvedor Full-Stack, ou seja, atuo tanto em Backend como em Frontend. E este aqui é meu portifólio e blog pessoal sobre tecnologia e programação.';
+export const DESCRIPTION = 'Rafael Coelho (Racoelho), desenvolvedor Full‑Stack. Portfólio e blog com artigos, desafios e projetos sobre programação, dev e tecnologia.';
 export const AUTHOR = 'racoelho';
 export const TWITTER_USERNAME = 'racoelhodev';
 export const LANG = 'pt-BR';

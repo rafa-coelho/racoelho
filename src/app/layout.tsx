@@ -3,14 +3,14 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 // import '@/styles/prism-theme.css';
 import { AnalyticsWrapper } from '@/components/Analytics';
-import { BLOG_NAME, DESCRIPTION } from '@/lib/config/constants';
+import { BLOG_NAME, SITE_TITLE, DESCRIPTION, SITE_URL } from '@/lib/config/constants';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://racoelho.com.br'),
   title: {
-    default: BLOG_NAME,
+    default: SITE_TITLE,
     template: `%s | ${BLOG_NAME}`,
   },
   description: DESCRIPTION,
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: BLOG_NAME,
     description: DESCRIPTION,
-    url: process.env.NEXT_PUBLIC_SITE_URL,
+    url: SITE_URL,
     siteName: BLOG_NAME,
     locale: 'pt_BR',
     type: 'website',
@@ -49,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-br">
       <body className={inter.className}>
         <AnalyticsWrapper />
         <main>
