@@ -25,8 +25,18 @@ function mapPbToContentItem(rec: any): ContentItem {
 }
 
 function fileUrl(rec: any, filename: string) {
+  if (!filename || !rec) return '';
+  
   const base = process.env.NEXT_PUBLIC_PB_URL || '';
-  return `${base}/api/files/${rec.collectionId || rec.collection}/${rec.id}/${filename}`;
+  const collection = rec.collectionId || rec.collection || 'posts';
+  const id = rec.id;
+  
+  if (!id) {
+    console.warn('[ContentService] fileUrl: Record sem ID', { collection, filename });
+    return '';
+  }
+  
+  return `${base}/api/files/${collection}/${id}/${filename}`;
 }
 
 export const contentService = {
