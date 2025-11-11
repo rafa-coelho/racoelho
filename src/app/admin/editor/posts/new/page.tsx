@@ -21,6 +21,7 @@ export default function NewPostPage() {
     const [status, setStatus] = useState("draft");
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [tags, setTags] = useState("");
+    const [keywords, setKeywords] = useState("");
     const [saving, setSaving] = useState(false);
 
     const readingTime = useMemo(() => calculateReadingTime(content || ""), [content]);
@@ -40,6 +41,7 @@ export default function NewPostPage() {
                 status,
                 date,
                 tags: tagsArray,
+                keywords,
                 readingTime: rt
             };
 
@@ -142,6 +144,17 @@ export default function NewPostPage() {
                                     onChange={e => setTags(e.target.value)} 
                                 />
                                 <p className="text-xs text-muted-foreground mt-1">Separe as tags por vírgula</p>
+                            </div>
+
+                            <div>
+                                <label className="text-sm font-medium text-muted-foreground mb-2 block">Keywords (opcional)</label>
+                                <input 
+                                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                                    placeholder="programação, dev, desenvolvimento"
+                                    value={keywords}
+                                    onChange={e => setKeywords(e.target.value)} 
+                                />
+                                <p className="text-xs text-muted-foreground mt-1">Palavras-chave para SEO</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

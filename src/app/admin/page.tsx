@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder } from "lucide-react";
+import { useState } from "react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type Module = {
     title: string;
@@ -43,7 +45,54 @@ const allModules: Array<Module & { category: string }> = sections.flatMap((s) =>
     s.modules.map((m) => ({ ...m, category: s.title }))
 );
 
+// Coleções que podem ter cache invalidado
+const cacheableCollections = [
+    { name: 'posts', label: 'Posts', icon: FileText },
+    { name: 'challenges', label: 'Desafios', icon: Code2 },
+    { name: 'sales_pages', label: 'Páginas de Venda', icon: ShoppingCart },
+    { name: 'setup', label: 'Setup', icon: Settings },
+    { name: 'links', label: 'Links', icon: LinkIcon },
+    { name: 'social_links', label: 'Links Sociais', icon: Share2 },
+    { name: 'assets', label: 'Assets', icon: Folder },
+    { name: 'ads', label: 'Anúncios', icon: Image },
+];
+
 export default function AdminDashboard() {
+    const { toast } = useToast();
+    const [invalidating, setInvalidating] = useState<string | null>(null);
+
+    const handleInvalidateCache = async (collection: string) => {
+        setInvalidating(collection);
+        try {
+            const response = await fetch('/api/cache/invalidate', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ collection }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao invalidar cache');
+            }
+
+            toast({
+                title: "Sucesso",
+                description: data.message || `Cache de ${collection} limpo com sucesso`,
+            });
+        } catch (error: any) {
+            toast({
+                title: "Erro",
+                description: error.message || "Erro ao invalidar cache",
+                variant: "destructive",
+            });
+        } finally {
+            setInvalidating(null);
+        }
+    };
+
     return (
         <div className="container mx-auto px-4 py-12">
             <div className="mb-8">
@@ -51,7 +100,42 @@ export default function AdminDashboard() {
                 <p className="text-muted-foreground">Gerencie todo o conteúdo do site</p>
             </div>
 
+            {/* Seção de Cache */}
+            <div className="mb-12">
+                <div className="flex items-center gap-3 mb-4">
+                    <RefreshCw className="w-5 h-5 text-muted-foreground" />
+                    <h2 className="text-xl font-semibold">Gerenciamento de Cache</h2>
+                </div>
+                <div className="card-modern p-6">
+                    <p className="text-sm text-muted-foreground mb-4">
+                        Limpe o cache de coleções específicas para forçar atualização dos dados
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {cacheableCollections.map((item) => {
+                            const Icon = item.icon;
+                            const isInvalidating = invalidating === item.name;
+                            return (
+                                <button
+                                    key={item.name}
+                                    onClick={() => handleInvalidateCache(item.name)}
+                                    disabled={isInvalidating}
+                                    className="flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 hover:border-primary/40 hover:bg-white/5 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                                >
+                                    <Icon className="w-4 h-4" />
+                                    <span>{item.label}</span>
+                                    {isInvalidating && (
+                                        <RefreshCw className="w-3 h-3 animate-spin ml-auto" />
+                                    )}
+                                </button>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+
+            {/* Módulos do Dashboard */}
             <div>
+                <h2 className="text-xl font-semibold mb-4">Módulos</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {allModules.map((module) => {
                         const Icon = module.icon;

@@ -27,11 +27,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Criar cookie no formato que PocketBase espera
-    // O exportToCookie retorna uma string completa, mas precisamos apenas do valor
-    // Vamos usar a serialização direta do authStore
+    // O exportToCookie retorna uma string completa: "pb_auth=valor; expires=..."
+    // Precisamos extrair apenas o valor (tudo depois de "pb_auth=" até o primeiro ";")
     const serialized = pb.authStore.exportToCookie();
-    // Extrair apenas o valor (formato: "pb_auth=valor; expires=...")
-    const cookieValue = serialized.split(';')[0].split('=')[1];
+    // Extrair o valor corretamente (pode conter caracteres especiais)
+    const match = serialized.match(/pb_auth=([^;]+)/);
+    const cookieValue = match ? match[1] : '';
+
+    if (!cookieValue) {
+      console.error('[Auth API] Erro ao extrair valor do cookie');
+      return NextResponse.json(
+        { error: 'Erro ao processar autenticação' },
+        { status: 500 }
+      );
+    }
 
     const response = NextResponse.json(
       { success: true, token: authData.token },

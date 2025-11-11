@@ -32,8 +32,8 @@ export const challengeService = {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
-    // Buscar com cache
-    const cacheKeyData = cacheListKey('challenges');
+    // Buscar com cache - chave diferente para preview e não-preview
+    const cacheKeyData = `${cacheListKey('challenges')}:${isPreview ? 'preview' : 'public'}`;
     
     return await getCached(
       cacheKeyData,
@@ -53,8 +53,8 @@ export const challengeService = {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
-    // Buscar com cache
-    const cacheKeyData = cacheKey('challenges', slug);
+    // Buscar com cache - chave diferente para preview e não-preview
+    const cacheKeyData = `${cacheKey('challenges', slug)}:${isPreview ? 'preview' : 'public'}`;
 
     return await getCached(
       cacheKeyData,
