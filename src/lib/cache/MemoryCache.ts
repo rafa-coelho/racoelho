@@ -61,13 +61,30 @@ export class MemoryCache implements ICacheService {
    * Suporta wildcards: * para qualquer string
    */
   async invalidate(pattern: string): Promise<void> {
+    // Se o padrão termina com *, buscar todas as chaves que começam com o prefixo
+    if (pattern.endsWith('*')) {
+      const prefix = pattern.slice(0, -1); // Remove o *
+      const keysToDelete: string[] = [];
+      
+      Array.from(this.cache.keys()).forEach((key) => {
+        if (key.startsWith(prefix)) {
+          keysToDelete.push(key);
+        }
+      });
+      
+      for (const key of keysToDelete) {
+        this.cache.delete(key);
+      }
+      return;
+    }
+    
+    // Para padrões com * no meio, usar regex
     const regex = new RegExp(
       '^' + pattern.replace(/\*/g, '.*') + '$'
     );
 
     const keysToDelete: string[] = [];
 
-    // Evita iteração de MapIterator para compatibilidade com targets < ES2015
     Array.from(this.cache.keys()).forEach((key) => {
       if (regex.test(key)) {
         keysToDelete.push(key);
