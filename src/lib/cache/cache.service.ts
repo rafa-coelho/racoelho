@@ -70,9 +70,23 @@ export async function getCached<T>(
 
 /**
  * Limpa cache de uma coleção específica
+ * Invalida todas as variações: list, items individuais, preview e public
  */
 export async function invalidateCollection(collection: string): Promise<void> {
   const cache = CacheService.getInstance();
+  
+  // Buscar todas as chaves que começam com pb:collection:
+  const debugInfo = await cache.getDebugInfo();
+  const keysToInvalidate = debugInfo.keys.filter(key => 
+    key.startsWith(`pb:${collection}:`)
+  );
+  
+  // Deletar todas as chaves encontradas
+  for (const key of keysToInvalidate) {
+    await cache.delete(key);
+  }
+  
+  // Também usar o padrão com wildcard como fallback
   await cache.invalidate(`pb:${collection}:*`);
 }
 

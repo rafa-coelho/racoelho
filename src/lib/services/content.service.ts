@@ -32,7 +32,6 @@ function fileUrl(rec: any, filename: string) {
   const id = rec.id;
   
   if (!id) {
-    console.warn('[ContentService] fileUrl: Record sem ID', { collection, filename });
     return '';
   }
   
@@ -86,7 +85,6 @@ export const contentService = {
           
           return mapPbToContentItem(rec);
         } catch (error: any) {
-          console.error('[ContentService] Erro ao buscar post:', error?.message || error);
           return null;
         }
       },
