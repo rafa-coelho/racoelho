@@ -4,12 +4,14 @@ import { SITE_URL, BLOG_NAME, AUTHOR } from '@/lib/config/constants'
 // Render faremos simples: usar markdown bruto em CDATA (sem depender de libs)
 
 export const revalidate = 900 // 15 min
+export const dynamic = 'force-dynamic' // Sempre buscar dados atualizados
 
 function escapeCdata(s: string) {
   return s.replace(/]]>/g, ']]]]><![CDATA[>')
 }
 
 export async function GET() {
+  // Buscar apenas posts publicados para o feed
   const metas = await contentService.getAllPosts([], false)
 
   const items = await Promise.all(
@@ -19,7 +21,10 @@ export async function GET() {
       const description = full?.excerpt || ''
       const html = full?.content || ''
       const categories = (full?.tags || []).map(t => `<category>${t}</category>`).join('')
-      const image = full?.coverImage ? `<enclosure url="${full.coverImage}" type="image/${full.coverImage.endsWith('.png') ? 'png' : 'jpeg'}" />` : ''
+      // Validar coverImage antes de usar (evitar URLs com undefined)
+      const image = full?.coverImage && !full.coverImage.includes('undefined') 
+        ? `<enclosure url="${full.coverImage}" type="image/${full.coverImage.endsWith('.png') ? 'png' : 'jpeg'}" />` 
+        : ''
       return `
         <item>
           <title>${full?.title || p.title}</title>
