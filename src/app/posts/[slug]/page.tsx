@@ -8,6 +8,9 @@ import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
 import { isAdmin } from '@/lib/pocketbase-server';
 
+// Permitir rotas dinâmicas não pré-geradas (necessário para posts em rascunho)
+export const dynamicParams = true;
+
 interface PostPageProps {
   params: Promise<{
     slug: string;
@@ -16,7 +19,9 @@ interface PostPageProps {
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const post = await contentService.getPostBySlug(slug, [], false);
+  // Verificar se é admin para incluir posts em rascunho nos metadados
+  const adminStatus = await isAdmin();
+  const post = await contentService.getPostBySlug(slug, [], adminStatus);
   
   if (!post || !post.content) {
     return {
@@ -77,7 +82,13 @@ export default async function PostPage({ params }: PostPageProps) {
     'status'
   ], adminStatus);
   
-  if (!post || !post.content) {
+  if (!post) {
+    notFound();
+  }
+  
+  // Para posts em rascunho, permitir mesmo sem conteúdo (pode estar sendo editado)
+  // Para posts publicados, exigir conteúdo
+  if (post.status === 'published' && !post.content) {
     notFound();
   }
 

@@ -34,8 +34,8 @@ export const contentService = {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
-    // Buscar com cache
-    const cacheKeyData = cacheListKey('posts');
+    // Buscar com cache - chave diferente para preview e não-preview
+    const cacheKeyData = `${cacheListKey('posts')}:${isPreview ? 'preview' : 'public'}`;
 
     return await getCached(
       cacheKeyData,
@@ -55,8 +55,8 @@ export const contentService = {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
 
-    // Buscar com cache
-    const cacheKeyData = cacheKey('posts', slug);
+    // Buscar com cache - chave diferente para preview e não-preview
+    const cacheKeyData = `${cacheKey('posts', slug)}:${isPreview ? 'preview' : 'public'}`;
 
     return await getCached(
       cacheKeyData,
@@ -66,13 +66,21 @@ export const contentService = {
           : `slug='${slug}' && status='published'`;
 
         try {
-          const rec = await pbFirstByFilterWithPreview('posts', filter, undefined, isPreview);
-          return rec ? mapPbToContentItem(rec) : null;
-        } catch (error) {
+          // Passar fields para garantir que content seja retornado
+          const fieldsParam = fields.length > 0 ? fields.join(',') : undefined;
+          const rec = await pbFirstByFilterWithPreview('posts', filter, fieldsParam, isPreview);
+          
+          if (!rec) {
+            return null;
+          }
+          
+          return mapPbToContentItem(rec);
+        } catch (error: any) {
+          console.error('[ContentService] Erro ao buscar post:', error?.message || error);
           return null;
         }
       },
-      3600000 // 1 hora
+      isPreview ? 0 : 3600000 // Preview sem cache, publicado com cache de 1 hora
     );
   },
 

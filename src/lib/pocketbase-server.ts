@@ -55,13 +55,33 @@ export async function getAdminSession(): Promise<string | null> {
     // loadFromCookie espera a string completa do header: "pb_auth=<valor>"
     pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
     
-    if (pb.authStore.isValid) {
-      // Tentar refresh para validar o token
-      try {
-        await pb.authStore.model?.id; // Trigger refresh if needed
-        return pb.authStore.token;
-      } catch {
+    if (pb.authStore.isValid && pb.authStore.token) {
+      // Se o token é válido, verificar se é admin
+      const model = pb.authStore.model;
+      
+      // Se não tem model, não é válido
+      if (!model) {
         return null;
+      }
+      
+      // Verificar se é admin: collectionName pode ser 'admins' ou '_superusers'
+      // _superusers é usado quando autenticado via pb.admins.authWithPassword()
+      const isAdminUser = model.collectionName === 'admins' || 
+                         model.collectionName === '_superusers' ||
+                         model.collectionId === '_pb_users_auth_' ||
+                         (model as any).avatar !== undefined;
+      
+      if (isAdminUser) {
+        return pb.authStore.token;
+      } else {
+        // Tentar verificar se tem permissões de admin fazendo uma requisição
+        try {
+          // Se conseguir acessar admins, é admin
+          await pb.collection('admins').getList(1, 1);
+          return pb.authStore.token;
+        } catch {
+          return null;
+        }
       }
     }
     
@@ -120,13 +140,31 @@ export async function pbListWithPreview(
   isPreview: boolean = false
 ) {
   let pb: PocketBase;
+  
+  // Se isPreview é true, tentar usar cliente autenticado do usuário
   if (isPreview) {
     try {
-      pb = await getAuthenticatedClient();
-    } catch {
+      const session = await getAdminSession();
+      if (session) {
+        // Cliente com autenticação do usuário via cookie
+        pb = new PocketBase(PB_URL);
+        pb.autoCancellation(false);
+        const { cookies: getCookies } = await import('next/headers');
+        const cookieStore = getCookies();
+        const authCookie = cookieStore.get('pb_auth');
+        if (authCookie?.value) {
+          pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+        }
+      } else {
+        // Se não há sessão, usar admin server-side
+        pb = await getPocketBaseServer();
+      }
+    } catch (error) {
+      // Em caso de erro, usar admin server-side como fallback
       pb = await getPocketBaseServer();
     }
   } else {
+    // Modo público, sempre usar admin server-side
     pb = await getPocketBaseServer();
   }
   
@@ -149,7 +187,30 @@ export async function pbGetByIdWithPreview(
   id: string,
   isPreview: boolean = false
 ) {
-  const pb = isPreview ? await getAuthenticatedClient() : await getPocketBaseServer();
+  let pb: PocketBase;
+  
+  if (isPreview) {
+    try {
+      const session = await getAdminSession();
+      if (session) {
+        pb = new PocketBase(PB_URL);
+        pb.autoCancellation(false);
+        const { cookies: getCookies } = await import('next/headers');
+        const cookieStore = getCookies();
+        const authCookie = cookieStore.get('pb_auth');
+        if (authCookie?.value) {
+          pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+        }
+      } else {
+        pb = await getPocketBaseServer();
+      }
+    } catch {
+      pb = await getPocketBaseServer();
+    }
+  } else {
+    pb = await getPocketBaseServer();
+  }
+  
   return await pb.collection(collection).getOne(id);
 }
 
@@ -162,7 +223,30 @@ export async function pbFirstByFilterWithPreview(
   fields?: string,
   isPreview: boolean = false
 ) {
-  const pb = isPreview ? await getAuthenticatedClient() : await getPocketBaseServer();
+  let pb: PocketBase;
+  
+  if (isPreview) {
+    try {
+      const session = await getAdminSession();
+      if (session) {
+        pb = new PocketBase(PB_URL);
+        pb.autoCancellation(false);
+        const { cookies: getCookies } = await import('next/headers');
+        const cookieStore = getCookies();
+        const authCookie = cookieStore.get('pb_auth');
+        if (authCookie?.value) {
+          pb.authStore.loadFromCookie(`pb_auth=${authCookie.value}`);
+        }
+      } else {
+        pb = await getPocketBaseServer();
+      }
+    } catch {
+      pb = await getPocketBaseServer();
+    }
+  } else {
+    pb = await getPocketBaseServer();
+  }
+  
   return await pb.collection(collection).getFirstListItem(filter, { fields });
 }
 
