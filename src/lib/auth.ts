@@ -96,6 +96,14 @@ export function getPocketBaseClient(): PocketBase {
   return pb;
 }
 
+/**
+ * Retorna um cliente PocketBase público (sem autenticação)
+ * Usado para operações que não requerem autenticação, como tracking de views
+ */
+export function getPublicPocketBaseClient(): PocketBase {
+  return new PocketBase(PB_URL);
+}
+
 export async function checkAuth(): Promise<boolean> {
   try {
     const pb = getPocketBaseClient();
