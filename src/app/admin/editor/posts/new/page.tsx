@@ -6,6 +6,7 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import { calculateReadingTime, slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "@/components/admin/ImageUpload";
 
 type Step = 'metadata' | 'content';
 
@@ -15,6 +16,7 @@ export default function NewPostPage() {
     const [step, setStep] = useState<Step>('metadata');
     const [title, setTitle] = useState("");
     const [slug, setSlug] = useState("");
+    const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
     const [excerpt, setExcerpt] = useState("");
     const [content, setContent] = useState("");
     const [cover, setCover] = useState<File | null>(null);
@@ -109,7 +111,12 @@ export default function NewPostPage() {
                                     className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
                                     placeholder="Ex: Como funciona a Internet"
                                     value={title}
-                                    onChange={e => { setTitle(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} 
+                                    onChange={e => { 
+                                        setTitle(e.target.value); 
+                                        if (!slugManuallyEdited) {
+                                            setSlug(slugify(e.target.value));
+                                        }
+                                    }} 
                                 />
                             </div>
 
@@ -119,7 +126,17 @@ export default function NewPostPage() {
                                     className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
                                     placeholder="exemplo-de-slug"
                                     value={slug}
-                                    onChange={e => setSlug(slugify(e.target.value))} 
+                                    onChange={e => {
+                                        const value = e.target.value;
+                                        // Permite traços, letras, números. Remove apenas espaços (substitui por traços) e caracteres especiais
+                                        const newSlug = value
+                                            .toLowerCase()
+                                            .replace(/\s+/g, '-')      // Substitui espaços por traços
+                                            .replace(/[^\w-]/g, '');   // Remove tudo exceto letras, números e traços
+                                        setSlug(newSlug);
+                                        // Se limpar o slug, volta a seguir o título
+                                        setSlugManuallyEdited(newSlug.length > 0);
+                                    }} 
                                 />
                                 <p className="text-xs text-muted-foreground mt-1">URL: /posts/{slug || 'seu-slug'}</p>
                             </div>
@@ -157,7 +174,7 @@ export default function NewPostPage() {
                                 <p className="text-xs text-muted-foreground mt-1">Palavras-chave para SEO</p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label className="text-sm font-medium text-muted-foreground mb-2 block">Data</label>
                                     <input 
@@ -179,17 +196,13 @@ export default function NewPostPage() {
                                         <option value="published">Publicado</option>
                                     </select>
                                 </div>
-
-                                <div>
-                                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Capa (opcional)</label>
-                                    <input 
-                                        className="w-full text-sm" 
-                                        type="file" 
-                                        accept="image/*" 
-                                        onChange={(e) => setCover(e.target.files?.[0] || null)} 
-                                    />
-                                </div>
                             </div>
+
+                            <ImageUpload 
+                                image={cover}
+                                setImage={setCover}
+                                collection="posts"
+                            />
                         </div>
                     </div>
                 ) : (

@@ -22,6 +22,8 @@ export default function ImageUpload({ image, setImage, existingImageUrl, collect
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+    } else {
+      setImagePreview(existingImageUrl || null);
     }
   };
 
@@ -29,7 +31,7 @@ export default function ImageUpload({ image, setImage, existingImageUrl, collect
     <div>
       <label className="text-sm font-medium text-muted-foreground mb-2 block">Imagem (opcional)</label>
       <div className="border border-white/10 rounded-lg p-4 bg-white/5">
-        {imagePreview && !image && (
+        {imagePreview && (
           <div className="mb-4">
             <img src={imagePreview} alt="Preview" className="w-full h-48 object-cover rounded-lg" />
           </div>
