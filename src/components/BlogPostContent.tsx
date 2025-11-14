@@ -15,6 +15,7 @@ import { SlotType } from '@/lib/services/adOrchestrator';
 import { generateShareLinks, openSharePopup } from '@/lib/utils/share';
 import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
+import { useViewTracking } from '@/hooks/use-view-tracking';
 
 interface BlogPostContentProps {
   post: ContentItem;
@@ -24,6 +25,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
   const [copied, setCopied] = useState(false);
   const readingTime = calculateReadingTime(post.content);
   const postUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+  // View Tracking
+  useViewTracking({ postId: post.slug });
 
   // Feature Flags
   const { flags, loading: flagsLoading } = useFeatureFlags(['share', 'newsletter', 'ads']);

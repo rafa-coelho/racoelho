@@ -13,8 +13,9 @@ let serverClient: PocketBase | null = null;
 /**
  * Retorna uma instância autenticada do PocketBase para server-side
  * Usa variáveis de ambiente para autenticação admin
+ * Inclui retry automático para lidar com timeouts
  */
-export async function getPocketBaseServer(): Promise<PocketBase> {
+export async function getPocketBaseServer(retries = 3): Promise<PocketBase> {
   if (serverClient && serverClient.authStore.isValid) {
     return serverClient;
   }
@@ -23,15 +24,28 @@ export async function getPocketBaseServer(): Promise<PocketBase> {
   // Evitar cancelamento automático de requisições concorrentes
   pb.autoCancellation(false);
   
-  // Autenticar como admin usando credenciais de ambiente
-  try {
-    await pb.admins.authWithPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
-    serverClient = pb;
-    return pb;
-  } catch (error) {
-    console.error('[PocketBase Server] Failed to authenticate:', error);
-    throw new Error('Failed to authenticate with PocketBase');
+  // Autenticar como admin usando credenciais de ambiente com retry
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      await pb.admins.authWithPassword(ADMIN_EMAIL, ADMIN_PASSWORD);
+      serverClient = pb;
+      return pb;
+    } catch (error: any) {
+      const isTimeout = error?.cause?.code === 'UND_ERR_CONNECT_TIMEOUT' || error?.status === 0;
+      const isLastAttempt = attempt === retries;
+      
+      if (isTimeout && !isLastAttempt) {
+        console.warn(`[PocketBase Server] Auth timeout (attempt ${attempt}/${retries}), retrying in ${attempt}s...`);
+        await new Promise(resolve => setTimeout(resolve, attempt * 1000)); // Backoff exponencial
+        continue;
+      }
+      
+      console.error('[PocketBase Server] Failed to authenticate:', error);
+      throw new Error(`Failed to authenticate with PocketBase after ${retries} attempts`);
+    }
   }
+  
+  throw new Error('Failed to authenticate with PocketBase');
 }
 
 /**

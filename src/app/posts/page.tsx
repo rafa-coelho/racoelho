@@ -2,6 +2,8 @@ import { contentService } from '@/lib/services/content.service';
 import BlogContent from '@/components/BlogContent';
 import { isAdmin } from '@/lib/pocketbase-server';
 
+export const revalidate = 0; // Sempre buscar dados atualizados (pode ser invalidado via revalidatePath)
+
 export default async function Blog() {
   const adminStatus = await isAdmin();
   

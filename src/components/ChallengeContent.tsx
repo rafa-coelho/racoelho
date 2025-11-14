@@ -14,6 +14,7 @@ import { SlotType } from '@/lib/services/adOrchestrator';
 import { generateShareLinks } from '@/lib/utils/share';
 import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
+import { useViewTracking } from '@/hooks/use-view-tracking';
 
 // Ícone customizado para X (Twitter)
 const XIcon = ({ size = 20, className = "" }: { size?: number; className?: string }) => (
@@ -39,6 +40,9 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
   const challengeUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/listas/desafios/${challenge.slug}`
     : '';
+
+  // View Tracking
+  useViewTracking({ challengeId: challenge.slug });
 
   // Feature Flags
   const { flags, loading: flagsLoading } = useFeatureFlags(['share', 'newsletter', 'ads']);

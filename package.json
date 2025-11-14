@@ -20,6 +20,7 @@
     "generate:sitemap": "npx ts-node --project tsconfig.scripts.json scripts/generate-sitemap.ts",
     "generate:all": "npm run generate:rss && npm run generate:sitemap",
     "pb:migrate": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.ts",
+    "pb:migrate:views": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.views.ts",
     "pb:import-assets": "npx ts-node --project tsconfig.scripts.json scripts/import-assets.ts"
   },
   "dependencies": {

@@ -10,6 +10,7 @@ import { isAdmin } from '@/lib/pocketbase-server';
 
 // Permitir rotas dinâmicas não pré-geradas (necessário para posts em rascunho)
 export const dynamicParams = true;
+export const revalidate = 0; // Sempre buscar dados atualizados (pode ser invalidado via revalidatePath)
 
 interface PostPageProps {
   params: Promise<{
