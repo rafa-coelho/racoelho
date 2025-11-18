@@ -1,9 +1,8 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw, Eye } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import ViewsStatsCard from "@/components/admin/ViewsStatsCard";
 
 type Module = {
     title: string;
@@ -20,12 +19,6 @@ const sections: { title: string; modules: Module[] }[] = [
         modules: [
             { title: "Posts", description: "Gerenciar artigos do blog", href: "/admin/editor/posts", icon: FileText, color: "from-blue-500/20 to-blue-600/20", borderColor: "border-blue-500/30" },
             { title: "Desafios", description: "Gerenciar desafios de programação", href: "/admin/editor/challenges", icon: Code2, color: "from-green-500/20 to-green-600/20", borderColor: "border-green-500/30" },
-        ]
-    },
-    {
-        title: "Analytics",
-        modules: [
-            { title: "Visualizações", description: "Analytics detalhado de posts e desafios", href: "/admin/analytics", icon: Eye, color: "from-violet-500/20 to-violet-600/20", borderColor: "border-violet-500/30" },
         ]
     },
     {
@@ -105,15 +98,6 @@ export default function AdminDashboard() {
             <div className="mb-8">
                 <h1 className="text-3xl font-bold mb-2">Dashboard Administrativo</h1>
                 <p className="text-muted-foreground">Gerencie todo o conteúdo do site</p>
-            </div>
-
-            {/* Seção de Analytics */}
-            <div className="mb-12">
-                <div className="flex items-center gap-3 mb-4">
-                    <Eye className="w-5 h-5 text-muted-foreground" />
-                    <h2 className="text-xl font-semibold">Analytics & Visualizações</h2>
-                </div>
-                <ViewsStatsCard />
             </div>
 
             {/* Seção de Cache */}
