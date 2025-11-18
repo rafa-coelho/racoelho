@@ -463,15 +463,16 @@ export default function AnalyticsPage() {
                       <div className="h-5 bg-muted rounded w-48 mb-2 animate-pulse"></div>
                       <div className="h-4 bg-muted rounded w-32 mb-2 animate-pulse"></div>
                       <div className="flex gap-4">
-                        <div className="h-4 bg-muted rounded w-16 animate-pulse"></div>
-                        <div className="h-4 bg-muted rounded w-16 animate-pulse"></div>
-                        <div className="h-4 bg-muted rounded w-16 animate-pulse"></div>
+                        <div className="h-3 bg-muted rounded w-16 animate-pulse"></div>
+                        <div className="h-3 bg-muted rounded w-16 animate-pulse"></div>
+                        <div className="h-3 bg-muted rounded w-16 animate-pulse"></div>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <div className="h-4 bg-muted rounded w-20 mb-2 animate-pulse"></div>
-                    <div className="h-3 bg-muted rounded w-24 animate-pulse"></div>
+                  <div className="text-right ml-6 flex flex-col items-end">
+                    <div className="h-8 bg-muted rounded w-20 mb-1 animate-pulse"></div>
+                    <div className="h-3 bg-muted rounded w-12 mb-2 animate-pulse"></div>
+                    <div className="h-3 bg-muted rounded w-16 animate-pulse"></div>
                   </div>
                 </div>
               ))}
@@ -508,29 +509,27 @@ export default function AnalyticsPage() {
                           {page.type === 'post' ? 'Post' : 'Desafio'}
                         </span>
                       </div>
-                      <p className="text-sm text-muted-foreground truncate">
+                      <p className="text-sm text-muted-foreground truncate mb-2">
                         /{page.type === 'post' ? 'posts' : 'desafios'}/{page.slug}
                       </p>
-                      <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-                        <span className="font-medium text-foreground">{page.views.total}</span>
-                        <span>views</span>
-                        <span className="font-medium text-foreground">{page.views.unique}</span>
-                        <span>únicos</span>
-                        <span className="font-medium text-foreground">{page.views.sessions}</span>
-                        <span>sessões</span>
+                      <div className="flex gap-4 text-xs text-muted-foreground">
+                        <span>{page.views.unique} únicos</span>
+                        <span>{page.views.sessions} sessões</span>
+                        <span>{Object.keys(page.countries).length} {Object.keys(page.countries).length === 1 ? 'país' : 'países'}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right text-sm ml-4">
-                    <div className="font-medium mb-1">
-                      {Object.keys(page.countries).length} {Object.keys(page.countries).length === 1 ? 'país' : 'países'}
+                  <div className="text-right ml-6 flex flex-col items-end">
+                    <div className="text-3xl font-bold text-primary mb-1">
+                      {page.views.total.toLocaleString()}
                     </div>
-                    <div className="text-muted-foreground text-xs">
+                    <div className="text-xs text-muted-foreground mb-2">views</div>
+                    <div className="text-xs text-muted-foreground">
                       {Object.entries(page.devices)
                         .sort((a, b) => b[1] - a[1])
-                        .slice(0, 3)
+                        .slice(0, 2)
                         .map(([device, count]) => (
-                          <div key={device}>
+                          <div key={device} className="text-right">
                             {device}: {count}
                           </div>
                         ))}
