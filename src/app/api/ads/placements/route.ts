@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     }
 
     const slots: SlotType[] = JSON.parse(slotsParam);
-    const maxPerPage = maxPerPageParam ? parseInt(maxPerPageParam, 10) : Infinity;
+    const maxPerPage = maxPerPageParam ? parseInt(maxPerPageParam, 10) : undefined;
     const now = new Date();
     const nowISO = now.toISOString();
 
@@ -73,16 +73,25 @@ export async function GET(request: NextRequest) {
     for (const slot of slots) {
       let placed: Placement | null = null;
 
+      // Se já atingimos o limite máximo de ADs internos por página, usa Google Ads para slots restantes
+      if (maxPerPage !== undefined && usedAdIds.size >= maxPerPage) {
+        placements[slot] = { kind: 'google', slotType: slot };
+        continue;
+      }
+
+      // Tenta encontrar um anúncio interno disponível para este slot
       for (const rec of ads) {
-        // Se o AD já foi usado, pule para o próximo
+        // Se o AD já foi usado nesta página, pule para o próximo
         if (usedAdIds.has(rec.id)) continue;
         
-        // Se já atingimos o limite máximo de ADs por página, pule
-        if (usedAdIds.size >= maxPerPage) continue;
+        // Se já atingimos o limite máximo de ADs internos, pare de buscar
+        if (maxPerPage !== undefined && usedAdIds.size >= maxPerPage) break;
 
+        // Verifica se o anúncio tem criativo adequado para este slot
         const imageUrl = selectCreativeForSlot(rec, slot);
         if (!imageUrl) continue;
 
+        // Encontrou um anúncio interno válido
         placed = {
           kind: 'internal',
           adId: rec.id,
@@ -92,10 +101,12 @@ export async function GET(request: NextRequest) {
           title: rec.title || '',
         };
 
+        // Marca o AD como usado
         usedAdIds.add(rec.id);
         break;
       }
 
+      // Se não encontrou anúncio interno, usa Google Ads como fallback
       if (!placed) {
         placed = { kind: 'google', slotType: slot };
       }

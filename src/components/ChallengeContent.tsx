@@ -210,7 +210,9 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
                 )}
 
                 {/* Ad Inline (conteúdo curto para desafios) */}
-                {flags.ads && !adsLoading && <AdSlot placement={placements['inline']} size="300x300" />}
+                {flags.ads && !adsLoading && placements['inline'] && (
+                  <AdSlot placement={placements['inline']} size="300x300" />
+                )}
 
                 {/* Newsletter CTA */}
                 {flags.newsletter && (
@@ -230,7 +232,9 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
                 )}
 
                 {/* Ad Footer */}
-                {flags.ads && !adsLoading && <AdSlot placement={placements['footer']} size="300x600" />}
+                {flags.ads && !adsLoading && placements['footer'] && (
+                  <AdSlot placement={placements['footer']} size="300x600" />
+                )}
               </div>
             </aside>
           </div>

@@ -90,7 +90,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 )}
 
                 {/* Ad Slot 1 - Sidebar Left */}
-                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-top']} size="300x300" />}
+                {flags.ads && !adsLoading && placements['sidebar-top'] && (
+                  <AdSlot placement={placements['sidebar-top']} size="300x300" />
+                )}
               </div>
             </aside>
 
@@ -119,7 +121,7 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
               </div>
 
               {/* Ad Slot - Content */}
-              {flags.ads && !adsLoading && (
+              {flags.ads && !adsLoading && placements['inline'] && (
                 <div className="my-12">
                   <AdSlot placement={placements['inline']} size="728x90" />
                 </div>
@@ -185,7 +187,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 </div>
 
                 {/* Ad Slot 2 - Sidebar Right Top */}
-                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-mid']} size="300x300" />}
+                {flags.ads && !adsLoading && placements['sidebar-mid'] && (
+                  <AdSlot placement={placements['sidebar-mid']} size="300x300" />
+                )}
 
                 {/* Newsletter CTA */}
                 {flags.newsletter && (
@@ -204,7 +208,9 @@ export default function BlogPostContent({ post }: BlogPostContentProps) {
                 )}
 
                 {/* Ad Slot 3 - Sidebar Right Skyscraper */}
-                {flags.ads && !adsLoading && <AdSlot placement={placements['sidebar-bottom']} size="300x600" />}
+                {flags.ads && !adsLoading && placements['sidebar-bottom'] && (
+                  <AdSlot placement={placements['sidebar-bottom']} size="300x600" />
+                )}
               </div>
             </aside>
           </div>
