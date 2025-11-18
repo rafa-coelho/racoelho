@@ -78,7 +78,9 @@ export async function invalidateCollection(collection: string): Promise<void> {
   // Buscar todas as chaves que começam com pb:collection:
   const debugInfo = await cache.getDebugInfo();
   const keysToInvalidate = debugInfo.keys.filter(key => 
-    key.startsWith(`pb:${collection}:`)
+    key.startsWith(`pb:${collection}:`) || 
+    // Para ads, também procurar chaves que começam com ads:
+    (collection === 'ads' && key.startsWith('ads:'))
   );
   
   // Deletar todas as chaves encontradas
@@ -88,6 +90,11 @@ export async function invalidateCollection(collection: string): Promise<void> {
   
   // Também usar o padrão com wildcard como fallback
   await cache.invalidate(`pb:${collection}:*`);
+  
+  // Para ads, também invalidar padrão ads:*
+  if (collection === 'ads') {
+    await cache.invalidate('ads:*');
+  }
 }
 
 /**

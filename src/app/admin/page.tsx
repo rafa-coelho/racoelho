@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw, Flag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Module = {
@@ -55,6 +55,7 @@ const cacheableCollections = [
     { name: 'social_links', label: 'Links Sociais', icon: Share2 },
     { name: 'assets', label: 'Assets', icon: Folder },
     { name: 'ads', label: 'Anúncios', icon: Image },
+    { name: 'feature_flags', label: 'Feature Flags', icon: Flag },
 ];
 
 export default function AdminDashboard() {
