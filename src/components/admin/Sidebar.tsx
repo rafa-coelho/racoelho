@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, ChevronDown } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, ChevronDown, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -56,8 +56,8 @@ export default function Sidebar() {
                 <p className="text-xs text-muted-foreground">Painel de Controle</p>
             </div>
 
-            {/* Dashboard fora das categorias */}
-            <div className="mb-3">
+            {/* Dashboard e Analytics fora das categorias */}
+            <div className="mb-3 space-y-1">
                 <Link
                     href="/admin"
                     className={cn(
@@ -72,6 +72,21 @@ export default function Sidebar() {
                         pathname === '/admin' ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                     )} />
                     <span className="text-sm">Dashboard</span>
+                </Link>
+                <Link
+                    href="/admin/analytics"
+                    className={cn(
+                        "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors group",
+                        pathname === '/admin/analytics'
+                            ? "bg-primary/10 text-primary font-medium"
+                            : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                    )}
+                >
+                    <BarChart3 className={cn(
+                        "w-5 h-5",
+                        pathname === '/admin/analytics' ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    )} />
+                    <span className="text-sm">Analytics</span>
                 </Link>
             </div>
 
