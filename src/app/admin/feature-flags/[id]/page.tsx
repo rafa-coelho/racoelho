@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { pbGetById, pbUpdate, pbDelete } from "@/lib/pocketbase";
 import { Check, Trash2 } from "lucide-react";
+import AdsConfigEditor from "@/components/admin/AdsConfigEditor";
+import { AdsMetadata } from "@/lib/types/ads-config";
 
 export default function EditFeatureFlagPage() {
   const params = useParams();
@@ -11,6 +13,7 @@ export default function EditFeatureFlagPage() {
   const [enabled, setEnabled] = useState(false);
   const [description, setDescription] = useState("");
   const [metadata, setMetadata] = useState('{}');
+  const [adsMetadata, setAdsMetadata] = useState<AdsMetadata>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -24,7 +27,12 @@ export default function EditFeatureFlagPage() {
         setKey(rec.key || "");
         setEnabled(rec.enabled || false);
         setDescription(rec.description || "");
-        setMetadata(JSON.stringify(rec.metadata || {}, null, 2));
+        const metadataObj = rec.metadata || {};
+        setMetadata(JSON.stringify(metadataObj, null, 2));
+        // Se for a flag 'ads', inicializa o editor especializado
+        if (rec.key === 'ads') {
+          setAdsMetadata(metadataObj as AdsMetadata);
+        }
       } finally {
         if (mounted) setLoading(false);
       }
@@ -36,12 +44,19 @@ export default function EditFeatureFlagPage() {
     setSaving(true);
     try {
       let parsedMetadata = {};
-      try {
-        parsedMetadata = JSON.parse(metadata);
-      } catch {
-        alert('Metadata deve ser um JSON válido');
-        setSaving(false);
-        return;
+      
+      // Se for a flag 'ads', usa o editor especializado
+      if (key === 'ads') {
+        parsedMetadata = adsMetadata;
+      } else {
+        // Caso contrário, usa o JSON do textarea
+        try {
+          parsedMetadata = JSON.parse(metadata);
+        } catch {
+          alert('Metadata deve ser um JSON válido');
+          setSaving(false);
+          return;
+        }
       }
 
       await pbUpdate("feature_flags", id, {
@@ -114,14 +129,21 @@ export default function EditFeatureFlagPage() {
             </button>
           </div>
 
-          <div>
-            <label className="text-sm font-medium text-muted-foreground mb-2 block">Metadata (JSON)</label>
-            <textarea 
-              className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none h-32 font-mono text-xs" 
-              value={metadata}
-              onChange={e => setMetadata(e.target.value)} 
-            />
-          </div>
+          {key === 'ads' ? (
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-4 block">Configuração de Anúncios</label>
+              <AdsConfigEditor value={adsMetadata} onChange={setAdsMetadata} />
+            </div>
+          ) : (
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">Metadata (JSON)</label>
+              <textarea 
+                className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none h-32 font-mono text-xs" 
+                value={metadata}
+                onChange={e => setMetadata(e.target.value)} 
+              />
+            </div>
+          )}
 
           <div className="flex gap-4 pt-4 border-t border-white/10">
             <button
