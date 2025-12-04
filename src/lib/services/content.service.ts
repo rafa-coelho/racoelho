@@ -49,9 +49,11 @@ export const contentService = {
     return await getCached(
       cacheKeyData,
       async () => {
+        // Buscar todos os posts sem limite de paginação
         const res = await pbListWithPreview('posts', {
           filter: isAdminPreview ? undefined : "status='published'",
           sort: '-date',
+          perPage: 500, // Limite alto para buscar todos os posts
         }, isPreview);
 
         return (res.items || []).map(mapPbToContentMeta);
