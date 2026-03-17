@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { cn } from '@/lib/utils';
+import MermaidBlock from './MermaidBlock';
 
 interface MarkdownRendererProps {
   content: string;
@@ -13,6 +15,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
   return (
     <ReactMarkdown
       className={cn('markdown-content', className)}
+      remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ node, ...props }) => (
           <h1 className="text-3xl font-bold mt-8 mb-4" {...props} />
@@ -52,10 +55,34 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, className 
             {...props}
           />
         ),
+        table: ({ node, ...props }) => (
+          <div className="my-6 overflow-x-auto rounded-md border border-white/10">
+            <table className="w-full text-sm" {...props} />
+          </div>
+        ),
+        thead: ({ node, ...props }) => (
+          <thead className="bg-muted/50 border-b border-white/10" {...props} />
+        ),
+        tbody: ({ node, ...props }) => (
+          <tbody className="divide-y divide-white/5" {...props} />
+        ),
+        tr: ({ node, ...props }) => (
+          <tr className="hover:bg-muted/20 transition-colors" {...props} />
+        ),
+        th: ({ node, ...props }) => (
+          <th className="px-4 py-2 text-left font-semibold" {...props} />
+        ),
+        td: ({ node, ...props }) => (
+          <td className="px-4 py-2" {...props} />
+        ),
         code({ node, className, children, ...props }) {
           const match = /language-(\w+)/.exec(className || '');
           const isInline = !match;
-          
+
+          if (match && match[1] === 'mermaid') {
+            return <MermaidBlock code={String(children).replace(/\n$/, '')} />;
+          }
+
           return !isInline ? (
             <SyntaxHighlighter
               language={match ? match[1] : ''}
