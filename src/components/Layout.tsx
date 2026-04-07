@@ -45,6 +45,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Blog', href: '/posts' },
     { name: 'Desafios', href: '/listas/desafios' },
     { name: 'Setup', href: '/setup' },
+    { name: 'Comunidade', href: '/comunidade' },
     // { name: 'Newsletter', href: '/newsletter' },
   ];
 
