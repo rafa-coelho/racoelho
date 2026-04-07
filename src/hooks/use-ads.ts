@@ -70,13 +70,13 @@ export function useAds(pageType: PageType, slots: SlotType[], options?: { maxPer
         console.error('[useAds] Error loading ads:', err);
         if (mounted) {
           setError(err as Error);
-          // Fallback: preencher slots habilitados com Google Ads
+          // Fallback: preencher slots habilitados como vazios (sem forçar Google)
           const fallback: Record<string, Placement> = {};
           const adsMetadata = (adsFlag?.metadata || {}) as AdsMetadata;
           const config = getAdsConfig(pageType, adsMetadata);
           const enabledSlots = filterEnabledSlots(slots, config.enabledSlots);
           for (const s of enabledSlots) {
-            fallback[s] = { kind: 'google', slotType: s } as Placement;
+            fallback[s] = { kind: 'none', slotType: s } as Placement;
           }
           setPlacements(fallback);
         }

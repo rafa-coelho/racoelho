@@ -8,25 +8,35 @@ function fileUrl(rec: any, filename: string): string {
   return `${base}/api/files/${rec.collectionId || rec.collection}/${rec.id}/${filename}`;
 }
 
+function anyCreative(rec: any): string | null {
+  const fields = ['creative_rectangle', 'creative_leaderboard', 'creative_skyscraper', 'creative_square', 'creative_mobile_banner'];
+  for (const f of fields) {
+    if (rec[f]) return fileUrl(rec, rec[f]);
+  }
+  return null;
+}
+
 function selectCreativeForSlot(rec: any, slot: SlotType): string | null {
   switch (slot) {
     case 'header':
-      return rec.creative_leaderboard ? fileUrl(rec, rec.creative_leaderboard) : null;
+      if (rec.creative_leaderboard) return fileUrl(rec, rec.creative_leaderboard);
+      break;
     case 'inline':
-      return rec.creative_rectangle ? fileUrl(rec, rec.creative_rectangle) : null;
+      if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
+      break;
     case 'sidebar-top':
     case 'sidebar-mid':
     case 'sidebar-bottom':
       if (rec.creative_skyscraper) return fileUrl(rec, rec.creative_skyscraper);
       if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
-      return null;
+      break;
     case 'footer':
       if (rec.creative_leaderboard) return fileUrl(rec, rec.creative_leaderboard);
       if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
-      return null;
-    default:
-      return null;
+      break;
   }
+  // Fallback: usa qualquer criativo disponível
+  return anyCreative(rec);
 }
 
 export async function GET(request: NextRequest) {
@@ -73,9 +83,10 @@ export async function GET(request: NextRequest) {
     for (const slot of slots) {
       let placed: Placement | null = null;
 
-      // Se já atingimos o limite máximo de ADs internos por página, usa Google Ads para slots restantes
+      // Se já atingimos o limite máximo de ADs internos por página, slots restantes ficam vazios ou Google se configurado
       if (maxPerPage !== undefined && usedAdIds.size >= maxPerPage) {
-        placements[slot] = { kind: 'google', slotType: slot };
+        const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && process.env.NEXT_PUBLIC_GOOGLE_ADS_AD_SLOT;
+        placements[slot] = googleEnabled ? { kind: 'google', slotType: slot } : { kind: 'none', slotType: slot };
         continue;
       }
 
@@ -106,9 +117,10 @@ export async function GET(request: NextRequest) {
         break;
       }
 
-      // Se não encontrou anúncio interno, usa Google Ads como fallback
+      // Se não encontrou anúncio interno, usa Google Ads como fallback apenas se configurado
       if (!placed) {
-        placed = { kind: 'google', slotType: slot };
+        const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && process.env.NEXT_PUBLIC_GOOGLE_ADS_AD_SLOT;
+        placed = googleEnabled ? { kind: 'google', slotType: slot } : { kind: 'none', slotType: slot };
       }
 
       placements[slot] = placed;
@@ -117,7 +129,7 @@ export async function GET(request: NextRequest) {
     // Retornar apenas os placements para os slots solicitados
     const result: Record<string, Placement> = {};
     for (const slot of slots) {
-      result[slot] = placements[slot] || { kind: 'google', slotType: slot };
+      result[slot] = placements[slot] || { kind: 'none', slotType: slot };
     }
 
     return NextResponse.json(result);

@@ -12,7 +12,8 @@ export type Placement =
       clickUrl: string;
       title: string;
     }
-  | { kind: 'google'; slotType: SlotType };
+  | { kind: 'google'; slotType: SlotType }
+  | { kind: 'none'; slotType: SlotType };
 
 type OrchestratorParams = {
   pageType: PageType;
@@ -49,26 +50,35 @@ function byPriorityDesc(a: AdRecord, b: AdRecord): number {
   return pb - pa;
 }
 
+function anyCreative(rec: AdRecord): string | null {
+  const fields = ['creative_rectangle', 'creative_leaderboard', 'creative_skyscraper', 'creative_square', 'creative_mobile_banner'];
+  for (const f of fields) {
+    if (rec[f]) return fileUrl(rec, rec[f]);
+  }
+  return null;
+}
+
 function selectCreativeForSlot(rec: AdRecord, slot: SlotType): string | null {
-  // mapeamento do plano
   switch (slot) {
     case 'header':
-      return rec.creative_leaderboard ? fileUrl(rec, rec.creative_leaderboard) : null;
+      if (rec.creative_leaderboard) return fileUrl(rec, rec.creative_leaderboard);
+      break;
     case 'inline':
-      return rec.creative_rectangle ? fileUrl(rec, rec.creative_rectangle) : null;
+      if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
+      break;
     case 'sidebar-top':
     case 'sidebar-mid':
     case 'sidebar-bottom':
       if (rec.creative_skyscraper) return fileUrl(rec, rec.creative_skyscraper);
       if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
-      return null;
+      break;
     case 'footer':
       if (rec.creative_leaderboard) return fileUrl(rec, rec.creative_leaderboard);
       if (rec.creative_rectangle) return fileUrl(rec, rec.creative_rectangle);
-      return null;
-    default:
-      return null;
+      break;
   }
+  // Fallback: usa qualquer criativo disponível
+  return anyCreative(rec);
 }
 
 export async function getPlacements({ pageType, slots, now, maxPerPage = Infinity }: OrchestratorParams): Promise<Record<string, Placement>> {
@@ -113,7 +123,8 @@ export async function getPlacements({ pageType, slots, now, maxPerPage = Infinit
     }
 
     if (!placed) {
-      placed = { kind: 'google', slotType: slot };
+      const googleEnabled = process.env.NEXT_PUBLIC_GOOGLE_ADS_CLIENT_ID && process.env.NEXT_PUBLIC_GOOGLE_ADS_AD_SLOT;
+      placed = googleEnabled ? { kind: 'google', slotType: slot } : { kind: 'none', slotType: slot };
     }
 
     placements[slot] = placed;
