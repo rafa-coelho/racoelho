@@ -23,7 +23,12 @@ export default function EditAdPage() {
   const [utmSource, setUtmSource] = useState("");
   const [utmCampaign, setUtmCampaign] = useState("");
   const [utmMedium, setUtmMedium] = useState("");
-  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
+  const [creativeLeaderboard, setCreativeLeaderboard] = useState<File | null>(null);
+  const [creativeRectangle, setCreativeRectangle] = useState<File | null>(null);
+  const [creativeSkyscraper, setCreativeSkyscraper] = useState<File | null>(null);
+  const [creativeSquare, setCreativeSquare] = useState<File | null>(null);
+  const [creativeMobileBanner, setCreativeMobileBanner] = useState<File | null>(null);
+  const [existingCreatives, setExistingCreatives] = useState<Record<string, string | null>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -44,6 +49,18 @@ export default function EditAdPage() {
         setUtmSource(rec.utmSource || "");
         setUtmCampaign(rec.utmCampaign || "");
         setUtmMedium(rec.utmMedium || "");
+
+        // Load existing creative URLs
+        const pbUrl = process.env.NEXT_PUBLIC_PB_URL || "";
+        const baseFileUrl = (filename: string) =>
+          filename ? `${pbUrl}/api/files/${rec.collectionId || rec.collectionName || "ads"}/${rec.id}/${filename}` : null;
+        setExistingCreatives({
+          leaderboard: baseFileUrl(rec.creative_leaderboard),
+          rectangle: baseFileUrl(rec.creative_rectangle),
+          skyscraper: baseFileUrl(rec.creative_skyscraper),
+          square: baseFileUrl(rec.creative_square),
+          mobile_banner: baseFileUrl(rec.creative_mobile_banner),
+        });
       } finally {
         if (mounted) setLoading(false);
       }
@@ -75,6 +92,12 @@ export default function EditAdPage() {
         utmCampaign,
         utmMedium,
       };
+
+      if (creativeLeaderboard) data.creative_leaderboard = creativeLeaderboard;
+      if (creativeRectangle) data.creative_rectangle = creativeRectangle;
+      if (creativeSkyscraper) data.creative_skyscraper = creativeSkyscraper;
+      if (creativeSquare) data.creative_square = creativeSquare;
+      if (creativeMobileBanner) data.creative_mobile_banner = creativeMobileBanner;
 
       await pbUpdate("ads", id, data);
       toast({
@@ -171,6 +194,62 @@ export default function EditAdPage() {
               <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_source" value={utmSource} onChange={e => setUtmSource(e.target.value)} />
               <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_campaign" value={utmCampaign} onChange={e => setUtmCampaign(e.target.value)} />
               <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_medium" value={utmMedium} onChange={e => setUtmMedium(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-sm font-semibold text-foreground mb-4">Criativos (upload um ou mais formatos)</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Leaderboard (728x90 / 970x90)</h4>
+                <ImageUpload
+                  image={creativeLeaderboard}
+                  setImage={setCreativeLeaderboard}
+                  existingImageUrl={existingCreatives.leaderboard}
+                  collection="ads"
+                  recordId={id}
+                />
+              </div>
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Rectangle (300x250 / 336x280)</h4>
+                <ImageUpload
+                  image={creativeRectangle}
+                  setImage={setCreativeRectangle}
+                  existingImageUrl={existingCreatives.rectangle}
+                  collection="ads"
+                  recordId={id}
+                />
+              </div>
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Skyscraper (160x600 / 300x600)</h4>
+                <ImageUpload
+                  image={creativeSkyscraper}
+                  setImage={setCreativeSkyscraper}
+                  existingImageUrl={existingCreatives.skyscraper}
+                  collection="ads"
+                  recordId={id}
+                />
+              </div>
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Square (200x200 / 250x250)</h4>
+                <ImageUpload
+                  image={creativeSquare}
+                  setImage={setCreativeSquare}
+                  existingImageUrl={existingCreatives.square}
+                  collection="ads"
+                  recordId={id}
+                />
+              </div>
+              <div>
+                <h4 className="text-xs font-medium text-muted-foreground mb-2">Mobile Banner (320x50 / 320x100)</h4>
+                <ImageUpload
+                  image={creativeMobileBanner}
+                  setImage={setCreativeMobileBanner}
+                  existingImageUrl={existingCreatives.mobile_banner}
+                  collection="ads"
+                  recordId={id}
+                />
+              </div>
             </div>
           </div>
 

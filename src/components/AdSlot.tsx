@@ -115,24 +115,21 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
     );
   }
 
-  // Google Ads
+  // Google Ads - only render if actually configured
   if (useLegacy && adConfig.type === 'google') {
+    if (!adConfig.googleClientId && !adConfig.googleAdSlot) return null;
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
           <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
-          <div 
+          <div
             className="bg-secondary/30 rounded flex items-center justify-center"
             style={{ height: dimensions.height }}
           >
-            {/* Placeholder para Google Ads */}
-            {/* Aqui você pode integrar o script do Google AdSense futuramente */}
+            {/* Google AdSense integration placeholder */}
             <div className="text-center">
               <p className="text-xs text-muted-foreground/50 mb-1">Google Ads</p>
               <p className="text-[10px] text-muted-foreground/40">{size}</p>
-              {adConfig.googleAdSlot && (
-                <p className="text-[10px] text-muted-foreground/30 mt-1">Slot: {adConfig.googleAdSlot}</p>
-              )}
             </div>
           </div>
         </div>
@@ -142,6 +139,10 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
 
   // Novo fluxo via placement
   if (placement) {
+    if (placement.kind === 'none') {
+      return null;
+    }
+
     if (placement.kind === 'internal') {
       const clickLabel = `${placement.adId}:${placement.slotType}`;
       return (
@@ -166,23 +167,8 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
       );
     }
 
-    // google fallback
-    return (
-      <div className={cn(baseClasses, 'p-3', className)}>
-        <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
-          <div 
-            className="bg-secondary/30 rounded flex items-center justify-center"
-            style={{ height: dimensions.height }}
-          >
-            <div className="text-center">
-              <p className="text-xs text-muted-foreground/50 mb-1">Google Ads</p>
-              <p className="text-[10px] text-muted-foreground/40">{size}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    // google fallback - don't render empty placeholder
+    return null;
   }
 
   return null;
