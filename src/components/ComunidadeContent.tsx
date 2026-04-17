@@ -4,7 +4,7 @@ import Layout from './Layout';
 import { FaDiscord } from 'react-icons/fa';
 import { Users, MessageSquare, Code2, Sparkles } from 'lucide-react';
 
-const DISCORD_LINK = 'https://discord.gg/7dv2QWYA';
+const DISCORD_LINK = 'https://discord.gg/zK6jeB2R5b';
 
 const perks = [
   {
