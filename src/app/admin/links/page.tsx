@@ -3,7 +3,7 @@ import Link from "next/link";
 import { pbList } from "@/lib/pocketbase";
 import { pbBulkDelete } from "@/lib/pb-bulk";
 import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Link as LinkIcon, Pencil, Star, ExternalLink } from "lucide-react";
+import { Plus, Link as LinkIcon, Pencil, Star, ExternalLink, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -13,6 +13,8 @@ type LinkItem = {
   url: string;
   description: string;
   type: 'link' | 'highlight';
+  order?: number;
+  visible?: boolean;
 };
 
 export default function LinkItemsPage() {
@@ -30,6 +32,32 @@ export default function LinkItemsPage() {
 
       <DataTable<LinkItem>
         columns={[
+          {
+            id: "order",
+            header: "#",
+            cell: (row) => (
+              <div className="text-sm text-muted-foreground tabular-nums">
+                {row.order ?? "—"}
+              </div>
+            ),
+            sortable: true,
+          },
+          {
+            id: "visible",
+            header: "Visível",
+            cell: (row) => (
+              row.visible === false ? (
+                <span className="inline-flex items-center gap-1 text-muted-foreground text-sm" title="Oculto">
+                  <EyeOff size={14} /> Não
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-emerald-500 text-sm" title="Visível">
+                  <Eye size={14} /> Sim
+                </span>
+              )
+            ),
+            sortable: true,
+          },
           {
             id: "type",
             header: "Tipo",

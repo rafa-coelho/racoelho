@@ -11,6 +11,8 @@ function mapPbToLinkItem(rec: any): LinkTreeItem {
     type: rec.type || 'link',
     icon: rec.icon,
     image: rec.image ? fileUrl(rec, rec.image) : undefined,
+    order: typeof rec.order === 'number' ? rec.order : undefined,
+    visible: rec.visible !== false,
   };
 }
 
@@ -33,7 +35,9 @@ export const linkService = {
           perPage: 100, // Link items geralmente são poucos
         });
 
-        return (res.items || []).map(mapPbToLinkItem);
+        return (res.items || [])
+          .map(mapPbToLinkItem)
+          .filter((item) => item.visible !== false);
       },
       86400000 // 24 horas
     );

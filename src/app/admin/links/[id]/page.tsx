@@ -13,6 +13,8 @@ export default function EditLinkItemPage() {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("link");
   const [icon, setIcon] = useState("");
+  const [order, setOrder] = useState(0);
+  const [visible, setVisible] = useState(true);
   const [image, setImage] = useState<File | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,9 @@ export default function EditLinkItemPage() {
         setDescription(rec.description || "");
         setType(rec.type || "link");
         setIcon(rec.icon || "");
-        
+        setOrder(typeof rec.order === 'number' ? rec.order : 0);
+        setVisible(rec.visible !== false);
+
         // Carregar preview da imagem existente
         if (rec.image) {
           const pbUrl = process.env.NEXT_PUBLIC_PB_URL || '';
@@ -51,7 +55,9 @@ export default function EditLinkItemPage() {
         url,
         description,
         type,
-        icon
+        icon,
+        order,
+        visible
       };
 
       if (image) {
@@ -121,15 +127,40 @@ export default function EditLinkItemPage() {
 
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">Ícone</label>
-              <input 
-                className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+              <input
+                className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3"
                 value={icon}
-                onChange={e => setIcon(e.target.value)} 
+                onChange={e => setIcon(e.target.value)}
               />
             </div>
           </div>
 
-          <ImageUpload 
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">Ordem</label>
+              <input
+                type="number"
+                className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3"
+                value={order}
+                onChange={e => setOrder(Number(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <div className="text-sm font-medium text-muted-foreground mb-2">Visibilidade</div>
+              <label className="flex items-center gap-3 px-4 py-3 rounded-md bg-white/5 border border-white/10 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={visible}
+                  onChange={e => setVisible(e.target.checked)}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm">{visible ? "Visível na página /links" : "Oculto"}</span>
+              </label>
+            </div>
+          </div>
+
+          <ImageUpload
             image={image}
             setImage={setImage}
             existingImageUrl={existingImageUrl}

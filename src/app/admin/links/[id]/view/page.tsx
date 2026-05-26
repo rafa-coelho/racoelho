@@ -47,6 +47,14 @@ export default function ViewLinkItemPage() {
             <div className="text-muted-foreground">Tipo</div>
             <div className="font-medium">{rec.type}</div>
           </div>
+          <div>
+            <div className="text-muted-foreground">Ordem</div>
+            <div className="font-medium">{typeof rec.order === 'number' ? rec.order : "—"}</div>
+          </div>
+          <div>
+            <div className="text-muted-foreground">Visibilidade</div>
+            <div className="font-medium">{rec.visible === false ? "Oculto" : "Visível"}</div>
+          </div>
           <div className="md:col-span-2">
             <div className="text-muted-foreground">URL</div>
             <a href={rec.url} target="_blank" rel="noopener" className="text-primary hover:underline">{rec.url}</a>

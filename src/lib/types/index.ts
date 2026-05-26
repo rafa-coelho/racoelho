@@ -30,6 +30,8 @@ export interface LinkTreeItem {
   type: 'link' | 'highlight';
   icon?: string;
   image?: string;
+  order?: number;
+  visible?: boolean;
 }
 
 export interface SetupItem {
