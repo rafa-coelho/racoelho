@@ -13,6 +13,8 @@ import { parseMarkdownFile } from './markdown';
 import type {
   ContentMeta,
   ContentItem,
+  ProjectMeta,
+  Project,
   SocialLink,
   LinkTreeItem,
   SetupItem,
@@ -26,6 +28,8 @@ import type {
 export type {
   ContentMeta,
   ContentItem,
+  ProjectMeta,
+  Project,
   SocialLink,
   LinkTreeItem,
   SetupItem,

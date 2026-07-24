@@ -7,7 +7,8 @@ export type FeatureFlagKey =
   | 'newsletter'
   | 'ads'
   | 'comments'
-  | 'analytics';
+  | 'analytics'
+  | 'projects';
 
 export interface FeatureFlag {
   key: FeatureFlagKey;

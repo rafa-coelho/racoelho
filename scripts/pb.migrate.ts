@@ -106,6 +106,35 @@ async function main() {
         ],
     });
 
+    // projects (portfólio)
+    await ensureCollection(pb, 'projects', {
+        name: 'projects',
+        type: 'base',
+        schema: [
+            { name: 'title', type: 'text', required: true },
+            { name: 'slug', type: 'text', required: true },
+            { name: 'excerpt', type: 'text' },
+            { name: 'content', type: 'text' },
+            { name: 'coverImage', type: 'file', options: { maxSelect: 1 } },
+            { name: 'tags', type: 'json' },
+            { name: 'role', type: 'text' },
+            { name: 'repoUrl', type: 'text' },
+            { name: 'liveUrl', type: 'text' },
+            { name: 'featured', type: 'bool' },
+            { name: 'order', type: 'number' },
+            { name: 'status', type: 'select', options: { values: ['draft', 'published'] } },
+            { name: 'date', type: 'date' },
+        ],
+        listRule: "status = 'published' || @request.auth.id != ''",
+        viewRule: "status = 'published' || @request.auth.id != ''",
+        createRule: "@request.auth.id != ''",
+        updateRule: "@request.auth.id != ''",
+        deleteRule: "@request.auth.id != ''",
+        indexes: [
+            'CREATE UNIQUE INDEX projects_slug_idx ON projects (slug)'
+        ],
+    });
+
     // sales_pages
     await ensureCollection(pb, 'sales_pages', {
         name: 'sales_pages',
@@ -291,6 +320,14 @@ async function main() {
             'CREATE INDEX access_tokens_email_slug_idx ON access_tokens (email, slug)'
         ],
     });
+
+    // Seed da feature flag 'projects' (habilitada por padrão)
+    try {
+        await pb.collection('feature_flags').getFirstListItem("key='projects'");
+    } catch {
+        await pb.collection('feature_flags').create({ key: 'projects', enabled: true, metadata: {} });
+        console.log("Feature flag 'projects' criada (enabled=true).");
+    }
 
     console.log('Migração concluída.');
 }

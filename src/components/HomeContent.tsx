@@ -1,7 +1,7 @@
 'use client';
 
-import { ContentMeta, YoutubeVideo, SocialLink, LinkTreeItem } from '@/lib/api';
-import { ArrowRight, Code2, Zap, Youtube, Sparkles, TrendingUp } from 'lucide-react';
+import { ContentMeta, ProjectMeta, YoutubeVideo, SocialLink, LinkTreeItem } from '@/lib/api';
+import { ArrowRight, Code2, Zap, Youtube, Sparkles, TrendingUp, FolderGit2, Lock } from 'lucide-react';
 import Link from 'next/link';
 import Layout from './Layout';
 import { TrackedLink } from '@/components/TrackedLink';
@@ -10,6 +10,7 @@ import { useFeatureFlag } from '@/hooks/use-feature-flag';
 interface HomeContentProps {
   posts: ContentMeta[];
   challenges: ContentMeta[];
+  projects?: ProjectMeta[];
   videos?: YoutubeVideo[];
   socialLinks?: SocialLink[];
   linkItems?: LinkTreeItem[];
@@ -20,6 +21,7 @@ interface HomeContentProps {
 export default function HomeContent({
   posts,
   challenges,
+  projects = [],
   videos = [],
   socialLinks = [],
   linkItems = [],
@@ -31,6 +33,7 @@ export default function HomeContent({
 
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
+  const { enabled: projectsEnabled } = useFeatureFlag('projects');
 
   return (
     <Layout>
@@ -287,6 +290,80 @@ export default function HomeContent({
           </div>
         </div>
       </section>
+
+      {/* Projetos em Destaque */}
+      {projectsEnabled && projects.length > 0 && (
+        <section className="py-16 md:py-20 section-gradient-2">
+          <div className="content-container">
+            <div className="text-center mb-10 md:mb-12">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-project/10 border border-project/20 mb-4">
+                <FolderGit2 size={18} className="text-project" />
+                <span className="text-sm font-bold text-project">Portfólio</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">Projetos em Destaque</h2>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+                Cases com especificação, arquitetura e decisões técnicas — inclusive de apps privados
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-10">
+              {projects.slice(0, 3).map((project, idx) => {
+                const isPrivate = !project.repoUrl && !project.liveUrl;
+                return (
+                  <Link
+                    key={project.slug}
+                    href={`/projetos/${project.slug}`}
+                    className="card-modern overflow-hidden group accent-project hover:scale-[1.02] transition-all duration-300 flex flex-col"
+                    style={{ animationDelay: `${idx * 100}ms` }}
+                  >
+                    {project.coverImage && (
+                      <div className="relative h-44 sm:h-48 overflow-hidden">
+                        <img
+                          src={project.coverImage}
+                          alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-project text-white text-xs font-bold">
+                          PROJETO
+                        </div>
+                      </div>
+                    )}
+                    <div className="p-5 sm:p-6 flex flex-col flex-1">
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <div className="flex items-center gap-2 text-project">
+                          <FolderGit2 size={18} />
+                          <span className="text-xs font-bold uppercase tracking-wider">{project.role || 'Case Study'}</span>
+                        </div>
+                        {isPrivate && <Lock size={14} className="text-muted-foreground flex-shrink-0" />}
+                      </div>
+                      <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-project transition-colors line-clamp-2">
+                        {project.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{project.excerpt}</p>
+                      {project.tags && project.tags.length > 0 && (
+                        <div className="mt-auto flex flex-wrap gap-1.5">
+                          {project.tags.slice(0, 3).map(tag => (
+                            <span key={tag} className="px-2.5 py-1 text-xs font-medium rounded-full bg-project/10 text-project border border-project/20">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="text-center">
+              <Link href="/projetos" className="btn-primary inline-flex items-center gap-2">
+                Ver Todos os Projetos
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Produtos/Ebooks - Se houver */}
       {highlightItems.length > 0 && (

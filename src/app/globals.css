@@ -40,6 +40,7 @@
     --color-challenge: 142 76% 56%; /* green */
     --color-video: 0 84% 60%; /* red */
     --color-product: 280 80% 60%; /* purple */
+    --color-project: 32 95% 58%; /* orange */
   }
  
   .dark {
@@ -101,16 +102,19 @@
   .accent-challenge { border-left: 4px solid hsl(var(--color-challenge)); }
   .accent-video { border-left: 4px solid hsl(var(--color-video)); }
   .accent-product { border-left: 4px solid hsl(var(--color-product)); }
-  
+  .accent-project { border-left: 4px solid hsl(var(--color-project)); }
+
   .text-post { color: hsl(var(--color-post)); }
   .text-challenge { color: hsl(var(--color-challenge)); }
   .text-video { color: hsl(var(--color-video)); }
   .text-product { color: hsl(var(--color-product)); }
-  
+  .text-project { color: hsl(var(--color-project)); }
+
   .bg-post { background-color: hsl(var(--color-post) / 0.1); }
   .bg-challenge { background-color: hsl(var(--color-challenge) / 0.1); }
   .bg-video { background-color: hsl(var(--color-video) / 0.1); }
   .bg-product { background-color: hsl(var(--color-product) / 0.1); }
+  .bg-project { background-color: hsl(var(--color-project) / 0.1); }
 
   .content-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;

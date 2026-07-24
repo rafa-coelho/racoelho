@@ -2,14 +2,16 @@ import { NextResponse } from 'next/server'
 import { SITE_URL } from '@/lib/config/constants'
 import { contentService } from '@/lib/services/content.service'
 import { challengeService } from '@/lib/services/challenge.service'
+import { projectService } from '@/lib/services/project.service'
 import { salesService } from '@/lib/services/sales.service'
 
 export const revalidate = 900
 
 export async function GET() {
-  const [posts, challenges] = await Promise.all([
+  const [posts, challenges, projects] = await Promise.all([
     contentService.getAllPosts([], false),
     challengeService.getAllChallenges([], false),
+    projectService.getAllProjects([], false).catch(() => []),
   ])
   let sales: string[] = []
   try {
@@ -26,6 +28,7 @@ export async function GET() {
   add('/', undefined, '1.0', 'daily')
   add('/posts')
   add('/listas/desafios')
+  add('/projetos')
   add('/links')
   add('/setup')
 
@@ -33,6 +36,8 @@ export async function GET() {
   posts.forEach((p) => add(`/posts/${p.slug}`, p.date))
   // Challenges
   challenges.forEach((c) => add(`/listas/desafios/${c.slug}`, c.date))
+  // Projects
+  projects.forEach((p) => add(`/projetos/${p.slug}`, p.date))
   // Sales pages
   sales.forEach((s) => add(`/venda/${s}`))
 

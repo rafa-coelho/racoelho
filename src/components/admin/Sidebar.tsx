@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, ChevronDown, BarChart3 } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, FolderGit2, ChevronDown, BarChart3 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -21,7 +21,8 @@ const navSections: NavSection[] = [
         title: "Conteúdo",
         items: [
             { title: "Posts", href: "/admin/editor/posts", icon: FileText },
-            { title: "Desafios", href: "/admin/editor/challenges", icon: Code2 }
+            { title: "Desafios", href: "/admin/editor/challenges", icon: Code2 },
+            { title: "Projetos", href: "/admin/editor/projects", icon: FolderGit2 }
         ]
     },
     {

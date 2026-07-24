@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 import HomeContent from '@/components/HomeContent';
 import { getLatestYoutubeVideos } from '@/lib/services/youtube.service';
 import { contentService } from '@/lib/services/content.service';
+import { projectService } from '@/lib/services/project.service';
 import { socialService } from '@/lib/services/social.service';
 import { linkService } from '@/lib/services/link.service';
 
@@ -20,15 +21,17 @@ export default async function Home() {
   // Mas passa apenas os primeiros 3 para exibir
   const posts = allPosts.slice(0, 3);
   const challenges = allChallenges.slice(0, 3);
+  const projects = await projectService.getFeaturedProjects(3);
   const videos = await getLatestYoutubeVideos(3);
   const socialLinks = await socialService.getSocialLinks();
   const linkItems = await linkService.getLinkItems();
 
-  return <HomeContent 
-    posts={posts} 
-    challenges={challenges} 
-    videos={videos} 
-    socialLinks={socialLinks} 
+  return <HomeContent
+    posts={posts}
+    challenges={challenges}
+    projects={projects}
+    videos={videos}
+    socialLinks={socialLinks}
     linkItems={linkItems}
     totalPosts={allPosts.length}
     totalChallenges={allChallenges.length}

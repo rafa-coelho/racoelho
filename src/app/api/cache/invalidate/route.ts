@@ -4,12 +4,14 @@ import { invalidateCollection } from '@/lib/cache/cache.service';
 import { isAdmin } from '@/lib/pocketbase-server';
 import { contentService } from '@/lib/services/content.service';
 import { challengeService } from '@/lib/services/challenge.service';
+import { projectService } from '@/lib/services/project.service';
 import { salesService } from '@/lib/services/sales.service';
 
 // Coleções válidas que podem ter cache invalidado
 const VALID_COLLECTIONS = [
   'posts',
   'challenges',
+  'projects',
   'sales_pages',
   'setup',
   'links',
@@ -28,6 +30,7 @@ const COLLECTION_TO_CACHE_KEY: Record<string, string[]> = {
   'ads': ['ads'],
   'posts': ['posts'],
   'challenges': ['challenges'],
+  'projects': ['projects'],
   'sales_pages': ['sales_pages'],
   'feature_flags': ['feature_flags'],
 };
@@ -93,6 +96,17 @@ export async function POST(request: NextRequest) {
       // Revalidar home e links que também mostram challenges
       revalidatePath('/');
       revalidatePath('/links');
+    } else if (collection === 'projects') {
+      revalidatePath('/projetos');
+
+      // Buscar todos os projetos e revalidar cada rota individual
+      const projects = await projectService.getAllProjects([], false);
+      for (const project of projects) {
+        revalidatePath(`/projetos/${project.slug}`);
+      }
+
+      // Revalidar home que também mostra projetos em destaque
+      revalidatePath('/');
     } else if (collection === 'sales_pages') {
       revalidatePath('/venda');
       

@@ -17,6 +17,25 @@ export interface ContentItem extends ContentMeta {
   content: string;
 }
 
+export interface ProjectMeta {
+  title: string;
+  slug: string;
+  date: string;
+  excerpt: string;
+  coverImage?: string;
+  tags?: string[];
+  role?: string;
+  repoUrl?: string;
+  liveUrl?: string;
+  featured?: boolean;
+  order?: number;
+  status?: 'draft' | 'published';
+}
+
+export interface Project extends ProjectMeta {
+  content: string;
+}
+
 export interface SocialLink {
   name: string;
   url: string;
