@@ -26,7 +26,6 @@ export default function Layout({ children }: LayoutProps) {
   
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
-  const { enabled: projectsEnabled } = useFeatureFlag('projects');
 
   // Fetch social links from API
   useEffect(() => {
@@ -45,7 +44,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Home', href: '/' },
     { name: 'Blog', href: '/posts' },
     { name: 'Desafios', href: '/listas/desafios' },
-    ...(projectsEnabled ? [{ name: 'Projetos', href: '/projetos' }] : []),
+    { name: 'Projetos', href: '/projetos' },
     { name: 'Setup', href: '/setup' },
     { name: 'Comunidade', href: '/comunidade' },
     // { name: 'Newsletter', href: '/newsletter' },
