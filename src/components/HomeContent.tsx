@@ -29,7 +29,6 @@ export default function HomeContent({
   totalChallenges = challenges.length
 }: HomeContentProps) {
   const featuredPost = posts[0];
-  const highlightItems = linkItems.filter(item => item.type === 'highlight');
 
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
@@ -360,49 +359,6 @@ export default function HomeContent({
                 Ver Todos os Projetos
                 <ArrowRight size={20} />
               </Link>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Produtos/Ebooks - Se houver */}
-      {highlightItems.length > 0 && (
-        <section className="py-20 section-gradient-2">
-          <div className="content-container">
-            <div className="text-center mb-12">
-              <h2 className="text-5xl font-bold mb-4">Recursos Premium</h2>
-              <p className="text-xl text-muted-foreground">Materiais para acelerar seu aprendizado</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {highlightItems.map((item, index) => (
-                <a
-                  key={item.title}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-modern p-10 text-center group hover:scale-105 transition-all accent-product"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  {item.image && (
-                    <div className="mb-6 flex justify-center">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-24 w-auto object-contain group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                  <h3 className="text-3xl font-bold mb-3 group-hover:text-product transition-colors">{item.title}</h3>
-                  {item.description && (
-                    <p className="text-muted-foreground text-lg mb-6">{item.description}</p>
-                  )}
-                  <div className="inline-flex items-center gap-2 text-product font-semibold">
-                    Saber mais
-                    <ArrowRight size={20} className="group-hover:translate-x-2 transition-transform" />
-                  </div>
-                </a>
-              ))}
             </div>
           </div>
         </section>
