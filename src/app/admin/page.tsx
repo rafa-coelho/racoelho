@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw, Flag } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, Folder, RefreshCw, Flag, Briefcase } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type Module = {
@@ -27,6 +27,12 @@ const sections: { title: string; modules: Module[] }[] = [
             { title: "Asset Packs", description: "Gerenciar pacotes de arquivos (ebooks, banners, etc)", href: "/admin/assets", icon: Folder, color: "from-emerald-500/20 to-emerald-600/20", borderColor: "border-emerald-500/30" },
             { title: "Anúncios", description: "Gerenciar banners publicitários", href: "/admin/ads", icon: Image, color: "from-purple-500/20 to-purple-600/20", borderColor: "border-purple-500/30" },
             { title: "Páginas de Venda", description: "Gerenciar páginas de vendas", href: "/admin/sales", icon: ShoppingCart, color: "from-orange-500/20 to-orange-600/20", borderColor: "border-orange-500/30" },
+        ]
+    },
+    {
+        title: "Recrutamento",
+        modules: [
+            { title: "Indicações", description: "Ver candidatos indicados em /vagas", href: "/admin/referrals", icon: Briefcase, color: "from-teal-500/20 to-teal-600/20", borderColor: "border-teal-500/30" },
         ]
     },
     {

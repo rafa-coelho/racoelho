@@ -1,0 +1,115 @@
+{
+  "name": "job_referrals",
+  "type": "base",
+  "system": false,
+  "fields": [
+    {
+      "name": "vagaSlug",
+      "type": "text",
+      "required": true,
+      "presentable": false,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "vagaTitle",
+      "type": "text",
+      "required": true,
+      "presentable": true,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "referralId",
+      "type": "text",
+      "required": false,
+      "presentable": false,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "candidateName",
+      "type": "text",
+      "required": true,
+      "presentable": true,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "candidateEmail",
+      "type": "text",
+      "required": true,
+      "presentable": false,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "linkedinUrl",
+      "type": "text",
+      "required": false,
+      "presentable": false,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "phone",
+      "type": "text",
+      "required": false,
+      "presentable": false,
+      "min": 0,
+      "max": 0,
+      "pattern": ""
+    },
+    {
+      "name": "cv",
+      "type": "file",
+      "required": false,
+      "presentable": false,
+      "maxSelect": 1,
+      "maxSize": 10485760,
+      "mimeTypes": [
+        "application/pdf",
+        "application/msword",
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      ],
+      "thumbs": [],
+      "protected": false
+    },
+    {
+      "name": "status",
+      "type": "select",
+      "required": false,
+      "presentable": false,
+      "maxSelect": 1,
+      "values": ["new", "submitted", "archived"]
+    },
+    {
+      "name": "created",
+      "type": "autodate",
+      "onCreate": true,
+      "onUpdate": false,
+      "presentable": false
+    },
+    {
+      "name": "updated",
+      "type": "autodate",
+      "onCreate": true,
+      "onUpdate": true,
+      "presentable": false
+    }
+  ],
+  "listRule": "@request.auth.id != \"\"",
+  "viewRule": "@request.auth.id != \"\"",
+  "createRule": "@request.auth.id != \"\"",
+  "updateRule": "@request.auth.id != \"\"",
+  "deleteRule": "@request.auth.id != \"\"",
+  "indexes": [
+    "CREATE INDEX `idx_job_referrals_vagaSlug` ON `job_referrals` (`vagaSlug`)"
+  ]
+}

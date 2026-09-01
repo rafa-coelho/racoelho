@@ -38,11 +38,17 @@ export default function Navbar() {
             >
               Desafios
             </Link>
-            <Link 
-              href="/setup" 
+            <Link
+              href="/setup"
               className={cn('nav-link', isActive('/setup') && 'active')}
             >
               Setup
+            </Link>
+            <Link
+              href="/vagas"
+              className={cn('nav-link', isActive('/vagas') && 'active')}
+            >
+              Vagas
             </Link>
             {/* <Link 
               href="/newsletter" 

@@ -38,4 +38,50 @@ export async function sendMail({ name, email, subject, message }: MailData): Pro
 
 
   return await transporter.sendMail(mailOptions);
-} 
+}
+
+/**
+ * Dados para envio de e-mail "cru" (destinatário arbitrário + anexos).
+ * Usado para notificações internas (ex.: nova indicação de candidato).
+ */
+interface RawMailData {
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+  attachments?: {
+    filename: string;
+    content: Buffer;
+    contentType?: string;
+  }[];
+}
+
+/**
+ * Envia um e-mail para um destinatário arbitrário, com suporte a anexos.
+ */
+export async function sendRawMail({
+  to,
+  subject,
+  html,
+  replyTo,
+  attachments,
+}: RawMailData): Promise<string | SentMessageInfo> {
+  const transporter = nodemailer.createTransport({
+    host: mailerConfig.host,
+    port: Number(mailerConfig.port),
+    secure: mailerConfig.secure === 'true',
+    auth: {
+      user: mailerConfig.user,
+      pass: mailerConfig.pass,
+    },
+  });
+
+  return await transporter.sendMail({
+    from: `"${mailerConfig.from.name}" <${mailerConfig.from.email}>`,
+    to,
+    replyTo,
+    subject,
+    html,
+    attachments,
+  });
+}

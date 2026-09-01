@@ -321,6 +321,34 @@ async function main() {
         ],
     });
 
+    // job_referrals (indicações de candidatos vindas de /vagas)
+    await ensureCollection(pb, 'job_referrals', {
+        name: 'job_referrals',
+        type: 'base',
+        schema: [
+            { name: 'vagaSlug', type: 'text', required: true },
+            { name: 'vagaTitle', type: 'text', required: true },
+            { name: 'referralId', type: 'text' },
+            { name: 'candidateName', type: 'text', required: true },
+            { name: 'candidateEmail', type: 'text', required: true },
+            { name: 'linkedinUrl', type: 'text' },
+            { name: 'phone', type: 'text' },
+            { name: 'cv', type: 'file', options: { maxSelect: 1, maxSize: 10485760 } },
+            { name: 'status', type: 'select', options: { values: ['new', 'submitted', 'archived'] } },
+        ],
+        // Regras: só admin lê/gerencia. A criação é feita pelo server (admin auth),
+        // por isso createRule também exige auth — o público NÃO escreve direto no PB.
+        listRule: "@request.auth.id != ''",
+        viewRule: "@request.auth.id != ''",
+        createRule: "@request.auth.id != ''",
+        updateRule: "@request.auth.id != ''",
+        deleteRule: "@request.auth.id != ''",
+        indexes: [
+            'CREATE INDEX job_referrals_vaga_idx ON job_referrals (vagaSlug)',
+            'CREATE INDEX job_referrals_created_idx ON job_referrals (created)',
+        ],
+    });
+
     // Seed da feature flag 'projects' (habilitada por padrão)
     try {
         await pb.collection('feature_flags').getFirstListItem("key='projects'");
