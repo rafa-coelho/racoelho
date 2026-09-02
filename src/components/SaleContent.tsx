@@ -54,7 +54,7 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
       
     case 'text':
       return (
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg dark:prose-invert max-w-none">
           {block.title && <h2 className="text-3xl font-bold mb-6">{block.title}</h2>}
           {block.content && <div dangerouslySetInnerHTML={{ __html: block.content }} />}
         </div>
@@ -204,7 +204,7 @@ const FormBlock = ({ title, content, apiUrl, fields, submitText, successMessage 
   return (
     <div className="glass-panel rounded-xl p-8 max-w-2xl mx-auto" id="form-block">
       {title && <h2 className="text-3xl font-bold mb-4 text-center">{title}</h2>}
-      {content && <div className="prose prose-lg max-w-none mb-6" dangerouslySetInnerHTML={{ __html: content }} />}
+      {content && <div className="prose prose-lg dark:prose-invert max-w-none mb-6" dangerouslySetInnerHTML={{ __html: content }} />}
       
       {isSuccess ? (
         <div className="text-center py-8">
