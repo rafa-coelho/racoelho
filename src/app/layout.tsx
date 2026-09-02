@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 // import '@/styles/prism-theme.css';
@@ -20,10 +20,15 @@ export const metadata: Metadata = {
       { url: '/favicon/favicon.ico', type: 'image/x-icon' },
     ],
     apple: [
-      { url: '/favicon/favicon.ico' },
+      { url: '/raise.png' },
     ],
   },
-  manifest: '/favicon/site.webmanifest',
+  // manifest servido por src/app/manifest.ts em /manifest.webmanifest
+  appleWebApp: {
+    capable: true,
+    title: `${BLOG_NAME} Admin`,
+    statusBarStyle: 'black-translucent',
+  },
   openGraph: {
     title: BLOG_NAME,
     description: DESCRIPTION,
@@ -41,6 +46,13 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0b0f1a',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({

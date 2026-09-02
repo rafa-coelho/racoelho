@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, FolderGit2, ChevronDown, BarChart3 } from "lucide-react";
+import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, FolderGit2, ChevronDown, BarChart3, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -34,6 +34,12 @@ const navSections: NavSection[] = [
         ]
     },
     {
+        title: "Recrutamento",
+        items: [
+            { title: "Indicações", href: "/admin/referrals", icon: Briefcase }
+        ]
+    },
+    {
         title: "Site",
         items: [
             { title: "Links do Setup", href: "/admin/setup", icon: Settings },
@@ -44,11 +50,11 @@ const navSections: NavSection[] = [
     }
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     const pathname = usePathname();
 
     return (
-        <aside className="fixed left-0 top-0 h-full w-64 bg-background border-r border-white/5 px-4 py-6 overflow-y-auto">
+        <aside className="h-full w-full bg-background px-4 py-6 overflow-y-auto">
             <div className="mb-8">
                 <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/60 to-primary/20 flex items-center justify-center mb-3">
                     <span className="text-primary font-bold text-xl">A</span>
@@ -61,6 +67,7 @@ export default function Sidebar() {
             <div className="mb-3 space-y-1">
                 <Link
                     href="/admin"
+                    onClick={onNavigate}
                     className={cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors group",
                         pathname === '/admin'
@@ -76,6 +83,7 @@ export default function Sidebar() {
                 </Link>
                 <Link
                     href="/admin/analytics"
+                    onClick={onNavigate}
                     className={cn(
                         "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors group",
                         pathname === '/admin/analytics'
@@ -113,6 +121,7 @@ export default function Sidebar() {
                                             <Link
                                                 key={item.href}
                                                 href={item.href}
+                                                onClick={onNavigate}
                                                 className={cn(
                                                     "flex items-center gap-3 px-3 py-2.5 ml-1 mr-1 rounded-md transition-colors group",
                                                     isActive
