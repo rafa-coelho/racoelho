@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota via Truelogic (staff augmentation nearshore) para atuar diretamente com um cliente dos EUA: uma empresa global de insights e estratégia que ajuda grandes marcas a tomar decisões orientadas por dados nos setores de entretenimento, mídia, tecnologia, games, esportes e cultura. Você vai liderar o DevOps que sustenta as plataformas de dados e software do cliente.
+Vaga remota no modelo staff augmentation nearshore para atuar diretamente com um cliente dos EUA: uma empresa global de insights e estratégia que ajuda grandes marcas a tomar decisões orientadas por dados nos setores de entretenimento, mídia, tecnologia, games, esportes e cultura. Você vai liderar o DevOps que sustenta as plataformas de dados e software do cliente.
 
 ## O que você vai fazer
 

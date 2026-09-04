@@ -52,6 +52,24 @@ function slugify(title: string): string {
     .slice(0, 80);
 }
 
+// Remove o nome da consultoria (Truelogic) do título exibido, sem quebrar o
+// match por título com o Ashby (que usa o título original do dump).
+function cleanTitle(title: string): string {
+  return title
+    .replace(/\s*[-–—]\s*Truelogic\s+Software\s*/gi, '')
+    .replace(/\bTruelogic\b/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/\s*[-–—]\s*$/, '')
+    .trim();
+}
+
+// Remoção simples do nome em textos originais (descriptionPlain/Html, que são
+// fallback/SEO em inglês). A versão PT-BR exibida é limpa à parte.
+function stripName(text: string): string {
+  if (!text) return '';
+  return text.replace(/\bTruelogic\b/gi, 'the company');
+}
+
 async function fetchAshbyJobs(): Promise<AshbyJob[]> {
   const res = await fetch(ASHBY_API, { headers: { Accept: 'application/json' } });
   if (!res.ok) {
@@ -82,7 +100,7 @@ async function generate(): Promise<void> {
   const dumpJobs: DumpJob[] = parseReferralDump(dumpRaw);
   console.log(`  ${dumpJobs.length} vagas habilitadas no dump`);
 
-  console.log(`→ Buscando conteúdo no Ashby (${ASHBY_BOARD})...`);
+  console.log(`→ Buscando conteúdo no Ashby...`);
   const ashbyJobs = await fetchAshbyJobs();
   console.log(`  ${ashbyJobs.length} vagas públicas no Ashby`);
 
@@ -118,9 +136,11 @@ async function generate(): Promise<void> {
     const match = copies[0]; // referência para conteúdo (descrição etc.)
 
     // slug único (evita colisão entre títulos parecidos)
-    let slug = slugify(d.title);
+    // usa o título já limpo, para não expor o nome da consultoria na URL
+    const baseSlug = slugify(cleanTitle(d.title));
+    let slug = baseSlug;
     let n = 2;
-    while (usedSlugs.has(slug)) slug = `${slugify(d.title)}-${n++}`;
+    while (usedSlugs.has(slug)) slug = `${baseSlug}-${n++}`;
     usedSlugs.add(slug);
 
     if (!match) notEnriched.push(d.title);
@@ -149,7 +169,7 @@ async function generate(): Promise<void> {
     return {
       referralId: d.id,
       slug,
-      title: d.title,
+      title: cleanTitle(d.title),
       department: match?.department,
       location: match?.location,
       allLocations,
@@ -158,8 +178,8 @@ async function generate(): Promise<void> {
       employmentType: match?.employmentType,
       isRemote: match?.isRemote,
       workplaceType: match?.workplaceType,
-      descriptionHtml: match?.descriptionHtml || '',
-      descriptionPlain: match?.descriptionPlain || '',
+      descriptionHtml: stripName(match?.descriptionHtml || ''),
+      descriptionPlain: stripName(match?.descriptionPlain || ''),
       descriptionPtBr: prevPtByTitle.get(normTitle(d.title)) || '',
       publishedAt: match?.publishedAt,
       enriched: Boolean(match),

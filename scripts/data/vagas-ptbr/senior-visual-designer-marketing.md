@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar com uma empresa dos EUA no modelo nearshore (staff augmentation, via Truelogic). Você vai integrar o time de uma agência criativa global, criando experiências digitais e peças de marketing de alta qualidade para uma marca líder no setor de viagens e hospitalidade.
+Vaga remota para trabalhar com uma empresa dos EUA no modelo nearshore (staff augmentation). Você vai integrar o time de uma agência criativa global, criando experiências digitais e peças de marketing de alta qualidade para uma marca líder no setor de viagens e hospitalidade.
 
 O foco é produzir trabalho visual sofisticado, moderno e caprichado para redes sociais, e-mail, web e campanhas digitais, transformando direção criativa e estratégia de marca em execuções prontas para produção.
 

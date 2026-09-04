@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar como DevOps Engineer diretamente com empresas dos EUA, no modelo nearshore (staff augmentation) da Truelogic, consultoria com sede em Nova York e times na América Latina. Você trabalha do Brasil, em projetos de clientes americanos que vão de startups a empresas Fortune 500.
+Vaga remota para atuar como DevOps Engineer diretamente com empresas dos EUA, no modelo nearshore (staff augmentation), por meio de uma consultoria com sede em Nova York e times na América Latina. Você trabalha do Brasil, em projetos de clientes americanos que vão de startups a empresas Fortune 500.
 
 ## Requisitos
 

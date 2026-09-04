@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar com uma agência criativa global, via modelo nearshore (staff augmentation) da Truelogic, empresa de NY que conecta profissionais da América Latina a empresas dos EUA. Contrato de curta duração (2 a 3 meses) para criar peças de motion polidas e envolventes para social media, publicidade digital, vídeo e experiências interativas.
+Vaga remota para trabalhar com uma agência criativa global, no modelo nearshore (staff augmentation) por meio de uma consultoria sediada em Nova York que conecta profissionais da América Latina a empresas dos EUA. Contrato de curta duração (2 a 3 meses) para criar peças de motion polidas e envolventes para social media, publicidade digital, vídeo e experiências interativas.
 
 ## O que você vai fazer
 

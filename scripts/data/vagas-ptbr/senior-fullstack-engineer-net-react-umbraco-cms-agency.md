@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic (staff augmentation nearshore) com um cliente dos EUA: uma agência digital que entrega soluções web escaláveis e de alta qualidade para grandes organizações, com forte foco em CMS e plataformas de experiência digital. Você atua como Senior Fullstack Engineer em múltiplos projetos client-facing, construindo aplicações escaláveis com .NET e frameworks front-end modernos.
+Vaga remota no modelo staff augmentation nearshore para atuar com um cliente dos EUA: uma agência digital que entrega soluções web escaláveis e de alta qualidade para grandes organizações, com forte foco em CMS e plataformas de experiência digital. Você atua como Senior Fullstack Engineer em múltiplos projetos client-facing, construindo aplicações escaláveis com .NET e frameworks front-end modernos.
 
 ## O que você vai fazer
 

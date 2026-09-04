@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic (staff augmentation nearshore, sede em Nova York) em um cliente americano: uma consultoria global de insights e estratégia que atua na interseção entre conteúdo, cultura e tecnologia. Você vai construir interfaces de alta qualidade para produtos orientados a dados (data-driven), com forte equilíbrio entre execução técnica, fluência em dados e sensibilidade de design.
+Vaga remota no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York, para atuar em um cliente americano: uma consultoria global de insights e estratégia que atua na interseção entre conteúdo, cultura e tecnologia. Você vai construir interfaces de alta qualidade para produtos orientados a dados (data-driven), com forte equilíbrio entre execução técnica, fluência em dados e sensibilidade de design.
 
 ## O que você vai fazer
 

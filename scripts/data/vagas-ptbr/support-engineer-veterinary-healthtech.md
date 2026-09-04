@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar com uma empresa dos EUA (modelo nearshore, via Truelogic) como Support Engineer em uma healthtech veterinária de médio porte, cujo software ajuda clínicas a melhorar o atendimento e a eficiência das equipes. A stack do cliente roda em Elixir no back-end e React no front-end, conectados por GraphQL.
+Vaga remota para atuar com uma empresa dos EUA (modelo nearshore, staff augmentation) como Support Engineer em uma healthtech veterinária de médio porte, cujo software ajuda clínicas a melhorar o atendimento e a eficiência das equipes. A stack do cliente roda em Elixir no back-end e React no front-end, conectados por GraphQL.
 
 Você será a ponte técnica entre o time de Platform Engineering e o time de Customer Experience (CX): cuidando de onboarding e offboarding técnico de clientes, migrações de dados via SQL e resolução de escalações técnicas da plataforma.
 

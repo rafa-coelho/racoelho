@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga 100% remota para atuar com o cliente da Truelogic (modelo nearshore/staff augmentation, com pagamento em USD): uma agência digital full-service que une desenvolvimento de produto digital e marketing de ciclo de vida para marcas líderes de diversos setores. Você vai liderar o processo de UX de ponta a ponta, criando experiências digitais centradas no usuário que equilibram necessidades das pessoas e objetivos de negócio.
+Vaga 100% remota no modelo nearshore/staff augmentation (com pagamento em USD), para atuar com o cliente de uma consultoria que conecta profissionais da América Latina a empresas dos EUA: uma agência digital full-service que une desenvolvimento de produto digital e marketing de ciclo de vida para marcas líderes de diversos setores. Você vai liderar o processo de UX de ponta a ponta, criando experiências digitais centradas no usuário que equilibram necessidades das pessoas e objetivos de negócio.
 
 ## O que você vai fazer
 

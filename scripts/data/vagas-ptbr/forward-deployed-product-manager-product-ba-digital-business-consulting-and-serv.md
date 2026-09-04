@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar com uma empresa dos EUA (modelo nearshore, via Truelogic, com pagamento em USD). O cliente é uma rede de tecnologia e criação que une CMOs, CTOs e CIOs para gerar resultado. Você vai ficar embarcado em pods de implementação, transformando necessidades de clientes e internas em requisitos claros de produto, fazendo a ponte entre produto, delivery e implementação durante os rollouts.
+Vaga remota para atuar com uma empresa dos EUA (modelo nearshore, via staff augmentation, com pagamento em USD). O cliente é uma rede de tecnologia e criação que une CMOs, CTOs e CIOs para gerar resultado. Você vai ficar embarcado em pods de implementação, transformando necessidades de clientes e internas em requisitos claros de produto, fazendo a ponte entre produto, delivery e implementação durante os rollouts.
 
 ## O que você vai fazer
 

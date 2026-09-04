@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar como engenheiro(a) de back-end sênior em projetos de empresas dos EUA, via modelo nearshore/staff augmentation da Truelogic (sediada em Nova York). Você trabalha do Brasil, direto com clientes americanos, incluindo Fortune 500 e startups em crescimento.
+Vaga remota para atuar como engenheiro(a) de back-end sênior em projetos de empresas dos EUA, no modelo nearshore/staff augmentation por meio de uma consultoria sediada em Nova York. Você trabalha do Brasil, direto com clientes americanos, incluindo Fortune 500 e startups em crescimento.
 
 ## Requisitos
 

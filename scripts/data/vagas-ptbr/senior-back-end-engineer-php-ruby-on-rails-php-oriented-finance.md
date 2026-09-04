@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota via Truelogic (modelo nearshore/staff augmentation) para atuar com um cliente dos EUA: uma fintech em alta que ajuda marcas de e-commerce a prevenir e contestar chargebacks de forma automatizada. Você vai assumir uma área central da plataforma de resolução de disputas de pagamentos e liderar a migração de um sistema legado para uma arquitetura moderna, estável e escalável.
+Vaga remota no modelo nearshore/staff augmentation para atuar com um cliente dos EUA: uma fintech em alta que ajuda marcas de e-commerce a prevenir e contestar chargebacks de forma automatizada. Você vai assumir uma área central da plataforma de resolução de disputas de pagamentos e liderar a migração de um sistema legado para uma arquitetura moderna, estável e escalável.
 
 Importante: não é refatoração incremental nem limpeza de dívida técnica. É investigar o legado, reconstruir os requisitos funcionais e executar uma migração de plataforma de ponta a ponta.
 

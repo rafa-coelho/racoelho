@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota via Truelogic (modelo nearshore/staff augmentation) para atuar como Principal Full-Stack Engineer junto a um cliente dos EUA que desenvolve soluções SaaS em nuvem para instituições públicas. Você vai construir do zero uma nova aplicação SaaS, atuando como líder técnico hands-on num time com forte uso de desenvolvimento assistido por IA (abordagem AI-first, shift-left total e sem QA dedicado).
+Vaga remota no modelo nearshore/staff augmentation para atuar como Principal Full-Stack Engineer junto a um cliente dos EUA que desenvolve soluções SaaS em nuvem para instituições públicas. Você vai construir do zero uma nova aplicação SaaS, atuando como líder técnico hands-on num time com forte uso de desenvolvimento assistido por IA (abordagem AI-first, shift-left total e sem QA dedicado).
 
 ## O que você vai fazer
 

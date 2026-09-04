@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar com empresas dos EUA no modelo nearshore (staff augmentation), pela Truelogic, com pagamento em USD. Você vai atuar como Forward Deployed Engineer, trabalhando diretamente com clientes para desenhar, construir e colocar em produção soluções de IA que gerem valor mensurável. O papel combina engenharia de software, design de soluções e contato direto com o cliente.
+Vaga remota para trabalhar com empresas dos EUA no modelo nearshore (staff augmentation), por meio de uma consultoria sediada em Nova York, com pagamento em USD. Você vai atuar como Forward Deployed Engineer, trabalhando diretamente com clientes para desenhar, construir e colocar em produção soluções de IA que gerem valor mensurável. O papel combina engenharia de software, design de soluções e contato direto com o cliente.
 
 ## O que você vai fazer
 

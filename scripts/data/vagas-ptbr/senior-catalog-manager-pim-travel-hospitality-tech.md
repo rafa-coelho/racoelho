@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota (modelo nearshore/staff augmentation via Truelogic) para atuar com um cliente dos EUA: uma agência premiada de comunicação e transformação digital que atende grandes marcas, órgãos governamentais e empresas dos setores de hospitalidade, turismo, viagens e comércio. Você será o dono estratégico do catálogo de produtos e do ecossistema de PIM da empresa.
+Vaga remota (modelo nearshore/staff augmentation) para atuar com um cliente dos EUA: uma agência premiada de comunicação e transformação digital que atende grandes marcas, órgãos governamentais e empresas dos setores de hospitalidade, turismo, viagens e comércio. Você será o dono estratégico do catálogo de produtos e do ecossistema de PIM da empresa.
 
 ## O que você vai fazer
 

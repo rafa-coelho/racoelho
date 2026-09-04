@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic (staff augmentation nearshore, sediada em Nova York) diretamente com uma empresa dos EUA. O cliente é uma rede global de marketing e comunicação, e o trabalho é construir um produto de payroll/RH em ambiente de startup, com bastante autonomia técnica.
+Vaga remota no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York, para atuar diretamente com uma empresa dos EUA. O cliente é uma rede global de marketing e comunicação, e o trabalho é construir um produto de payroll/RH em ambiente de startup, com bastante autonomia técnica.
 
 ## O que você vai fazer
 

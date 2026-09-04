@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar com uma empresa dos EUA (modelo nearshore, via Truelogic). O cliente é uma firma de investimentos por associação, focada em dar acesso a mercados privados (private credit, real estate, private equity e venture capital). Você atuará full-stack em um time enxuto, contribuindo em todas as fases do desenvolvimento.
+Vaga remota para trabalhar com uma empresa dos EUA (modelo nearshore, via staff augmentation). O cliente é uma firma de investimentos por associação, focada em dar acesso a mercados privados (private credit, real estate, private equity e venture capital). Você atuará full-stack em um time enxuto, contribuindo em todas as fases do desenvolvimento.
 
 ## O que você vai fazer
 

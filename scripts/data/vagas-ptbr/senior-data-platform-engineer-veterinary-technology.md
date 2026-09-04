@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar com uma empresa dos EUA, no modelo nearshore (staff augmentation via Truelogic). O cliente é referência em tecnologia veterinária, com um ecossistema de software de gestão de clínicas, ferramentas de IA e apoio à decisão clínica usado por profissionais no mundo todo. Você será dono, de ponta a ponta, de uma plataforma de dados em rápido crescimento.
+Vaga remota para atuar com uma empresa dos EUA, no modelo nearshore (staff augmentation). O cliente é referência em tecnologia veterinária, com um ecossistema de software de gestão de clínicas, ferramentas de IA e apoio à decisão clínica usado por profissionais no mundo todo. Você será dono, de ponta a ponta, de uma plataforma de dados em rápido crescimento.
 
 ## O que você vai fazer
 

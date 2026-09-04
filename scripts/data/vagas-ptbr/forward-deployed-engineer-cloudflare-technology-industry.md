@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota via Truelogic (modelo nearshore/staff augmentation) para atuar como Forward Deployed Engineer especialista em Cloudflare, embarcado no time de um dos clientes mais estratégicos: uma empresa global de tecnologia e inovação digital. Você trabalha diretamente com uma empresa dos EUA, com pagamento em USD.
+Vaga remota no modelo nearshore/staff augmentation para atuar como Forward Deployed Engineer especialista em Cloudflare, embarcado no time de um dos clientes mais estratégicos: uma empresa global de tecnologia e inovação digital. Você trabalha diretamente com uma empresa dos EUA, com pagamento em USD.
 
 ## O que você vai fazer
 

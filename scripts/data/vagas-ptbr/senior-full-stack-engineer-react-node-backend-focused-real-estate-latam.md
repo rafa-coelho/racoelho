@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic (staff augmentation nearshore, sede em Nova York) diretamente com um cliente dos EUA: uma empresa de tecnologia e mídia que está reinventando o mercado imobiliário de luxo, combinando vendas, tecnologia e produção de conteúdo. Você fará parte de um time de engenharia enxuto e autônomo, construindo sistemas escaláveis, confiáveis e de dados intensivos.
+Vaga remota para atuar no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York, diretamente com um cliente dos EUA: uma empresa de tecnologia e mídia que está reinventando o mercado imobiliário de luxo, combinando vendas, tecnologia e produção de conteúdo. Você fará parte de um time de engenharia enxuto e autônomo, construindo sistemas escaláveis, confiáveis e de dados intensivos.
 
 ## O que você vai fazer
 

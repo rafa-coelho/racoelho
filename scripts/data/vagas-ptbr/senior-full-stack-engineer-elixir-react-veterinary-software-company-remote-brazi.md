@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota (modelo nearshore) para atuar diretamente com uma empresa dos EUA de software veterinário, que ajuda clínicas e hospitais de animais a melhorar o atendimento, ganhar eficiência e reduzir a sobrecarga das equipes. A contratação é via Truelogic, que conecta talentos da América Latina a projetos de empresas norte-americanas.
+Vaga remota (modelo nearshore) para atuar diretamente com uma empresa dos EUA de software veterinário, que ajuda clínicas e hospitais de animais a melhorar o atendimento, ganhar eficiência e reduzir a sobrecarga das equipes. A contratação é no modelo staff augmentation nearshore, por meio de uma consultoria que conecta talentos da América Latina a projetos de empresas norte-americanas.
 
 ## O que você vai fazer
 

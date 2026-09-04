@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic (modelo nearshore/staff augmentation) com um cliente dos EUA: uma empresa de SaaS que oferece software de gestão para negócios de serviços na América do Norte (estimativas, faturamento, pagamentos e gestão de projetos para contratantes de reforma e construção). Você vai desenhar e manter a infraestrutura cloud em AWS de uma plataforma SaaS moderna.
+Vaga remota no modelo nearshore/staff augmentation, por meio de uma consultoria sediada em Nova York que conecta profissionais da América Latina a empresas dos EUA, para atuar com um cliente dos EUA: uma empresa de SaaS que oferece software de gestão para negócios de serviços na América do Norte (estimativas, faturamento, pagamentos e gestão de projetos para contratantes de reforma e construção). Você vai desenhar e manter a infraestrutura cloud em AWS de uma plataforma SaaS moderna.
 
 ## O que você vai fazer
 

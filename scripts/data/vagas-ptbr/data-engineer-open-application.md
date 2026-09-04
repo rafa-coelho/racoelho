@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Candidatura aberta para Data Engineer na Truelogic, empresa de staff augmentation nearshore sediada em Nova York. Você trabalha de forma 100% remota, alocado em projetos de empresas dos EUA (de startups a Fortune 500), com pagamento em USD.
+Candidatura aberta para Data Engineer no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York. Você trabalha de forma 100% remota, alocado em projetos de empresas dos EUA (de startups a Fortune 500), com pagamento em USD.
 
 ## O que você vai fazer
 

@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Candidatura espontânea na Truelogic, empresa de staff augmentation nearshore sediada em Nova York. Você trabalha de forma 100% remota, alocado em projetos de empresas dos EUA (de startups a Fortune 500), com pagamento em USD. Não encontrou uma vaga aberta com o seu perfil? Candidate-se por aqui e o time entra em contato quando surgir uma oportunidade compatível.
+Candidatura espontânea em uma consultoria de staff augmentation nearshore sediada em Nova York. Você trabalha de forma 100% remota, alocado em projetos de empresas dos EUA (de startups a Fortune 500), com pagamento em USD. Não encontrou uma vaga aberta com o seu perfil? Candidate-se por aqui e o time entra em contato quando surgir uma oportunidade compatível.
 
 ## O que oferecem
 

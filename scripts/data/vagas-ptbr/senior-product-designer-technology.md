@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar via Truelogic (staff augmentation nearshore, sede em Nova York) com um cliente dos EUA: uma empresa de tecnologia do setor de construção, dona de uma plataforma cloud para gestão de projetos e operações. Você entra num time de AI Design, atuando em áreas centrais do produto como Accounts & Activation, Monetization e Permissions.
+Vaga remota no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York, para trabalhar com um cliente dos EUA: uma empresa de tecnologia do setor de construção, dona de uma plataforma cloud para gestão de projetos e operações. Você entra num time de AI Design, atuando em áreas centrais do produto como Accounts & Activation, Monetization e Permissions.
 
 ## O que você vai fazer
 

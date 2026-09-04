@@ -1,4 +1,4 @@
-// Tipos das vagas de referral (Truelogic / Ashby)
+// Tipos das vagas de referral (fonte: Ashby)
 //
 // A fonte da VERDADE de QUAIS vagas exibir é o dump do sistema de referral
 // (as vagas habilitadas para indicação). O conteúdo (descrição, local, área)

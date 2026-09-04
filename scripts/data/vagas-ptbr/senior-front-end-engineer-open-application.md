@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar via Truelogic, empresa de nearshore staff augmentation sediada em Nova York, trabalhando diretamente em projetos de empresas dos EUA (de startups a companhias Fortune 500). É uma candidatura aberta para a posição de Front-end Sênior.
+Vaga remota no modelo nearshore (staff augmentation), por meio de uma consultoria sediada em Nova York, trabalhando diretamente em projetos de empresas dos EUA (de startups a companhias Fortune 500). É uma candidatura aberta para a posição de Front-end Sênior.
 
 ## Requisitos
 

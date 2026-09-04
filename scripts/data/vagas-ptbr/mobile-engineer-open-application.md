@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar como Mobile Engineer em projetos de empresas dos EUA, no modelo nearshore (staff augmentation) da Truelogic. Você trabalha do Brasil, integrado a times americanos, com pagamento em USD.
+Vaga remota para atuar como Mobile Engineer em projetos de empresas dos EUA, no modelo nearshore (staff augmentation), por meio de uma consultoria sediada em Nova York que conecta profissionais da América Latina a empresas dos EUA. Você trabalha do Brasil, integrado a times americanos, com pagamento em USD.
 
 ## Requisitos
 

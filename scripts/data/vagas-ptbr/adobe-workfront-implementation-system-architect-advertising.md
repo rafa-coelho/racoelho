@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para atuar como System Architect em implementações de larga escala de Adobe Workfront, trabalhando via Truelogic (staff augmentation nearshore, sede em Nova York) para um cliente global de tecnologia e criatividade voltado a marketing e ambientes de varejo. É uma oportunidade para trabalhar de forma 100% remota com empresas dos EUA, com pagamento em USD.
+Vaga remota para atuar como System Architect em implementações de larga escala de Adobe Workfront, no modelo staff augmentation nearshore, por meio de uma consultoria sediada em Nova York, para um cliente global de tecnologia e criatividade voltado a marketing e ambientes de varejo. É uma oportunidade para trabalhar de forma 100% remota com empresas dos EUA, com pagamento em USD.
 
 ## O que você vai fazer
 

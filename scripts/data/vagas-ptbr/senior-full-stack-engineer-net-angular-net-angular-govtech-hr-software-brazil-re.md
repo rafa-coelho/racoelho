@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota (modelo nearshore) via Truelogic para atuar diretamente com uma empresa dos EUA que desenvolve soluções cloud de GovTech/RH para o setor público. Você vai construir e manter aplicações SaaS escaláveis, seguras e de alta performance usando o stack Microsoft.
+Vaga remota no modelo staff augmentation nearshore para atuar diretamente com uma empresa dos EUA que desenvolve soluções cloud de GovTech/RH para o setor público. Você vai construir e manter aplicações SaaS escaláveis, seguras e de alta performance usando o stack Microsoft.
 
 ## O que você vai fazer
 

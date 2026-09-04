@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota como Quality Engineer para atuar diretamente com empresas dos EUA, no modelo nearshore/staff augmentation da Truelogic (consultoria de tecnologia sediada em Nova York). Você trabalha do Brasil, integrado a projetos de clientes americanos, com pagamento em USD.
+Vaga remota como Quality Engineer para atuar diretamente com empresas dos EUA, no modelo nearshore/staff augmentation por meio de uma consultoria de tecnologia sediada em Nova York. Você trabalha do Brasil, integrado a projetos de clientes americanos, com pagamento em USD.
 
 ## O que você vai fazer
 

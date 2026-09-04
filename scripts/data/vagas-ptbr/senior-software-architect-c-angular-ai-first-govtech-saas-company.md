@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota (modelo nearshore/staff augmentation via Truelogic) para atuar com uma empresa americana de SaaS GovTech, que há mais de duas décadas moderniza operações de órgãos públicos e instituições de ensino. Você será Arquiteto de Software Sênior, liderando o design e a evolução de plataformas SaaS cloud-native, escaláveis e seguras, dentro de uma cultura de engenharia AI-first.
+Vaga remota (modelo nearshore/staff augmentation) para atuar com uma empresa americana de SaaS GovTech, que há mais de duas décadas moderniza operações de órgãos públicos e instituições de ensino. Você será Arquiteto de Software Sênior, liderando o design e a evolução de plataformas SaaS cloud-native, escaláveis e seguras, dentro de uma cultura de engenharia AI-first.
 
 ## O que você vai fazer
 

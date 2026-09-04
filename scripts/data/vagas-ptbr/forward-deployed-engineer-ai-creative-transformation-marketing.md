@@ -1,6 +1,6 @@
 ## Sobre a vaga
 
-Vaga remota para trabalhar com uma empresa dos EUA, via modelo nearshore (staff augmentation) da Truelogic, com pagamento em USD. O cliente é uma organização global de transformação digital que combina tecnologia, criatividade, IA e engenharia para modernizar operações de conteúdo e experiências de clientes em grandes empresas.
+Vaga remota para trabalhar com uma empresa dos EUA, no modelo nearshore (staff augmentation) por meio de uma consultoria sediada em Nova York, com pagamento em USD. O cliente é uma organização global de transformação digital que combina tecnologia, criatividade, IA e engenharia para modernizar operações de conteúdo e experiências de clientes em grandes empresas.
 
 Você atuará como Forward Deployed Engineer (FDE) no centro de projetos de transformação criativa e de conteúdo: mapeando workflows criativos existentes, redesenhando-os e construindo pipelines com IA em ambientes reais de produção. Aqui, construir não é diferencial, é o trabalho. Em muitos projetos você estará embarcado diretamente nos times do cliente, trabalhando lado a lado com diretores criativos, produtores, líderes de marketing technology e engenheiros.
 
