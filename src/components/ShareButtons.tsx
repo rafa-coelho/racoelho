@@ -48,79 +48,52 @@ export default function ShareButtons({ title, url, variant = 'sidebar', classNam
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const chip =
+    'inline-flex h-10 items-center gap-2 rounded-lg border border-rc-border-chip bg-rc-surface px-3 font-mono text-xs text-rc-nav-ink transition-colors duration-150 hover:border-rc-border-hover hover:text-rc-ink md:h-9';
+
+  const buttons = (
+    <>
+      {allowedNetworks.includes('x') && (
+        <button type="button" onClick={() => openSharePopup(links.x)} className={chip} aria-label="Compartilhar no X">
+          <XIcon size={13} /> x / twitter
+        </button>
+      )}
+      {allowedNetworks.includes('linkedin') && (
+        <button type="button" onClick={() => openSharePopup(links.linkedin)} className={chip} aria-label="Compartilhar no LinkedIn">
+          <Linkedin size={14} strokeWidth={1.75} /> linkedin
+        </button>
+      )}
+      {allowedNetworks.includes('threads') && (
+        <button type="button" onClick={() => openSharePopup(links.threads)} className={chip} aria-label="Compartilhar no Threads">
+          <AtSign size={14} strokeWidth={1.75} /> threads
+        </button>
+      )}
+      {allowedNetworks.includes('whatsapp') && (
+        <button type="button" onClick={() => openSharePopup(links.whatsapp, 600, 600)} className={chip} aria-label="Compartilhar no WhatsApp">
+          <WhatsAppIcon size={13} /> whatsapp
+        </button>
+      )}
+      <button type="button" onClick={handleCopy} className={chip} aria-label="Copiar link">
+        {copied ? <Check size={14} className="text-rc-green" /> : <Copy size={14} strokeWidth={1.75} />}
+        {copied ? 'copiado' : 'copiar link'}
+      </button>
+    </>
+  );
+
   if (variant === 'inline') {
     return (
-      <div className={className || ''}>
-        <div className="card-modern p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Compartilhar:</span>
-            <div className="flex gap-2">
-              {allowedNetworks.includes('threads') && (
-                <button onClick={() => openSharePopup(links.threads)} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Compartilhar no Threads">
-                  <AtSign size={18} />
-                </button>
-              )}
-              {allowedNetworks.includes('x') && (
-                <button onClick={() => openSharePopup(links.x)} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Compartilhar no X">
-                  <XIcon size={18} />
-                </button>
-              )}
-              {allowedNetworks.includes('linkedin') && (
-                <button onClick={() => openSharePopup(links.linkedin)} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Compartilhar no LinkedIn">
-                  <Linkedin size={18} className="text-[#0A66C2]" />
-                </button>
-              )}
-              {allowedNetworks.includes('whatsapp') && (
-                <button onClick={() => openSharePopup(links.whatsapp, 600, 600)} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Compartilhar no WhatsApp">
-                  <WhatsAppIcon size={18} className="text-[#25D366]" />
-                </button>
-              )}
-              <button onClick={handleCopy} className="p-2 rounded-lg hover:bg-secondary transition-colors" title="Copiar link">
-                {copied ? <Check size={18} className="text-green-500" /> : <Copy size={18} />}
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className={`flex flex-wrap items-center gap-2 md:gap-3 ${className || ''}`}>
+        <span className="w-full font-mono text-xs text-rc-ink-5 md:w-auto">compartilhar:</span>
+        {buttons}
       </div>
     );
   }
 
   // sidebar
   return (
-    <div className={`card-modern p-6 ${className || ''}`}>
-      <h3 className="text-sm font-bold mb-4 text-muted-foreground uppercase tracking-wider">Compartilhar</h3>
-      <div className="space-y-3">
-        {allowedNetworks.includes('threads') && (
-          <button onClick={() => openSharePopup(links.threads)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left">
-            <AtSign size={20} className="text-foreground" />
-            <span className="text-sm font-medium group-hover:text-primary transition-colors">Threads</span>
-          </button>
-        )}
-        {allowedNetworks.includes('x') && (
-          <button onClick={() => openSharePopup(links.x)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left">
-            <XIcon size={20} className="text-foreground" />
-            <span className="text-sm font-medium group-hover:text-primary transition-colors">X</span>
-          </button>
-        )}
-        {allowedNetworks.includes('linkedin') && (
-          <button onClick={() => openSharePopup(links.linkedin)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left">
-            <Linkedin size={20} className="text-[#0A66C2]" />
-            <span className="text-sm font-medium group-hover:text-primary transition-colors">LinkedIn</span>
-          </button>
-        )}
-        {allowedNetworks.includes('whatsapp') && (
-          <button onClick={() => openSharePopup(links.whatsapp, 600, 600)} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left">
-            <WhatsAppIcon size={20} className="text-[#25D366]" />
-            <span className="text-sm font-medium group-hover:text-primary transition-colors">WhatsApp</span>
-          </button>
-        )}
-        <button onClick={handleCopy} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary transition-colors group w-full text-left">
-          {copied ? <Check size={20} className="text-green-500" /> : <Copy size={20} className="text-muted-foreground" />}
-          <span className="text-sm font-medium group-hover:text-primary transition-colors">{copied ? 'Copiado!' : 'Copiar link'}</span>
-        </button>
-      </div>
+    <div className={`rounded-rc-card border border-rc-border-card bg-rc-surface p-5 ${className || ''}`}>
+      <div className="font-mono text-rc-eyebrow uppercase text-rc-ink-5">Compartilhar</div>
+      <div className="mt-3.5 flex flex-wrap gap-2">{buttons}</div>
     </div>
   );
 }
-
-
