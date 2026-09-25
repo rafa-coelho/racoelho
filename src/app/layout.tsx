@@ -1,11 +1,18 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { JetBrains_Mono } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
 import './globals.css';
 // import '@/styles/prism-theme.css';
 import { AnalyticsWrapper } from '@/components/Analytics';
 import { BLOG_NAME, SITE_TITLE, DESCRIPTION, SITE_URL } from '@/lib/config/constants';
 
-const inter = Inter({ subsets: ['latin'] });
+// Geist vem do pacote `geist` (o next/font/google do Next 14.1 ainda não tem Geist).
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://racoelho.com.br'),
@@ -61,8 +68,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-br" className="dark" style={{ colorScheme: 'dark' }}>
-      <body className={inter.className}>
+    <html
+      lang="pt-br"
+      className={`dark ${GeistSans.variable} ${jetbrainsMono.variable}`}
+      style={{ colorScheme: 'dark' }}
+    >
+      <body className="font-sans">
         <AnalyticsWrapper />
         <main>
           {children}
