@@ -71,6 +71,26 @@ export const challengeService = {
     );
   },
 
+  // Trilha de /listas/desafios: publicados + "em breve" (comingSoon aparece mesmo sem estar publicado).
+  // Separado de getAllChallenges para não vazar "em breve" em sitemap, home e links.
+  async getChallengeTrail(isPreview: boolean = false): Promise<ContentMeta[]> {
+    const cacheKeyData = `${cacheListKey('challenges')}:trail:${isPreview ? 'preview' : 'public'}`;
+
+    return await getCached(
+      cacheKeyData,
+      async () => {
+        const res = await pbListWithPreview('challenges', {
+          filter: isPreview ? undefined : "status='published' || comingSoon=true",
+          sort: '-date',
+          perPage: 200,
+        }, isPreview);
+
+        return (res.items || []).map(mapPbToContentMeta);
+      },
+      3600000 // 1 hora
+    );
+  },
+
   async getChallengeBySlug(slug: string, fields: string[] = [], isPreview: boolean = false): Promise<ContentItem | null> {
     // Verificar se é preview/admin
     const isAdminPreview = isPreview;
