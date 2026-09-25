@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 // Progresso dos desafios só no navegador (não há conta de visitante).
 export const CHALLENGES_DONE_KEY = 'rc:challenges:done';
@@ -28,7 +29,10 @@ function write(list: string[]) {
 // Marca fora de um componente (ex.: após enviar solução).
 export function markChallengeDone(slug: string) {
   const list = read();
-  if (!list.includes(slug)) write([...list, slug]);
+  if (!list.includes(slug)) {
+    write([...list, slug]);
+    analyticsService.event('challenge_complete', 'challenges', slug);
+  }
 }
 
 export function useChallengeProgress() {

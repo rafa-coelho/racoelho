@@ -4,6 +4,7 @@ import { RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { readingFraction } from '@/hooks/use-reading-progress';
 import { LikeButton } from './LikeButton';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 // Aparece depois de 30% do artigo.
 const SHOW_AFTER = 0.3;
@@ -63,6 +64,7 @@ export function PostActionBar({ articleRef, endRef, title, url, showShare, like 
     if (typeof navigator.share === 'function') {
       try {
         await navigator.share({ title, url: shareUrl });
+        analyticsService.event('post_share', 'posts', 'native');
         return;
       } catch (error) {
         // usuário cancelou: não faz nada
@@ -71,6 +73,7 @@ export function PostActionBar({ articleRef, endRef, title, url, showShare, like 
     }
     try {
       await navigator.clipboard.writeText(shareUrl);
+      analyticsService.event('post_share', 'posts', 'copy');
       showToast('Link copiado');
     } catch {
       showToast('Não foi possível copiar o link');

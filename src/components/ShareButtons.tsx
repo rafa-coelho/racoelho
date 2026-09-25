@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AtSign, Linkedin, Copy, Check } from 'lucide-react';
 import { generateShareLinks, openSharePopup } from '@/lib/utils/share';
 import { useFeatureFlags, useFeatureFlagWithMetadata } from '@/hooks/use-feature-flag';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 type ShareVariant = 'sidebar' | 'inline';
 
@@ -42,7 +43,10 @@ export default function ShareButtons({ title, url, variant = 'sidebar', classNam
 
   const links = generateShareLinks(title, url);
 
+  const track = (network: string) => analyticsService.event('post_share', 'share', network);
+
   const handleCopy = () => {
+    track('copy');
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -54,22 +58,22 @@ export default function ShareButtons({ title, url, variant = 'sidebar', classNam
   const buttons = (
     <>
       {allowedNetworks.includes('x') && (
-        <button type="button" onClick={() => openSharePopup(links.x)} className={chip} aria-label="Compartilhar no X">
+        <button type="button" onClick={() => { track('x'); openSharePopup(links.x); }} className={chip} aria-label="Compartilhar no X">
           <XIcon size={13} /> x / twitter
         </button>
       )}
       {allowedNetworks.includes('linkedin') && (
-        <button type="button" onClick={() => openSharePopup(links.linkedin)} className={chip} aria-label="Compartilhar no LinkedIn">
+        <button type="button" onClick={() => { track('linkedin'); openSharePopup(links.linkedin); }} className={chip} aria-label="Compartilhar no LinkedIn">
           <Linkedin size={14} strokeWidth={1.75} /> linkedin
         </button>
       )}
       {allowedNetworks.includes('threads') && (
-        <button type="button" onClick={() => openSharePopup(links.threads)} className={chip} aria-label="Compartilhar no Threads">
+        <button type="button" onClick={() => { track('threads'); openSharePopup(links.threads); }} className={chip} aria-label="Compartilhar no Threads">
           <AtSign size={14} strokeWidth={1.75} /> threads
         </button>
       )}
       {allowedNetworks.includes('whatsapp') && (
-        <button type="button" onClick={() => openSharePopup(links.whatsapp, 600, 600)} className={chip} aria-label="Compartilhar no WhatsApp">
+        <button type="button" onClick={() => { track('whatsapp'); openSharePopup(links.whatsapp, 600, 600); }} className={chip} aria-label="Compartilhar no WhatsApp">
           <WhatsAppIcon size={13} /> whatsapp
         </button>
       )}

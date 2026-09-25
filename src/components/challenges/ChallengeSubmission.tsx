@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NOTES_MAX, validateSubmission, type SubmissionInput } from '@/lib/utils/submission-validation';
 import { markChallengeDone } from '@/hooks/use-challenge-progress';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 type Field = keyof SubmissionInput;
 
@@ -62,6 +63,7 @@ export default function ChallengeSubmission({ challengeSlug }: { challengeSlug: 
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || 'Não foi possível enviar. Tente novamente.');
       }
+      analyticsService.event('challenge_submit', 'challenges', challengeSlug);
       markChallengeDone(challengeSlug);
       setSent(true);
     } catch (err: any) {

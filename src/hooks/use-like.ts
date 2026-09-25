@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { analyticsService } from '@/lib/services/analytics.service';
 
 // Mesma chave de localStorage usada em use-view-tracking (/api/views).
 const VIEWER_KEY = 'viewerId';
@@ -72,6 +73,7 @@ export function useLike(postId: string, { enabled = true, initialCount = 0 }: { 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       if (typeof data.count === 'number') setState({ liked: !!data.liked, count: data.count });
+      if (nextLiked) analyticsService.event('post_like', 'posts', postId);
     } catch {
       // rollback
       setState(previous);
