@@ -1,29 +1,45 @@
 'use client';
 
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BLOG_NAME } from "@/lib/config/constants";
-import { GetSocialIcon } from "./LinksContent";
 import { SocialLink } from '@/lib/api';
 import packageJson from '../../package.json';
 import Script from 'next/script';
 import { GA_TRACKING_ID } from "@/lib/gtag";
 import { AnalyticsWrapper } from "./Analytics";
 import { useFeatureFlag } from "@/hooks/use-feature-flag";
+import { Logo, SocialIcon } from "@/components/rc";
 
 interface LayoutProps {
   children: ReactNode;
+}
+
+const navigation = [
+  { name: 'Home', href: '/' },
+  { name: 'Blog', href: '/posts' },
+  { name: 'Desafios', href: '/listas/desafios' },
+  { name: 'Projetos', href: '/projetos' },
+  { name: 'Setup', href: '/setup' },
+  { name: 'Vagas', href: '/vagas' },
+  { name: 'Comunidade', href: '/comunidade' },
+];
+
+function isActivePath(pathname: string | null, href: string) {
+  if (!pathname) return false;
+  if (href === '/') return pathname === '/';
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export default function Layout({ children }: LayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const pathname = usePathname();
-  
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
 
@@ -31,7 +47,7 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     fetch('/api/social-links')
       .then(res => res.json())
-      .then(data => setSocialLinks(data))
+      .then(data => setSocialLinks(Array.isArray(data) ? data : []))
       .catch(err => console.error('Error loading social links:', err));
   }, []);
 
@@ -40,19 +56,14 @@ export default function Layout({ children }: LayoutProps) {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  const navigation = [
-    { name: 'Home', href: '/' },
-    { name: 'Blog', href: '/posts' },
-    { name: 'Desafios', href: '/listas/desafios' },
-    { name: 'Projetos', href: '/projetos' },
-    { name: 'Setup', href: '/setup' },
-    { name: 'Vagas', href: '/vagas' },
-    { name: 'Comunidade', href: '/comunidade' },
-    // { name: 'Newsletter', href: '/newsletter' },
-  ];
+  const closeMenu = useCallback(() => {
+    setIsMenuOpen(false);
+    // devolve o foco ao botão que abriu o drawer
+    requestAnimationFrame(() => menuButtonRef.current?.focus());
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-rc-bg text-rc-ink">
       {/* Google Analytics */}
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
@@ -68,160 +79,263 @@ export default function Layout({ children }: LayoutProps) {
       </Script>
       <AnalyticsWrapper />
 
-      {/* Header - Modern & Subtle */}
-      <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/80 backdrop-blur-xl">
-        <div className="content-container">
-          <div className="flex h-20 items-center justify-between">
-            {/* Logo with Gradient */}
-            <Link href="/" className="group flex items-center gap-3">
-              
-              <span className="font-bold text-xl group-hover:text-primary transition-colors hidden sm:block">
-                {BLOG_NAME}
-              </span>
-            </Link>
+      <header className="sticky top-0 z-40 w-full border-b border-rc-border bg-rc-bg/[.92] backdrop-blur-md">
+        <div className="rc-container flex h-14 items-center justify-between md:h-[66px]">
+          <Logo />
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1">
-              {navigation.map((item) => (
+          <nav className="hidden items-center gap-1.5 text-[14.5px] md:flex" aria-label="Principal">
+            {navigation.map((item) => {
+              const active = isActivePath(pathname, item.href);
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
+                  aria-current={active ? 'page' : undefined}
                   className={cn(
-                    "nav-link px-4 py-2 rounded-lg text-sm font-medium",
-                    pathname === item.href && "active"
+                    "rounded-lg px-[13px] py-2 transition-colors duration-150 ease-out",
+                    active
+                      ? "bg-rc-blue-chip text-rc-ink"
+                      : "text-rc-nav-ink hover:bg-rc-nav-hover hover:text-rc-ink"
                   )}
                 >
                   {item.name}
                 </Link>
-              ))}
-            </nav>
+              );
+            })}
+          </nav>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle menu"
+          <div className="-mr-2.5 flex items-center gap-0.5 md:hidden">
+            <Link
+              href="/posts#busca"
+              className="grid h-11 w-11 place-items-center text-rc-ink-3"
+              aria-label="Buscar artigos"
             >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
+              <Search className="h-5 w-5" strokeWidth={1.75} />
+            </Link>
+            <button
+              ref={menuButtonRef}
+              type="button"
+              className="grid h-11 w-11 place-items-center text-rc-ink"
+              onClick={() => setIsMenuOpen(true)}
+              aria-label="Abrir menu"
+              aria-expanded={isMenuOpen}
+              aria-controls="rc-mobile-menu"
+            >
+              <Menu className="h-[22px] w-[22px]" strokeWidth={1.75} />
             </button>
           </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-white/5 bg-background/95 backdrop-blur-xl animate-fade-in-down">
-            <nav className="content-container py-6 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "block px-4 py-3 rounded-lg text-base font-medium transition-all",
-                    pathname === item.href
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                  )}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        )}
       </header>
 
-      {/* Main Content */}
+      {isMenuOpen && (
+        <MobileDrawer
+          pathname={pathname}
+          onClose={closeMenu}
+          socialLinks={socialLinks}
+          newsletterEnabled={newsletterEnabled}
+        />
+      )}
+
       <main className="flex-1">
         {children}
       </main>
 
-      {/* Footer - Modern Layout */}
-      <footer className="border-t border-white/5 bg-background/50 backdrop-blur-sm">
-        <div className="content-container py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-            {/* Brand Column */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-xl">{BLOG_NAME}</span>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Conteúdo sobre desenvolvimento, tecnologia e desafios de programação para impulsionar sua carreira em tech.
-              </p>
-            </div>
+      <Footer socialLinks={socialLinks} />
+    </div>
+  );
+}
 
-            {/* Quick Links Column */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">Links Rápidos</h3>
-              <ul className="space-y-2">
-                {navigation.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-                <li>
-                  <Link
-                    href="/links"
-                    className="text-muted-foreground hover:text-primary transition-colors text-sm"
-                  >
-                    Links
-                  </Link>
-                </li>
-              </ul>
-            </div>
+function MobileDrawer({
+  pathname,
+  onClose,
+  socialLinks,
+  newsletterEnabled,
+}: {
+  pathname: string | null;
+  onClose: () => void;
+  socialLinks: SocialLink[];
+  newsletterEnabled: boolean;
+}) {
+  const panelRef = useRef<HTMLDivElement>(null);
 
-            {/* Social & Newsletter Column */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-4">Conecte-se</h3>
-              <div className="flex gap-3 mb-6">
-                {socialLinks.slice(0, 5).map((social, index) => (
-                  <a
-                    key={`${social.name}-${social.url}-${index}`}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 flex items-center justify-center rounded-xl bg-secondary hover:bg-primary hover:scale-110 transition-all duration-300 text-lg"
-                    aria-label={social.name}
-                    title={social.name}
-                  >
-                    {GetSocialIcon(social.name)}
-                  </a>
-                ))}
-              </div>
-              {newsletterEnabled && (
+  // Foco preso no drawer, Esc fecha, scroll da página travado.
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return;
+    const focusables = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])'));
+    focusables()[0]?.focus();
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = focusables();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [onClose]);
+
+  return (
+    <div className="fixed inset-0 z-50 md:hidden">
+      <div className="absolute inset-0 bg-rc-canvas/80" onClick={onClose} aria-hidden="true" />
+      <div
+        ref={panelRef}
+        id="rc-mobile-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        className="absolute inset-0 flex flex-col bg-rc-bg"
+      >
+        <div className="flex h-14 shrink-0 items-center justify-between border-b border-rc-border px-4">
+          <Logo />
+          <button
+            type="button"
+            onClick={onClose}
+            className="-mr-2.5 grid h-11 w-11 place-items-center text-rc-ink"
+            aria-label="Fechar menu"
+          >
+            <X className="h-[22px] w-[22px]" strokeWidth={1.75} />
+          </button>
+        </div>
+
+        <nav className="flex flex-col gap-0.5 overflow-y-auto px-4 pt-[18px] text-[19px] font-medium tracking-[-.02em]" aria-label="Principal">
+          {navigation.map((item, index) => {
+            const active = isActivePath(pathname, item.href);
+            return (
               <Link
-                href="/newsletter"
-                className="inline-flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-medium transition-colors group"
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  "flex h-[54px] items-center gap-3.5 rounded-xl px-3.5",
+                  active ? "bg-rc-blue-chip text-rc-ink" : "text-rc-ink-2"
+                )}
               >
-                📬 Assinar Newsletter
-                <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <span className={cn("w-[22px] font-mono text-[11px] tracking-normal", active ? "text-rc-blue-link" : "text-rc-ink-6")}>
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                {item.name}
               </Link>
-              )}
-            </div>
-          </div>
+            );
+          })}
+        </nav>
 
-          {/* Bottom Bar */}
-          <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              © 2024{new Date().getFullYear() > 2024 ? `- ${new Date().getFullYear()}` : ''} {BLOG_NAME}. Todos os direitos reservados.
-            </p>
-            <p className="text-xs text-muted-foreground">
-              v{packageJson.version} • Build: {packageJson.buildDate}
-            </p>
+        <div className="mt-auto flex flex-col gap-3.5 border-t border-rc-border px-4 pb-[calc(26px+env(safe-area-inset-bottom))] pt-5">
+          {newsletterEnabled && (
+            <Link
+              href="/newsletter"
+              onClick={onClose}
+              className="grid h-[50px] place-items-center rounded-xl bg-rc-blue text-[15.5px] font-semibold text-white"
+            >
+              Assinar a newsletter
+            </Link>
+          )}
+          {socialLinks.length > 0 && (
+            <div className="flex gap-2">
+              {socialLinks.slice(0, 4).map((social, index) => (
+                <a
+                  key={`${social.name}-${index}`}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className="grid h-11 flex-1 place-items-center rounded-[11px] border border-rc-border-chip bg-rc-surface-2 text-rc-ink-3"
+                >
+                  <SocialIcon name={social.icon || social.name} />
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Footer({ socialLinks }: { socialLinks: SocialLink[] }) {
+  const year = new Date().getFullYear();
+  const footerLinks = [...navigation.slice(1), { name: 'Links', href: '/links' }];
+
+  return (
+    <footer className="mt-[30px] border-t border-rc-border md:mt-[76px] md:bg-rc-footer">
+      <div className="rc-container grid grid-cols-1 gap-[18px] pb-0 pt-6 md:grid-cols-[1.5fr_1fr_1fr] md:gap-10 md:pb-[26px] md:pt-[46px]">
+        <div className="hidden md:block">
+          <Logo size="sm" />
+          <p className="mt-3.5 max-w-[40ch] text-[14.5px] leading-[1.65] text-rc-ink-4">
+            Conteúdo sobre desenvolvimento, tecnologia e desafios de programação para impulsionar sua carreira em tech.
+          </p>
+        </div>
+
+        {/* Links rápidos */}
+        <nav aria-label="Links rápidos" className="text-[14px] text-rc-ink-4 md:text-[14.5px]">
+          <span className="mb-3.5 hidden font-mono text-rc-eyebrow uppercase text-rc-ink-5 md:block">Links rápidos</span>
+          <ul className="grid grid-cols-2 gap-x-3.5 gap-y-[9px] md:grid-cols-1 md:gap-y-2.5">
+            {footerLinks.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="transition-colors duration-150 hover:text-rc-ink">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        {/* Conecte-se */}
+        <div className="text-[14.5px] text-rc-ink-4">
+          <span className="mb-3.5 hidden font-mono text-rc-eyebrow uppercase text-rc-ink-5 md:block">Conecte-se</span>
+          {/* desktop: lista em texto */}
+          <ul className="hidden flex-col gap-2.5 md:flex">
+            {socialLinks.map((social, index) => (
+              <li key={`${social.name}-${index}`}>
+                <a href={social.url} target="_blank" rel="noopener noreferrer" className="transition-colors duration-150 hover:text-rc-ink">
+                  {social.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+          {/* mobile: ícones de 44px */}
+          <div className="flex gap-2 md:hidden">
+            {socialLinks.slice(0, 5).map((social, index) => (
+              <a
+                key={`${social.name}-${index}`}
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.name}
+                className="grid h-11 w-11 place-items-center rounded-[11px] border border-rc-border-chip bg-rc-surface-2 text-rc-ink-3"
+              >
+                <SocialIcon name={social.icon || social.name} />
+              </a>
+            ))}
           </div>
         </div>
-      </footer>
-    </div>
+      </div>
+
+      <div className="rc-container flex flex-col gap-1 pb-[30px] pt-[18px] font-mono text-[11px] text-rc-ink-6 md:flex-row md:justify-between md:pb-[38px] md:pt-0 md:text-[11.5px]">
+        <span>© 2024–{year} {BLOG_NAME}. Todos os direitos reservados.</span>
+        <span className="hidden md:inline">v{packageJson.version} · build {packageJson.buildDate}</span>
+      </div>
+    </footer>
   );
 }
