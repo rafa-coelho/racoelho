@@ -5,6 +5,7 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import { calculateReadingTime, slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { ChallengeExtraFields, challengeExtraToPayload, emptyChallengeExtra, type ChallengeExtra } from "@/components/admin/fields";
 
 type Step = 'metadata' | 'content';
 
@@ -19,7 +20,7 @@ export default function NewChallengePage() {
     const [status, setStatus] = useState("draft");
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [tags, setTags] = useState("");
-    const [difficulty, setDifficulty] = useState("medium");
+    const [extra, setExtra] = useState<ChallengeExtra>(emptyChallengeExtra);
     const [saving, setSaving] = useState(false);
 
     const readingTime = useMemo(() => calculateReadingTime(content || ""), [content]);
@@ -37,7 +38,7 @@ export default function NewChallengePage() {
                 status,
                 date,
                 tags: tagsArray,
-                difficulty
+                ...challengeExtraToPayload(extra),
             };
 
             if (cover) {
@@ -58,13 +59,13 @@ export default function NewChallengePage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <div className="sticky top-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-b border-white/5">
+            <div className="sticky top-0 z-10 -mx-4 px-4 py-4 bg-rc-bg border-b border-rc-border">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary/60 to-primary/20" />
+                        <div className="h-8 w-8 rounded-[9px] border border-rc-blue-border bg-rc-blue-chip" />
                         <div>
-                            <div className="text-sm text-muted-foreground">Editor - Etapa {step === 'metadata' ? '1' : '2'} de 2</div>
-                            <h1 className="text-xl font-semibold">
+                            <div className="text-[13.5px] text-rc-ink-4">Editor - Etapa {step === 'metadata' ? '1' : '2'} de 2</div>
+                            <h1 className="text-[19px] font-semibold tracking-[-.018em] text-rc-ink md:text-rc-card-title">
                                 {step === 'metadata' ? 'Informações do Desafio' : 'Conteúdo do Desafio'}
                             </h1>
                         </div>
@@ -72,19 +73,19 @@ export default function NewChallengePage() {
                 </div>
                 
                 <div className="flex items-center gap-2 mt-4">
-                    <div className={`flex-1 h-1 rounded-full ${step === 'metadata' ? 'bg-primary' : 'bg-primary/30'}`} />
-                    <div className={`flex-1 h-1 rounded-full ${step === 'content' ? 'bg-primary' : 'bg-white/10'}`} />
+                    <div className={`flex-1 h-1 rounded-full ${step === 'metadata' ? 'bg-rc-blue' : 'bg-rc-blue-border'}`} />
+                    <div className={`flex-1 h-1 rounded-full ${step === 'content' ? 'bg-rc-blue' : 'bg-rc-border'}`} />
                 </div>
             </div>
 
             <div className="mt-6">
                 {step === 'metadata' ? (
-                    <div className="card-modern p-8 max-w-3xl mx-auto">
+                    <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8 max-w-3xl mx-auto">
                         <div className="space-y-6">
                             <div>
-                                <label className="text-sm font-medium text-muted-foreground mb-2 block">Título *</label>
+                                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Título *</label>
                                 <input 
-                                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                                     placeholder="Ex: Criar um TODO List"
                                     value={title}
                                     onChange={e => { 
@@ -97,9 +98,9 @@ export default function NewChallengePage() {
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-muted-foreground mb-2 block">Slug *</label>
+                                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Slug *</label>
                                 <input 
-                                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                                     placeholder="exemplo-de-slug"
                                     value={slug}
                                     onChange={e => {
@@ -114,13 +115,13 @@ export default function NewChallengePage() {
                                         setSlugManuallyEdited(newSlug.length > 0);
                                     }} 
                                 />
-                                <p className="text-xs text-muted-foreground mt-1">URL: /listas/desafios/{slug || 'seu-slug'}</p>
+                                <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">URL: /listas/desafios/{slug || 'seu-slug'}</p>
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-muted-foreground mb-2 block">Resumo (opcional)</label>
+                                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Resumo (opcional)</label>
                                 <textarea 
-                                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none" 
+                                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link resize-y" 
                                     placeholder="Breve descrição do desafio..."
                                     rows={3}
                                     value={excerpt}
@@ -129,34 +130,22 @@ export default function NewChallengePage() {
                             </div>
 
                             <div>
-                                <label className="text-sm font-medium text-muted-foreground mb-2 block">Tags (opcional)</label>
+                                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Tags (opcional)</label>
                                 <input 
-                                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                                     placeholder="javascript, typescript, react"
                                     value={tags}
                                     onChange={e => setTags(e.target.value)} 
                                 />
-                                <p className="text-xs text-muted-foreground mt-1">Separe as tags por vírgula</p>
+                                <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">Separe as tags por vírgula</p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div>
-                                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Dificuldade</label>
-                                    <select 
-                                        className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
-                                        value={difficulty} 
-                                        onChange={e => setDifficulty(e.target.value)}
-                                    >
-                                        <option value="easy">Fácil</option>
-                                        <option value="medium">Médio</option>
-                                        <option value="hard">Difícil</option>
-                                    </select>
-                                </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                                 <div>
-                                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Data</label>
+                                    <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Data</label>
                                     <input 
-                                        className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                                        className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                                         type="date"
                                         value={date}
                                         onChange={e => setDate(e.target.value)} 
@@ -164,9 +153,9 @@ export default function NewChallengePage() {
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-muted-foreground mb-2 block">Status</label>
+                                    <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Status</label>
                                     <select 
-                                        className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                                        className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                                         value={status} 
                                         onChange={e => setStatus(e.target.value)}
                                     >
@@ -174,6 +163,11 @@ export default function NewChallengePage() {
                                         <option value="published">Publicado</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <div className="border-t border-rc-border pt-6">
+                              <h2 className="mb-5 font-mono text-[11.5px] uppercase tracking-[.1em] text-rc-ink-3">Trilha</h2>
+                              <ChallengeExtraFields value={extra} onChange={setExtra} />
                             </div>
 
                             <ImageUpload 
@@ -184,8 +178,8 @@ export default function NewChallengePage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="card-modern p-8">
-                        <label className="text-sm font-medium text-muted-foreground mb-3 block">Conteúdo (Markdown)</label>
+                    <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8">
+                        <label className="mb-3 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Conteúdo (Markdown)</label>
                         <div className="mt-3">
                             <MarkdownEditor 
                                 value={content} 
@@ -198,10 +192,10 @@ export default function NewChallengePage() {
                 )}
             </div>
 
-            <div className="sticky bottom-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-t border-white/5 mt-6">
+            <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] md:bottom-0 z-10 -mx-4 px-4 py-3 bg-rc-bg border-t border-rc-border mt-6">
                 <div className="flex items-center justify-between">
                     <button 
-                        className="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-colors text-sm font-medium"
+                        className="min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover"
                         onClick={() => history.back()}
                     >
                         Cancelar
@@ -210,7 +204,7 @@ export default function NewChallengePage() {
                     <div className="flex items-center gap-2">
                         {step === 'metadata' ? (
                             <button 
-                                className="px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                className="min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" 
                                 onClick={() => setStep('content')} 
                                 disabled={!canProceedMetadata}
                             >
@@ -219,13 +213,13 @@ export default function NewChallengePage() {
                         ) : (
                             <>
                                 <button 
-                                    className="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2 text-sm font-medium" 
+                                    className="min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover flex items-center gap-2" 
                                     onClick={() => setStep('metadata')}
                                 >
                                     <ChevronLeft size={18} /> Voltar
                                 </button>
                                 <button 
-                                    className="px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                    className="min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" 
                                     onClick={onSave} 
                                     disabled={saving}
                                 >
