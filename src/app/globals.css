@@ -39,6 +39,9 @@
     --rc-logo-ink: #93b4ff;       /* "rc" do logo */
     --rc-badge: #111c33;          /* badge de status do hero */
     --rc-footer: #090d16;         /* fundo do footer */
+    --rc-photo-border: #22304f;   /* borda da foto de perfil */
+    --rc-green-chip: #13251c;     /* quadrado de número de desafio */
+    --rc-dots-blue: radial-gradient(#1e2c4d 1px, transparent 1px); /* grade dentro de cartão azul */
 
     /* azul — conteúdo / primário */
     --rc-blue: #2f6bff;

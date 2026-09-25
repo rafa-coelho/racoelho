@@ -18,6 +18,8 @@ const rcTheme = {
       input: v('input'),
       badge: v('badge'),
       footer: v('footer'),
+      'photo-border': v('photo-border'),
+      'green-chip': v('green-chip'),
       'nav-hover': v('nav-hover'),
       'nav-ink': v('nav-ink'),
       'logo-ink': v('logo-ink'),
@@ -83,10 +85,12 @@ const rcTheme = {
     'rc-dots': v('dots'),
     'rc-dots-fade': v('dots-fade'),
     'rc-placeholder': v('placeholder'),
+    'rc-dots-blue': v('dots-blue'),
   },
   backgroundSize: {
     'rc-dots': '22px 22px',
     'rc-dots-m': '20px 20px',
+    'rc-dots-sm': '18px 18px',
   },
   maxWidth: {
     'rc-container': '1180px',
