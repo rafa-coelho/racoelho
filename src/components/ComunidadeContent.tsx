@@ -50,7 +50,36 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function ComunidadeContent() {
+// Estatísticas já formatadas no servidor (formatCount).
+export interface CommunityStatsView {
+  members: string;
+  online: string;
+  channels: string | null;
+}
+
+function StatsGrid({ stats }: { stats: CommunityStatsView }) {
+  const items: { label: string; value: string | null; tone?: string }[] = [
+    { label: 'membros', value: stats.members },
+    { label: 'online', value: stats.online, tone: 'text-rc-green' },
+    { label: 'canais', value: stats.channels },
+  ];
+  return (
+    <section aria-label="Comunidade em números" className="rc-container pt-[22px] md:pt-[52px]">
+      <dl className="grid grid-cols-3 gap-[9px] text-center font-mono md:gap-4">
+        {items.map((item) => (
+          <div key={item.label} className="flex flex-col-reverse rounded-[11px] border border-rc-border-chip bg-rc-surface-2 py-[13px] md:rounded-rc-card md:py-6">
+            <dt className="text-[11px] text-rc-ink-4 md:mt-1 md:text-[12.5px]">{item.label}</dt>
+            <dd className={cn('text-[20px] leading-tight md:text-[32px] md:tracking-[-.02em]', item.value ? item.tone ?? 'text-rc-ink' : 'text-rc-ink-empty')}>
+              {item.value ?? '—'}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+export default function ComunidadeContent({ stats = null }: { stats?: CommunityStatsView | null }) {
   return (
     <Layout>
       {/* Hero */}
@@ -79,6 +108,9 @@ export default function ComunidadeContent() {
           </a>
         </div>
       </section>
+
+      {/* Estatísticas (flag community_stats) */}
+      {stats && <StatsGrid stats={stats} />}
 
       {/* Por que entrar */}
       <section className="rc-container pt-[22px] md:pt-[52px]">
