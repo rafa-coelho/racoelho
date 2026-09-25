@@ -68,7 +68,7 @@ export function NewsletterForm({ withName = false, layout = 'inline', submitLabe
         {withName && (
           <label className="flex-1">
             <span className="sr-only">Nome</span>
-            <input type="text" autoComplete="name" placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} className={inputClasses} />
+            <input type="text" autoComplete="name" maxLength={100} placeholder="Seu nome" value={name} onChange={(e) => setName(e.target.value)} className={inputClasses} />
           </label>
         )}
         <label className="flex-1">

@@ -24,15 +24,36 @@ function validateEmailData(data: EmailData): string | null {
 }
 
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const NAME_MAX = 100;
+
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    let body: { email?: unknown; name?: unknown };
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Corpo inválido' }, { status: 400 });
+    }
 
+    const email = typeof body?.email === 'string' ? body.email.trim() : '';
     if (!email) {
       return NextResponse.json(
         { error: 'Email é obrigatório' },
         { status: 400 }
       );
+    }
+    if (!EMAIL_RE.test(email)) {
+      return NextResponse.json({ error: 'Email inválido' }, { status: 400 });
+    }
+
+    // Nome opcional (repassado como first_name ao ConvertKit)
+    if (body.name !== undefined && body.name !== null && typeof body.name !== 'string') {
+      return NextResponse.json({ error: 'Nome inválido' }, { status: 400 });
+    }
+    const name = typeof body.name === 'string' ? body.name.trim() : '';
+    if (name.length > NAME_MAX) {
+      return NextResponse.json({ error: `Nome deve ter no máximo ${NAME_MAX} caracteres` }, { status: 400 });
     }
 
     const formId = process.env.CONVERTKIT_FORM_ID;
@@ -46,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     await registerToForm({
-      name: '',
+      name,
       email,
       formId,
       tagId
