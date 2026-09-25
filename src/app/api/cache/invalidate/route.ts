@@ -77,6 +77,10 @@ export async function POST(request: NextRequest) {
       await invalidateCollection(cacheKey);
     }
 
+    if (collection === 'feature_flags') {
+      revalidatePath('/mediakit');
+    }
+
     // Invalidar cache do Next.js (ISR/estático)
     // Revalidar rotas relacionadas à coleção
     if (collection === 'posts') {
@@ -131,6 +135,13 @@ export async function POST(request: NextRequest) {
       // Revalidar home e links (que usam socialLinks)
       revalidatePath('/');
       revalidatePath('/links');
+    } else if (collection === 'mediakit') {
+      // /mediakit é ISR (1h): revalida na hora ao salvar no admin
+      revalidatePath('/mediakit');
+    } else if (collection === 'site_status') {
+      revalidatePath('/');
+    } else if (collection === 'community_stats') {
+      revalidatePath('/comunidade');
     } else if (collection === 'setup') {
       // Revalidar página de setup e home
       revalidatePath('/setup');
