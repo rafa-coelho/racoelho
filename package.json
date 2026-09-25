@@ -24,7 +24,9 @@
     "pb:migrate": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.ts",
     "pb:migrate:views": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.views.ts",
     "pb:import-assets": "npx ts-node --project tsconfig.scripts.json scripts/import-assets.ts",
-    "pb:migrate:rebranding": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.rebranding.ts"
+    "pb:migrate:rebranding": "npx ts-node --project tsconfig.scripts.json scripts/pb.migrate.rebranding.ts",
+    "staging:seed": "npx ts-node --project tsconfig.scripts.json scripts/staging/seed-from-source.ts",
+    "staging:prepare": "npm run pb:migrate && npm run pb:migrate:rebranding && npm run staging:seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

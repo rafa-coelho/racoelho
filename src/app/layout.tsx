@@ -7,6 +7,9 @@ import { AnalyticsWrapper } from '@/components/Analytics';
 import { BLOG_NAME, SITE_TITLE, DESCRIPTION, SITE_URL } from '@/lib/config/constants';
 
 // Geist vem do pacote `geist` (o next/font/google do Next 14.1 ainda não tem Geist).
+// Ambiente de staging: nunca indexar e mostrar um selo para não confundir com produção.
+const IS_STAGING = process.env.NEXT_PUBLIC_SITE_ENV === 'staging';
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
@@ -49,10 +52,12 @@ export const metadata: Metadata = {
     title: BLOG_NAME,
     description: DESCRIPTION,
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: IS_STAGING
+    ? { index: false, follow: false }
+    : {
+        index: true,
+        follow: true,
+      },
 };
 
 export const viewport: Viewport = {
@@ -75,6 +80,11 @@ export default function RootLayout({
     >
       <body className="font-sans">
         <AnalyticsWrapper />
+        {IS_STAGING && (
+          <div className="pointer-events-none fixed bottom-3 left-3 z-[60] rounded-full border border-rc-amber-border bg-rc-amber-surface px-2.5 py-1 font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-amber">
+            staging
+          </div>
+        )}
         <main>
           {children}
         </main>
