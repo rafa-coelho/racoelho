@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Layout from './Layout';
 import MarkdownRenderer, { extractHeadings } from '@/components/MarkdownRenderer';
 import { ContentItem, ContentMeta } from '@/lib/api';
@@ -15,6 +15,11 @@ import { useFeatureFlags } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
 import { useViewTracking } from '@/hooks/use-view-tracking';
 import { Eyebrow, NewsletterForm, RcImage, Tag, cardClasses, formatShortDate } from '@/components/rc';
+import { useReadingProgress } from '@/hooks/use-reading-progress';
+import { useLike } from '@/hooks/use-like';
+import { ReadingProgress } from '@/components/posts/ReadingProgress';
+import { PostActionBar } from '@/components/posts/PostActionBar';
+import { LikeButton } from '@/components/posts/LikeButton';
 
 interface BlogPostContentProps {
   post: ContentItem;
@@ -34,7 +39,13 @@ export default function BlogPostContent({ post, related = [] }: BlogPostContentP
   useViewTracking({ postId: post.slug });
 
   // Feature Flags
-  const { flags } = useFeatureFlags(['share', 'newsletter', 'ads']);
+  const { flags } = useFeatureFlags(['share', 'newsletter', 'ads', 'reading_progress', 'likes']);
+
+  // Progresso de leitura (flag reading_progress) e barra de ação/curtir (flag likes)
+  const articleRef = useRef<HTMLElement>(null);
+  const newsletterEndRef = useRef<HTMLDivElement>(null);
+  const progress = useReadingProgress(articleRef, !!flags.reading_progress);
+  const like = useLike(post.slug, { enabled: !!flags.likes, initialCount: post.likes || 0 });
   // Slots que realmente existem na página de posts
   // sidebar-mid (topo direita) tem prioridade mais alta, então vem primeiro
   const postSlots: SlotType[] = ['sidebar-mid', 'sidebar-top', 'inline', 'sidebar-bottom'];
@@ -44,6 +55,8 @@ export default function BlogPostContent({ post, related = [] }: BlogPostContentP
 
   return (
     <Layout>
+      {flags.reading_progress && <ReadingProgress progress={progress} />}
+
       {/* Trilha */}
       <div className="rc-container pt-5 md:pt-10">
         <nav aria-label="Trilha" className="truncate font-mono text-[11.5px] text-rc-ink-6 md:text-xs">
@@ -63,7 +76,7 @@ export default function BlogPostContent({ post, related = [] }: BlogPostContentP
       </div>
 
       <div className="rc-container grid grid-cols-1 gap-14 pb-2 pt-5 md:pt-7 lg:grid-cols-[minmax(0,1fr)_300px] lg:pb-16">
-        <article className="min-w-0 max-w-[72ch]">
+        <article ref={articleRef} className="min-w-0 max-w-[72ch]">
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 md:gap-2">
               {post.tags.map((tag) => (
@@ -101,19 +114,38 @@ export default function BlogPostContent({ post, related = [] }: BlogPostContentP
             </div>
           )}
 
-          {flags.share && (
-            <ShareButtons title={post.title} url={postUrl} variant="inline" className="mt-10 border-t border-rc-border pt-[26px]" />
+          {flags.likes ? (
+            // Com curtir: o botão fica junto aos de compartilhar no desktop (no mobile, vai na barra do rodapé)
+            <div className={`mt-10 flex-wrap items-center gap-2 border-t border-rc-border pt-[26px] md:gap-3 ${flags.share ? 'flex' : 'hidden md:flex'}`}>
+              {flags.share && <ShareButtons title={post.title} url={postUrl} variant="inline" />}
+              <LikeButton variant="inline" showLabel liked={like.liked} count={like.count} onToggle={like.toggle} className="hidden md:inline-flex" />
+            </div>
+          ) : (
+            flags.share && (
+              <ShareButtons title={post.title} url={postUrl} variant="inline" className="mt-10 border-t border-rc-border pt-[26px]" />
+            )
           )}
 
           {/* Newsletter no fim (mobile/tablet; no desktop fica na lateral) */}
           {flags.newsletter && (
-            <div className="mt-7 rounded-rc-card-lg border border-rc-blue-border bg-rc-blue-surface px-[18px] py-5 lg:hidden">
+            <div ref={newsletterEndRef} className="mt-7 rounded-rc-card-lg border border-rc-blue-border bg-rc-blue-surface px-[18px] py-5 lg:hidden">
               <Eyebrow className="text-rc-blue-soft">Newsletter</Eyebrow>
               <h2 className="mt-[9px] text-[19px] font-semibold tracking-[-.025em] text-rc-ink">Gostou? Recebe o próximo por email</h2>
               <NewsletterForm layout="stacked" submitLabel="Inscrever" source="post" className="mt-3.5" />
             </div>
           )}
         </article>
+
+        {flags.likes && (
+          <PostActionBar
+            articleRef={articleRef}
+            endRef={flags.newsletter ? newsletterEndRef : undefined}
+            title={post.title}
+            url={postUrl}
+            showShare={!!flags.share}
+            like={like}
+          />
+        )}
 
         <aside className="hidden lg:block">
           <div className="sticky top-24 flex flex-col gap-4">
