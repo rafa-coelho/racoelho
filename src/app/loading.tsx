@@ -1,19 +1,20 @@
 import Layout from '@/components/Layout';
+import { Skeleton } from '@/components/rc';
 
 export default function Loading() {
   return (
     <Layout>
-      <div className="content-container py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="rc-container py-8 md:py-14">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-[18px]">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="glass-panel animate-pulse rounded-lg p-5 h-64">
-              <div className="h-32 bg-muted rounded-md mb-4"></div>
-              <div className="h-4 bg-muted rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-muted rounded w-1/2"></div>
+            <div key={i} className="flex h-64 flex-col gap-3 rounded-rc-card border border-rc-border-card bg-rc-surface p-5">
+              <Skeleton className="h-32 rounded-[10px]" />
+              <Skeleton className="h-4 w-3/4 rounded" />
+              <Skeleton className="h-4 w-1/2 rounded" />
             </div>
           ))}
         </div>
       </div>
     </Layout>
   );
-} 
+}

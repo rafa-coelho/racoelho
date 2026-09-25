@@ -82,8 +82,8 @@ export default async function SalesPage({ params }: SalesPageProps) {
           })}
         </script>
         <Layout>
-          <div className="content-container py-12">
-            <div className="max-w-4xl mx-auto">
+          <div className="rc-container py-8 md:py-14">
+            <div className="mx-auto max-w-4xl">
               <SaleContent salesPage={salesPage} />
             </div>
           </div>
@@ -94,14 +94,14 @@ export default async function SalesPage({ params }: SalesPageProps) {
     console.error('Error loading sales page:', error);
     return (
       <Layout>
-        <div className="content-container py-12 text-center">
-          <h1 className="text-2xl font-bold mb-4">Página não encontrada</h1>
-          <p className="text-muted-foreground mb-6">
+        <div className="rc-container py-12 text-center">
+          <h1 className="mb-4 text-rc-h1-m font-semibold text-rc-ink">Página não encontrada</h1>
+          <p className="mb-6 text-rc-body text-rc-ink-4">
             A página de vendas que você está procurando não existe ou foi removida.
           </p>
           <Link
             href="/"
-            className="inline-flex items-center text-primary hover:text-primary/80"
+            className="inline-flex min-h-[44px] items-center text-rc-blue-link hover:text-rc-blue-soft"
           >
             <ArrowLeft size={16} className="mr-2" /> Voltar para Home
           </Link>

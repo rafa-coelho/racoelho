@@ -1,12 +1,12 @@
 export default function Loading() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#0d1117] p-4">
-      <div className="bg-[#161b22] rounded-lg shadow-xl p-8 max-w-md w-full text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-        <h1 className="text-3xl font-extrabold mb-2 text-gray-100">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-rc-bg p-4">
+      <div className="w-full max-w-md rounded-rc-card-lg border border-rc-border-card bg-rc-surface p-6 text-center md:p-8">
+        <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-rc-border-strong border-t-rc-blue-link"></div>
+        <h1 className="mb-2 text-rc-h1-m font-semibold text-rc-ink">
           Preparando seu download
         </h1>
-        <p className="text-gray-300">
+        <p className="text-rc-body text-rc-ink-3">
           Por favor, aguarde enquanto preparamos seu ebook...
         </p>
       </div>
