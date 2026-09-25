@@ -4,87 +4,153 @@
  
 @layer base {
   :root {
-    /* High contrast modern dark theme */
-    --background: 220 40% 8%; /* deeper navy */
-    --foreground: 0 0% 100%; /* pure white text */
+    /* ── Rebranding racoelho — tokens (fonte: design handoff) ── */
+    /* superfícies */
+    --rc-canvas: #05070c;
+    --rc-bg: #0b0f1a;
+    --rc-bg-admin: #090d16;
+    --rc-surface: #0e1524;
+    --rc-surface-2: #101827;
+    --rc-surface-sunken: #0a0f1b;
+    --rc-ad: #0a101c;
 
-    --card: 220 35% 12%;
-    --card-foreground: 0 0% 100%;
- 
-    --popover: 220 35% 12%;
-    --popover-foreground: 0 0% 100%;
- 
-    --primary: 217 100% 65%; /* brighter electric blue */
+    /* bordas */
+    --rc-border: #182033;
+    --rc-border-card: #1c2740;
+    --rc-border-hover: #2c3d63;
+    --rc-border-strong: #26314f;
+
+    /* texto */
+    --rc-ink: #e9eef7;
+    --rc-ink-2: #c3cdde;
+    --rc-ink-3: #a6b2c8;
+    --rc-ink-4: #8b98ad;
+    --rc-ink-5: #6b7891;
+    --rc-ink-6: #5f6d85;
+    --rc-ink-empty: #5a6d90;
+
+    /* complementos extraídos dos protótipos (valores recorrentes nos .dc.html) */
+    --rc-surface-3: #111a2e;      /* botão secundário */
+    --rc-tag: #131c2e;            /* fundo de tag mono */
+    --rc-border-chip: #1e2940;    /* borda de chip / tag */
+    --rc-nav-hover: #131b2e;      /* hover de link de nav */
+    --rc-nav-ink: #9aa6bc;        /* link de nav inativo */
+    --rc-input: #0b1222;          /* fundo de input sobre cartão azul */
+    --rc-logo-ink: #93b4ff;       /* "rc" do logo */
+    --rc-badge: #111c33;          /* badge de status do hero */
+    --rc-footer: #090d16;         /* fundo do footer */
+
+    /* azul — conteúdo / primário */
+    --rc-blue: #2f6bff;
+    --rc-blue-hover: #4d81ff;
+    --rc-blue-link: #6ea3ff;
+    --rc-blue-soft: #9dbcff;
+    --rc-blue-surface: #0f1830;
+    --rc-blue-border: #24365f;
+    --rc-blue-chip: #16203a;
+    --rc-blue-logo: #1c2947;
+
+    /* verde — desafios / sucesso */
+    --rc-green: #4ade80;
+    --rc-green-hover: #86efac;
+    --rc-green-surface: #0d1512;
+    --rc-green-border: #1b2b23;
+    --rc-green-border-strong: #224031;
+    --rc-green-track: #12251b;
+    --rc-green-num: #4d6656;
+
+    /* âmbar — projetos / rascunho / alerta */
+    --rc-amber: #e8b563;
+    --rc-amber-hover: #f3cf95;
+    --rc-amber-surface: #1a1508;
+    --rc-amber-surface-2: #14100a;
+    --rc-amber-border: #3a2f14;
+    --rc-amber-border-soft: #2a2412;
+    --rc-amber-num: #6b5a3a;
+
+    /* vermelho */
+    --rc-red: #ff6b6b;
+
+    /* raio */
+    --rc-r-chip: 9px;
+    --rc-r-control: 11px;
+    --rc-r-card: 14px;
+    --rc-r-card-lg: 16px;
+
+    /* sombra (única) */
+    --rc-shadow-primary: 0 8px 20px -8px #2f6bff80;
+
+    /* padrões */
+    --rc-dots: radial-gradient(#1b2740 1px, transparent 1px);
+    --rc-dots-fade: linear-gradient(180deg, #0b0f1a00 40%, #0b0f1a 100%);
+    --rc-placeholder: repeating-linear-gradient(135deg, #141d31 0 7px, #101827 7px 14px);
+
+    /* ── shadcn/ui — mapeado para a paleta rc (HSL) ── */
+    --background: 224 41% 7%;        /* rc-bg */
+    --foreground: 219 47% 94%;       /* rc-ink */
+
+    --card: 221 44% 10%;             /* rc-surface */
+    --card-foreground: 219 47% 94%;
+
+    --popover: 221 44% 10%;
+    --popover-foreground: 219 47% 94%;
+
+    --primary: 223 100% 59%;         /* rc-blue */
     --primary-foreground: 0 0% 100%;
- 
-    --secondary: 220 30% 15%;
-    --secondary-foreground: 0 0% 100%;
- 
-    --muted: 220 20% 18%;
-    --muted-foreground: 220 10% 70%;
- 
-    --accent: 280 80% 60%; /* purple accent for variety */
-    --accent-foreground: 0 0% 100%;
- 
-    --destructive: 0 84% 60%;
+
+    --secondary: 219 42% 11%;        /* rc-surface-2 */
+    --secondary-foreground: 219 47% 94%;
+
+    --muted: 222 42% 13%;
+    --muted-foreground: 217 17% 61%; /* rc-ink-4 */
+
+    --accent: 223 45% 16%;           /* rc-blue-chip */
+    --accent-foreground: 219 47% 94%;
+
+    --destructive: 0 100% 71%;       /* rc-red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 30% 20%;
-    --input: 220 30% 15%;
-    --ring: 217 100% 65%;
- 
-    --radius: 1rem;
-    
-    /* Category colors */
-    --color-post: 217 100% 65%; /* blue */
-    --color-challenge: 142 76% 56%; /* green */
-    --color-video: 0 84% 60%; /* red */
-    --color-product: 280 80% 60%; /* purple */
-    --color-project: 32 95% 58%; /* orange */
-  }
- 
-  .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
- 
-    --card: 222 47% 14%;
-    --card-foreground: 210 40% 98%;
- 
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
- 
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
- 
-    --secondary: 222 47% 16%;
-    --secondary-foreground: 210 40% 98%;
- 
-    --muted: 220 17% 20%;
-    --muted-foreground: 220 9% 65%;
- 
-    --accent: 217 91% 60%;
-    --accent-foreground: 0 0% 100%;
- 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
- 
-    --border: 217 32% 17%;
-    --input: 222 47% 16%;
-    --ring: 217 91% 60%;
+    --border: 222 36% 15%;           /* rc-border */
+    --input: 224 35% 23%;            /* rc-border-strong */
+    --ring: 218 100% 72%;            /* rc-blue-link */
+
+    --radius: 0.75rem;
+
+    /* Cores por área */
+    --color-post: 218 100% 72%;      /* azul */
+    --color-challenge: 142 69% 58%;  /* verde */
+    --color-video: 0 100% 71%;       /* vermelho */
+    --color-product: 218 100% 72%;
+    --color-project: 37 74% 65%;     /* âmbar */
+
+    --sidebar-background: 222 42% 6%;
+    --sidebar-foreground: 217 17% 61%;
+    --sidebar-primary: 223 100% 59%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 223 45% 16%;
+    --sidebar-accent-foreground: 219 47% 94%;
+    --sidebar-border: 222 36% 15%;
+    --sidebar-ring: 218 100% 72%;
   }
 }
- 
+
+@keyframes rc-pulse-dot { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+@keyframes rc-shimmer { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rc-pulse, .animate-rc-shimmer { animation: none !important; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+:focus-visible { outline: 2px solid var(--rc-blue-link); outline-offset: 2px; }
+
 @layer base {
   * {
     @apply border-border;
   }
   
   body {
-    @apply bg-background text-foreground antialiased;
-    background-image: 
-      radial-gradient(at 0% 0%, hsla(217, 100%, 65%, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.12) 0px, transparent 50%);
-    background-attachment: fixed;
+    @apply bg-rc-bg text-rc-ink font-sans antialiased;
   }
 
   /* Fix select options contrast */
@@ -117,156 +183,67 @@
   .bg-project { background-color: hsl(var(--color-project) / 0.1); }
 
   .content-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-rc-container mx-auto px-4 md:px-8;
   }
   
   .content-narrow {
-    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-4xl mx-auto px-4 md:px-8;
   }
 }
 
 @layer components {
-  /* Modern glass panel with improved aesthetics */
+  /* ── Legado: classes antigas remapeadas para o visual rc (bordas 1px, sem sombra) ── */
   .glass-panel {
-    @apply bg-card/50 backdrop-blur-md border border-white/10 shadow-lg transition-all duration-300;
+    @apply bg-rc-surface border border-rc-border-card rounded-rc-card transition-colors duration-150 ease-out;
   }
+  .glass-panel:hover { @apply border-rc-border-hover; }
 
-  .glass-panel:hover {
-    @apply border-primary/30 shadow-xl;
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.1);
-  }
-
-  /* Enhanced card styles */
   .card-modern {
-    @apply relative overflow-hidden rounded-xl bg-card/80 backdrop-blur-sm border border-white/10 transition-all duration-300;
+    @apply relative overflow-hidden rounded-rc-card-lg bg-rc-surface border border-rc-border-card transition-colors duration-150 ease-out;
   }
-  
-  .card-modern:hover {
-    @apply border-primary/40 shadow-2xl translate-y-[-4px];
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(59, 130, 246, 0.15);
-  }
-  
-  .card-modern::before {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  
-  .card-modern:hover::before {
-    @apply opacity-100;
-  }
+  .card-modern:hover { @apply border-rc-border-hover; }
 
-  /* Hero gradient backgrounds */
-  .hero-gradient {
-    background: linear-gradient(135deg, 
-      hsl(222, 47%, 11%) 0%, 
-      hsl(222, 47%, 14%) 50%, 
-      hsl(217, 91%, 20%) 100%);
-  }
-  
-  .hero-glow {
-    position: relative;
-  }
-  
-  .hero-glow::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
+  .hero-gradient { background: var(--rc-bg); }
+  .hero-glow { position: relative; }
+  .section-gradient-1, .section-gradient-2 { background: transparent; }
 
-  /* Section backgrounds */
-  .section-gradient-1 {
-    background: linear-gradient(to bottom, 
-      hsl(222, 47%, 11%) 0%, 
-      hsl(222, 47%, 13%) 100%);
-  }
-  
-  .section-gradient-2 {
-    background: linear-gradient(to bottom, 
-      hsl(222, 47%, 13%) 0%, 
-      hsl(222, 47%, 11%) 100%);
-  }
-
-  /* Navigation styles */
   .nav-link {
-    @apply relative text-muted-foreground hover:text-primary transition-all duration-200;
+    @apply relative text-rc-ink-4 hover:text-rc-ink transition-colors duration-150;
   }
+  .nav-link.active { @apply text-rc-ink font-medium; }
 
-  .nav-link::after {
-    content: '';
-    @apply absolute bottom-[-4px] left-0 w-0 h-[2px] bg-primary transition-all duration-200;
-  }
-  
-  .nav-link:hover::after,
-  .nav-link.active::after {
-    @apply w-full;
-  }
-
-  .nav-link.active {
-    @apply text-primary font-semibold;
-  }
-
-  /* Button styles */
   .btn-primary {
-    @apply relative overflow-hidden bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-primary/50 hover:scale-105;
+    @apply inline-flex items-center justify-center gap-2 bg-rc-blue text-white px-[22px] py-[14px] rounded-[10px] font-semibold shadow-rc-primary transition-colors duration-150 ease-out hover:bg-rc-blue-hover;
   }
-  
-  .btn-primary::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] transition-transform duration-500;
-  }
-  
-  .btn-primary:hover::before {
-    @apply translate-x-[200%];
-  }
-  
   .btn-secondary {
-    @apply relative overflow-hidden bg-secondary text-secondary-foreground px-6 py-3 rounded-lg font-semibold border border-white/10 transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:scale-105;
+    @apply inline-flex items-center justify-center gap-2 bg-rc-surface-3 text-rc-ink px-[22px] py-[14px] rounded-[10px] font-medium border border-rc-border-strong transition-colors duration-150 ease-out hover:border-rc-border-hover;
   }
 
-  /* Tag badges */
   .tag-badge {
-    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 transition-all duration-200 hover:bg-primary/20 hover:border-primary/40;
+    @apply inline-flex items-center px-2.5 py-1 rounded-md font-mono text-[11.5px] text-rc-ink-4 bg-rc-tag border border-rc-border-chip;
   }
-  
-  /* Grid pattern overlay */
+
   .grid-pattern {
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    background-size: 50px 50px;
+    background-image: var(--rc-dots);
+    background-size: 22px 22px;
   }
-  
-  /* Animated gradient text */
-  .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-primary;
-    background-size: 200% auto;
-    animation: gradient-shift 3s ease infinite;
+
+  .gradient-text { @apply text-rc-blue-link; }
+
+  .image-overlay { @apply relative overflow-hidden; }
+
+  /* ── rc: padrões reutilizáveis ── */
+  .rc-container {
+    @apply mx-auto w-full max-w-rc-container px-4 md:px-8;
   }
-  
-  @keyframes gradient-shift {
-    0%, 100% { background-position: 0% center; }
-    50% { background-position: 100% center; }
+  .rc-dots-bg {
+    @apply pointer-events-none absolute inset-0 bg-rc-dots bg-rc-dots-m md:bg-rc-dots opacity-50;
   }
-  
-  /* Image overlay for cards */
-  .image-overlay {
-    @apply relative overflow-hidden;
+  .rc-dots-fade {
+    @apply pointer-events-none absolute inset-0 bg-rc-dots-fade;
   }
-  
-  .image-overlay::after {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent opacity-0 transition-opacity duration-300;
+  .rc-shimmer {
+    background: linear-gradient(90deg, var(--rc-surface) 0%, var(--rc-surface-2) 50%, var(--rc-surface) 100%);
+    background-size: 200% 100%;
   }
-  
-  .image-overlay:hover::after {
-    @apply opacity-100;
-  }
-} 
+}
