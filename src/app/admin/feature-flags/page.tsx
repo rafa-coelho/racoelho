@@ -1,222 +1,143 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
-import { pbList, pbUpdate } from "@/lib/pocketbase";
-import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
-import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SquarePen } from "lucide-react";
+import { pbUpdate } from "@/lib/pocketbase";
+import { AdminListPage, DataTable } from "@/components/admin/DataTable";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Pill, buttonClasses } from "@/components/rc";
 
 type FeatureFlag = {
   id: string;
   key: string;
   enabled: boolean;
+  description?: string;
   metadata?: any;
 };
+
+const CREATE = { href: "/admin/feature-flags/new", label: "Nova flag" };
+
+const describe = (row: FeatureFlag): string | undefined => row.metadata?.description || row.description || undefined;
+
+async function invalidateFlags() {
+  try {
+    await fetch("/api/cache/invalidate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ collection: "feature_flags" }),
+    });
+  } catch {
+    /* o cache de flags expira em 1 min */
+  }
+}
 
 export default function FeatureFlagsPage() {
   const { toast } = useToast();
   const [togglingIds, setTogglingIds] = useState<Set<string>>(new Set());
-  const [confirmDialog, setConfirmDialog] = useState<{
-    open: boolean;
-    flag: FeatureFlag | null;
-    newValue: boolean;
-  }>({
-    open: false,
-    flag: null,
-    newValue: false,
-  });
-  return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Feature Flags</h1>
-          <p className="text-sm text-muted-foreground">Controle de funcionalidades do site</p>
-        </div>
-        <Link href="/admin/feature-flags/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} /> Nova Flag
-        </Link>
-      </div>
+  const [confirm, setConfirm] = useState<{ flag: FeatureFlag; newValue: boolean } | null>(null);
 
+  const applyToggle = async () => {
+    if (!confirm) return;
+    const { flag, newValue } = confirm;
+    setConfirm(null);
+    setTogglingIds((prev) => new Set(prev).add(flag.id));
+    try {
+      await pbUpdate("feature_flags", flag.id, { enabled: newValue });
+      toast({
+        title: `Flag "${flag.key}" ${newValue ? "ativada" : "desativada"}`,
+        className: "border-rc-border-card bg-rc-surface text-rc-ink",
+      });
+      void invalidateFlags();
+      window.dispatchEvent(new CustomEvent("datatable:refetch"));
+    } catch (error: any) {
+      toast({
+        title: "Erro",
+        description: error?.message || "Falha ao atualizar feature flag",
+        variant: "destructive",
+      });
+    } finally {
+      setTogglingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(flag.id);
+        return next;
+      });
+    }
+  };
+
+  const toggle = (row: FeatureFlag) => (
+    <div className="flex items-center gap-2.5">
+      <Switch
+        checked={row.enabled}
+        disabled={togglingIds.has(row.id)}
+        onCheckedChange={(checked) => setConfirm({ flag: row, newValue: checked })}
+        aria-label={`${row.enabled ? "Desativar" : "Ativar"} ${row.key}`}
+      />
+      {row.enabled ? <Pill tone="green">ativa</Pill> : <Pill>inativa</Pill>}
+    </div>
+  );
+
+  return (
+    <AdminListPage title="Feature Flags" description="Controle de funcionalidades do site." create={CREATE}>
       <DataTable<FeatureFlag>
+        collection="feature_flags"
+        cacheCollection="feature_flags"
         columns={[
           {
             id: "key",
             header: "Chave",
+            sortable: true,
             cell: (row) => (
-              <div>
-                <div className="font-medium">{row.key}</div>
-                {row.metadata?.description && (
-                  <div className="text-xs text-muted-foreground mt-1">{row.metadata.description}</div>
-                )}
+              <div className="min-w-0">
+                <div className="truncate font-mono text-sm text-rc-ink">{row.key}</div>
+                {describe(row) && <div className="mt-1 truncate text-[13px] text-rc-ink-5">{describe(row)}</div>}
               </div>
             ),
-            sortable: true,
           },
-          {
-            id: "enabled",
-            header: "Status",
-            cell: (row) => {
-              const isToggling = togglingIds.has(row.id);
-              return (
-                <div className="flex items-center gap-2">
-                  <Switch
-                    checked={row.enabled}
-                    disabled={isToggling}
-                    onCheckedChange={(checked) => {
-                      setConfirmDialog({
-                        open: true,
-                        flag: row,
-                        newValue: checked,
-                      });
-                    }}
-                  />
-                  <span className="text-sm text-muted-foreground">
-                    {row.enabled ? 'Ativo' : 'Inativo'}
-                  </span>
-                </div>
-              );
-            },
-            sortable: true,
-          },
-          {
-            id: "actions",
-            header: "Ações",
-            cell: (row) => (
-              <div className="flex items-center justify-end gap-2">
-                <Link href={`/admin/feature-flags/${row.id}`}>
-                  <Button variant="ghost" size="sm">
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            ),
-            sortable: false,
-          },
+          { id: "enabled", header: "Status", sortable: true, width: "180px", cell: toggle },
         ]}
-        fetcher={async ({ page, perPage, filter, sort }) => {
-          const res = await pbList("feature_flags", { page, perPage, filter, sort });
-          return {
-            items: res.items as unknown as FeatureFlag[],
-            page: res.page,
-            perPage: res.perPage,
-            totalItems: res.totalItems,
-            totalPages: res.totalPages,
-          };
-        }}
+        rowActions={(row) => [{ label: "Editar", icon: SquarePen, href: `/admin/feature-flags/${row.id}` }]}
         bulkActions={[
-          {
-            label: "Excluir selecionados",
-            variant: "destructive",
-            action: async (selected) => {
-              await pbBulkDelete("feature_flags", selected.map((s) => s.id));
-            },
-          },
-          {
-            label: "Ativar",
-            action: async (selected) => {
-              await pbBulkUpdate("feature_flags", selected.map((s) => s.id), { enabled: true });
-            },
-          },
-          {
-            label: "Desativar",
-            action: async (selected) => {
-              await pbBulkUpdate("feature_flags", selected.map((s) => s.id), { enabled: false });
-            },
-          },
+          { id: "enable", label: "Ativar", kind: "update", data: { enabled: true } },
+          { id: "disable", label: "Desativar", kind: "update", data: { enabled: false }, secondary: true },
+          { id: "delete", label: "Excluir", kind: "delete" },
         ]}
         defaultSort="key"
-        filtersSchema={{
-          q: {
-            placeholder: "Buscar por chave...",
-            searchFields: ["key"],
-          },
-          enabled: {
-            label: "Status",
-          },
+        search={{ placeholder: "Buscar por chave…", fields: ["key"] }}
+        statusOptions={[
+          { label: "Ativas", value: "on", filter: "enabled = true" },
+          { label: "Inativas", value: "off", filter: "enabled = false" },
+        ]}
+        mobile={{
+          title: (row) => <span className="font-mono text-sm">{row.key}</span>,
+          meta: (row) => (describe(row) ? [describe(row)] : []),
+          extra: (row) => <div className="mt-2.5">{toggle(row)}</div>,
         }}
-        getRowId={(row) => row.id}
-        emptyMessage="Nenhuma feature flag encontrada"
-        emptyAction={
-          <Link href="/admin/feature-flags/new" className="btn-primary mt-4 inline-flex">
-            Criar primeira flag
-          </Link>
-        }
+        rowLabel={(row) => row.key}
+        create={CREATE}
+        emptyMessage="Nenhuma feature flag ainda."
       />
 
-      {/* Dialog de Confirmação */}
-      <Dialog open={confirmDialog.open} onOpenChange={(open) => setConfirmDialog({ ...confirmDialog, open })}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {confirmDialog.flag?.enabled ? 'Desativar' : 'Ativar'} Feature Flag
-            </DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja {confirmDialog.flag?.enabled ? 'desativar' : 'ativar'} a feature flag{' '}
-              <strong>{confirmDialog.flag?.key}</strong>?
-              {confirmDialog.flag?.metadata?.description && (
-                <div className="mt-2 text-sm">
-                  {confirmDialog.flag.metadata.description}
-                </div>
-              )}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setConfirmDialog({ open: false, flag: null, newValue: false })}
-            >
+      {/* Confirmação do toggle individual */}
+      <Dialog open={!!confirm} onOpenChange={(open) => !open && setConfirm(null)}>
+        <DialogContent className="max-w-[calc(100vw-32px)] rounded-rc-card-lg border-rc-border-card bg-rc-surface text-rc-ink sm:max-w-md">
+          <DialogTitle className="text-lg font-semibold tracking-[-.02em]">
+            {confirm?.newValue ? "Ativar" : "Desativar"} feature flag
+          </DialogTitle>
+          <DialogDescription className="text-rc-small text-rc-ink-4">
+            Tem certeza que deseja {confirm?.newValue ? "ativar" : "desativar"} <strong className="font-mono text-rc-ink">{confirm?.flag.key}</strong>?
+            {confirm && describe(confirm.flag) && <span className="mt-2 block">{describe(confirm.flag)}</span>}
+          </DialogDescription>
+          <div className="flex justify-end gap-2">
+            <button type="button" onClick={() => setConfirm(null)} className={buttonClasses({ variant: "secondary", size: "sm", className: "h-11 md:h-9" })}>
               Cancelar
-            </Button>
-            <Button
-              onClick={async () => {
-                if (!confirmDialog.flag) return;
-
-                const flag = confirmDialog.flag;
-                setConfirmDialog({ open: false, flag: null, newValue: false });
-                setTogglingIds((prev) => new Set(prev).add(flag.id));
-                
-                try {
-                  await pbUpdate("feature_flags", flag.id, { enabled: confirmDialog.newValue });
-                  toast({
-                    title: "Sucesso",
-                    description: `Feature flag "${flag.key}" ${confirmDialog.newValue ? 'ativada' : 'desativada'}`,
-                  });
-                  // Recarregar dados automaticamente
-                  setTimeout(() => {
-                    window.dispatchEvent(new CustomEvent('datatable:refetch'));
-                  }, 100);
-                } catch (error: any) {
-                  toast({
-                    title: "Erro",
-                    description: error.message || "Falha ao atualizar feature flag",
-                    variant: "destructive",
-                  });
-                } finally {
-                  setTogglingIds((prev) => {
-                    const next = new Set(prev);
-                    next.delete(flag.id);
-                    return next;
-                  });
-                }
-              }}
-            >
+            </button>
+            <button type="button" onClick={applyToggle} className={buttonClasses({ variant: "primary", size: "sm", className: "h-11 md:h-9" })}>
               Confirmar
-            </Button>
-          </DialogFooter>
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
-    </div>
+    </AdminListPage>
   );
 }
-

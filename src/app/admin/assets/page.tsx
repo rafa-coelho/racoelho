@@ -1,11 +1,13 @@
 "use client";
-import Link from "next/link";
-import { pbList } from "@/lib/pocketbase";
-import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
-import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Folder, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Eye, SquarePen } from "lucide-react";
+import {
+  AdminListPage,
+  CONTENT_BULK_ACTIONS,
+  CONTENT_STATUS_OPTIONS,
+  ContentStatusPill,
+  DataTable,
+  MonoMeta,
+} from "@/components/admin/DataTable";
 
 type AssetPack = {
   id: string;
@@ -16,126 +18,51 @@ type AssetPack = {
   files?: string[];
 };
 
+const CREATE = { href: "/admin/assets/new", label: "Novo pack" };
+
+const filesLabel = (row: AssetPack) => {
+  const n = row.files?.length || 0;
+  return `${n} ${n === 1 ? "arquivo" : "arquivos"}`;
+};
+
 export default function AssetsPage() {
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Asset Packs</h1>
-          <p className="text-sm text-muted-foreground">Gerenciar pacotes de arquivos</p>
-        </div>
-        <Link href="/admin/assets/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} /> Novo Pacote
-        </Link>
-      </div>
-
+    <AdminListPage title="Asset Packs" description="Gerenciar pacotes de arquivos (ebooks, banners etc.)." create={CREATE}>
       <DataTable<AssetPack>
+        collection="asset_packs"
+        cacheCollection="assets"
         columns={[
           {
             id: "title",
             header: "Título",
-            cell: (row) => (
-              <div>
-                <div className="font-medium">{row.title}</div>
-                <div className="text-xs text-muted-foreground">/{row.slug}</div>
-              </div>
-            ),
             sortable: true,
-          },
-          {
-            id: "files",
-            header: "Arquivos",
             cell: (row) => (
-              <div className="text-sm text-muted-foreground">
-                {row.files?.length || 0} arquivo(s)
+              <div className="min-w-0">
+                <div className="truncate text-[15.5px] font-medium tracking-[-.012em] text-rc-ink">{row.title}</div>
+                <div className="mt-1 truncate font-mono text-[11px] text-rc-ink-6">/{row.slug}</div>
               </div>
             ),
-            sortable: false,
           },
-          {
-            id: "status",
-            header: "Status",
-            cell: (row) => (
-              <Badge variant={row.status === 'published' ? 'default' : 'secondary'} className="capitalize">
-                {row.status || 'draft'}
-              </Badge>
-            ),
-            sortable: true,
-          },
-          {
-            id: "actions",
-            header: "Ações",
-            cell: (row) => (
-              <div className="flex items-center gap-1">
-                <Link href={`/admin/assets/${row.id}`}>
-                  <Button variant="ghost" size="sm">
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link href={`/admin/assets/${row.id}/view`}>
-                  <Button variant="ghost" size="sm" title="Ver">
-                    <Folder className="h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            ),
-            sortable: false,
-          },
+          { id: "files", header: "Arquivos", width: "140px", cell: (row) => <MonoMeta>{filesLabel(row)}</MonoMeta> },
+          { id: "status", header: "Status", sortable: true, width: "140px", cell: (row) => <ContentStatusPill status={row.status} /> },
         ]}
-        fetcher={async ({ page, perPage, filter, sort }) => {
-          const res = await pbList("asset_packs", { page, perPage, filter, sort });
-          return {
-            items: res.items as unknown as AssetPack[],
-            page: res.page,
-            perPage: res.perPage,
-            totalItems: res.totalItems,
-            totalPages: res.totalPages,
-          };
-        }}
-        bulkActions={[
-          {
-            label: "Excluir selecionados",
-            variant: "destructive",
-            action: async (selected) => {
-              await pbBulkDelete("asset_packs", selected.map((s) => s.id));
-            },
-          },
-          {
-            label: "Publicar",
-            action: async (selected) => {
-              await pbBulkUpdate("asset_packs", selected.map((s) => s.id), { status: "published" });
-            },
-          },
-          {
-            label: "Despublicar",
-            action: async (selected) => {
-              await pbBulkUpdate("asset_packs", selected.map((s) => s.id), { status: "draft" });
-            },
-          },
+        rowActions={(row) => [
+          { label: "Editar", icon: SquarePen, href: `/admin/assets/${row.id}` },
+          { label: "Ver detalhes", icon: Eye, href: `/admin/assets/${row.id}/view` },
         ]}
-        defaultSort=""
-        filtersSchema={{
-          q: {
-            placeholder: "Buscar por título ou slug...",
-            searchFields: ["title", "slug"],
-          },
-          status: {
-            placeholder: "Status",
-            options: [
-              { label: "Rascunho", value: "draft" },
-              { label: "Publicado", value: "published" },
-            ],
-          },
+        bulkActions={CONTENT_BULK_ACTIONS}
+        search={{ placeholder: "Buscar por título ou slug…", fields: ["title", "slug"] }}
+        statusOptions={CONTENT_STATUS_OPTIONS}
+        mobile={{
+          title: (row) => row.title,
+          status: (row) => <ContentStatusPill status={row.status} />,
+          meta: (row) => [filesLabel(row)],
+          highlight: (row) => row.status !== "published",
         }}
-        getRowId={(row) => row.id}
-        emptyMessage="Nenhum pacote encontrado"
-        emptyAction={
-          <Link href="/admin/assets/new" className="btn-primary mt-4 inline-flex">
-            Criar primeiro pacote
-          </Link>
-        }
+        rowLabel={(row) => row.title}
+        create={CREATE}
+        emptyMessage="Nenhum asset pack ainda."
       />
-    </div>
+    </AdminListPage>
   );
 }
-
