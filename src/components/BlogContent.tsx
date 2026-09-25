@@ -1,126 +1,102 @@
 'use client';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
 import { ContentMeta } from '@/lib/api';
 import Link from 'next/link';
 import Layout from './Layout';
 import { Search, X } from 'lucide-react';
-import { Chip, EmptyState, Eyebrow, RcImage, Skeleton, Tag, cardClasses, formatShortDate } from '@/components/rc';
+import { Chip, EmptyState, Eyebrow, RcImage, Tag, cardClasses, formatShortDate } from '@/components/rc';
+import { POSTS_PER_PAGE, matchesSearch, pickFeatured, popularTags } from '@/components/posts/search';
 
 interface BlogContentProps {
   posts: (ContentMeta & { content?: string })[];
-  tags: string[];
+  tags?: string[];
+  /** ?tag= vindo do servidor */
+  initialTag?: string | null;
+  /** ?page= vindo do servidor */
+  initialPage?: number;
 }
 
-export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
-  const [posts, setPosts] = useState<(ContentMeta & { content?: string })[]>(initialPosts.slice(0, 10));
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+// Filtros refletidos na URL sem navegar (tag e página).
+function syncUrl(tag: string | null, page: number) {
+  try {
+    const url = new URL(window.location.href);
+    if (tag) url.searchParams.set('tag', tag);
+    else url.searchParams.delete('tag');
+    if (page > 1) url.searchParams.set('page', String(page));
+    else url.searchParams.delete('page');
+    if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url);
+  } catch {
+    /* ignora */
+  }
+}
+
+// Link de "Carregar mais" (funciona sem JavaScript).
+function pageHref(tag: string | null, page: number) {
+  const params = new URLSearchParams();
+  if (tag) params.set('tag', tag);
+  params.set('page', String(page));
+  return `/posts?${params.toString()}`;
+}
+
+export default function BlogContent({ posts: allPosts, initialTag = null, initialPage = 1 }: BlogContentProps) {
+  const [selectedTag, setSelectedTag] = useState<string | null>(initialTag || null);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalPosts, setTotalPosts] = useState(0);
-  const observerTarget = useRef<HTMLDivElement>(null);
+  const [page, setPage] = useState(Math.max(1, initialPage));
+  const isFirstRender = useRef(true);
 
-  // Debounce search term
+  // Debounce da busca (150ms)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
-
+    const timer = setTimeout(() => setDebouncedSearchTerm(searchTerm), 150);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Reset and fetch when filters change
+  // Novo filtro volta para a primeira página
   useEffect(() => {
-    setPosts([]);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
     setPage(1);
-    setHasMore(true);
-    fetchPosts(1, true);
   }, [debouncedSearchTerm, selectedTag]);
 
-  const fetchPosts = useCallback(async (pageNum: number, reset: boolean = false) => {
-    if (isLoading) return;
-
-    setIsLoading(true);
-
-    try {
-      const params = new URLSearchParams({
-        page: pageNum.toString(),
-        limit: '10',
-      });
-
-      if (debouncedSearchTerm) {
-        params.append('search', debouncedSearchTerm);
-      }
-
-      if (selectedTag) {
-        params.append('tag', selectedTag);
-      }
-
-      const response = await fetch(`/api/posts?${params.toString()}`);
-      const data = await response.json();
-
-      if (reset) {
-        setPosts(data.posts);
-      } else {
-        setPosts(prev => [...prev, ...data.posts]);
-      }
-
-      setTotalPosts(data.pagination.totalPosts);
-      setHasMore(data.pagination.hasMore);
-      setPage(pageNum);
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [debouncedSearchTerm, selectedTag, isLoading]);
-
-  // Infinite scroll observer
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        if (entries[0].isIntersecting && hasMore && !isLoading) {
-          fetchPosts(page + 1, false);
-        }
-      },
-      { threshold: 0.1 }
-    );
+    syncUrl(selectedTag, page);
+  }, [selectedTag, page]);
 
-    const currentTarget = observerTarget.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
+  const tagList = useMemo(() => popularTags(allPosts), [allPosts]);
 
-    return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
-      }
-    };
-  }, [hasMore, isLoading, page, fetchPosts]);
+  const isFiltering = !!selectedTag || !!debouncedSearchTerm.trim();
 
-  // Get tag counts from all initial posts
-  const tagCounts = initialPosts.reduce((acc, post) => {
-    post.tags?.forEach(tag => {
-      acc[tag] = (acc[tag] || 0) + 1;
-    });
-    return acc;
-  }, {} as Record<string, number>);
+  const filtered = useMemo(
+    () =>
+      allPosts.filter(
+        (post) => (!selectedTag || post.tags?.includes(selectedTag)) && matchesSearch(post, debouncedSearchTerm),
+      ),
+    [allPosts, selectedTag, debouncedSearchTerm],
+  );
 
-  const popularTags = Object.entries(tagCounts)
-    .filter(([, count]) => count >= 2)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12);
+  // Destaque só na lista sem filtro; sai da grade para não repetir.
+  const featured = !isFiltering ? pickFeatured(filtered) : undefined;
+  const listPosts = featured ? filtered.filter((post) => post !== featured) : filtered;
+  const visiblePosts = listPosts.slice(0, page * POSTS_PER_PAGE);
+  const hasMore = visiblePosts.length < listPosts.length;
+  const posts = featured ? [featured, ...visiblePosts] : visiblePosts;
 
-  const isFiltering = !!selectedTag || !!debouncedSearchTerm;
-  // Destaque: o mais recente ocupa o topo quando não há filtro ativo.
-  const featured = !isFiltering ? posts[0] : undefined;
-  const gridPosts = featured ? posts.slice(1) : posts;
+  const handleLoadMore = (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setPage((p) => p + 1);
+  };
 
   const handleClearFilters = () => {
     setSelectedTag(null);
     setSearchTerm('');
+    setDebouncedSearchTerm('');
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+    setDebouncedSearchTerm('');
   };
 
   return (
@@ -131,7 +107,7 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
         <div className="rc-dots-fade hidden md:block" />
         <div className="rc-container relative pt-6 md:pb-10 md:pt-14">
           <Eyebrow className="md:text-[11.5px] md:text-rc-blue-soft">
-            Blog<span className="hidden md:inline"> · {initialPosts.length} artigos</span>
+            Blog<span className="hidden md:inline"> · {allPosts.length} artigos</span>
           </Eyebrow>
           <h1 className="mt-[9px] text-rc-h1-m font-semibold text-rc-ink md:mt-3.5 md:text-rc-h1">Artigos e tutoriais</h1>
           <p className="mt-[9px] max-w-[56ch] text-[15px] leading-[1.6] text-rc-ink-3 md:mt-3 md:text-lg">
@@ -149,18 +125,18 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
-              <button type="button" onClick={() => setSearchTerm('')} className="-mr-2 grid h-11 w-11 place-items-center text-rc-ink-5 hover:text-rc-ink" aria-label="Limpar busca">
+              <button type="button" onClick={handleClearSearch} className="-mr-2 grid h-11 w-11 place-items-center text-rc-ink-5 hover:text-rc-ink" aria-label="Limpar busca">
                 <X className="h-4 w-4" />
               </button>
             )}
           </label>
 
-          {popularTags.length > 0 && (
+          {tagList.length > 0 && (
             <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-4 md:flex-wrap md:overflow-visible md:px-0">
               <Chip active={!selectedTag} onClick={() => setSelectedTag(null)}>
-                todos · {initialPosts.length}
+                todos · {allPosts.length}
               </Chip>
-              {popularTags.map(([tag, count]) => (
+              {tagList.map(([tag, count]) => (
                 <Chip key={tag} active={selectedTag === tag} onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}>
                   {tag} · {count}
                 </Chip>
@@ -181,7 +157,7 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
                 <div className="relative">
                   <RcImage src={featured.coverImage} alt="" ratio="16/9" className="md:h-full md:min-h-[300px]" />
                   <span className="absolute left-3.5 top-3.5 hidden rounded-md bg-rc-blue px-2.5 py-1.5 font-mono text-[10.5px] uppercase tracking-[.1em] text-white md:inline">
-                    Mais recente
+                    {featured.featured ? 'Destaque' : 'Mais recente'}
                   </span>
                 </div>
                 <div className="flex flex-col p-4 md:p-[34px]">
@@ -189,7 +165,7 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
                     <time dateTime={featured.date}>{formatShortDate(featured.date)}</time>
                     {featured.readingTime ? (<><span aria-hidden="true">·</span><span>{featured.readingTime} min</span></>) : null}
                     <span aria-hidden="true" className="md:hidden">·</span>
-                    <span className="text-rc-blue-link md:hidden">destaque</span>
+                    <span className="text-rc-blue-link md:hidden">{featured.featured ? 'destaque' : 'mais recente'}</span>
                   </div>
                   <h2 className="mt-[9px] text-[21px] font-semibold leading-[1.22] tracking-[-.026em] text-rc-ink [text-wrap:balance] md:mt-3 md:text-[32px] md:leading-[1.16] md:tracking-[-.03em]">
                     {featured.title}
@@ -206,7 +182,7 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
             )}
 
             <div className="mb-5 mt-10 hidden items-center gap-4 font-mono text-xs text-rc-ink-6 md:flex">
-              <span>{isFiltering ? `${totalPosts} ${totalPosts === 1 ? 'resultado' : 'resultados'}` : 'Todos os artigos'}</span>
+              <span>{isFiltering ? `${filtered.length} ${filtered.length === 1 ? 'resultado' : 'resultados'}` : 'Todos os artigos'}</span>
               <span className="h-px flex-1 bg-rc-border" aria-hidden="true" />
               {isFiltering && (
                 <button type="button" onClick={handleClearFilters} className="text-rc-blue-link hover:text-rc-blue-soft">
@@ -216,7 +192,7 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
             </div>
 
             <div className="flex flex-col gap-3 md:grid md:grid-cols-2 md:gap-[18px] lg:grid-cols-3">
-              {gridPosts.map((post, index) => (
+              {visiblePosts.map((post, index) => (
                 <Link
                   key={`${post.slug}-${index}`}
                   href={`/posts/${post.slug}`}
@@ -245,27 +221,35 @@ export default function BlogContent({ posts: initialPosts }: BlogContentProps) {
                   </div>
                 </Link>
               ))}
-              {isLoading &&
-                [0, 1, 2].map((i) => <Skeleton key={`sk-${i}`} className="h-[104px] md:h-[340px] md:rounded-rc-card-lg" />)}
             </div>
 
-            {/* Alvo do scroll infinito */}
-            {hasMore && <div ref={observerTarget} className="h-10" aria-hidden="true" />}
-
-            {!hasMore && posts.length > 0 && (
-              <p className="py-10 text-center font-mono text-xs text-rc-ink-6">fim da lista</p>
+            {/* Carregar mais: sem JavaScript, vira link para ?page=N+1 */}
+            {hasMore ? (
+              <div className="mt-5 flex justify-center md:mt-10">
+                <a
+                  href={pageHref(selectedTag, page + 1)}
+                  onClick={handleLoadMore}
+                  className="grid h-12 w-full place-items-center rounded-xl border border-rc-border-card bg-rc-surface text-[15px] text-rc-ink-2 transition-colors hover:border-rc-border-hover hover:text-rc-ink md:w-auto md:rounded-[10px] md:border-rc-border-strong md:bg-rc-surface-3 md:px-[22px] md:font-medium md:text-rc-ink"
+                >
+                  Carregar mais
+                </a>
+              </div>
+            ) : (
+              listPosts.length > POSTS_PER_PAGE && (
+                <p className="py-10 text-center font-mono text-xs text-rc-ink-6">fim da lista</p>
+              )
             )}
           </>
-        ) : isLoading ? (
-          <div className="flex flex-col gap-3 md:grid md:grid-cols-3 md:gap-[18px]">
-            {[0, 1, 2].map((i) => <Skeleton key={i} className="h-[104px] md:h-[340px] md:rounded-rc-card-lg" />)}
-          </div>
         ) : (
           <EmptyState
-            message={debouncedSearchTerm ? `Nenhum artigo sobre "${debouncedSearchTerm}"` : 'Nenhum artigo encontrado.'}
+            message={debouncedSearchTerm.trim() ? `Nenhum artigo sobre '${debouncedSearchTerm.trim()}'` : 'Nenhum artigo encontrado.'}
             action={
-              <button type="button" onClick={handleClearFilters} className="text-sm font-medium text-rc-blue-link hover:text-rc-blue-soft">
-                {debouncedSearchTerm ? 'Limpar busca' : 'Limpar filtros'}
+              <button
+                type="button"
+                onClick={debouncedSearchTerm.trim() ? handleClearSearch : handleClearFilters}
+                className="min-h-11 px-3 text-sm font-medium text-rc-blue-link hover:text-rc-blue-soft"
+              >
+                {debouncedSearchTerm.trim() ? 'Limpar busca' : 'Limpar filtros'}
               </button>
             }
           />
