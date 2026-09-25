@@ -106,10 +106,15 @@ async function main() {
     let created = 0;
     let updated = 0;
     for (const rec of records) {
+      const match = String(rec[key] ?? '').replace(/"/g, '\\"');
+      const existing: any = match ? await pb.collection(collection).getFirstListItem(`${key}="${match}"`).catch(() => null) : null;
       const form = new FormData();
       for (const [name, value] of Object.entries(rec)) {
         if (SYSTEM.has(name) || !known.has(name)) continue;
         if (fileFields.has(name)) {
+          // Não reenvia arquivo que já existe: o PocketBase renomearia e quebraria URLs já geradas
+          const has = existing?.[name];
+          if (Array.isArray(has) ? has.length > 0 : !!has) continue;
           for (const filename of (Array.isArray(value) ? value : [value]).filter(Boolean) as string[]) {
             const blob = await downloadFile(rec, filename);
             if (blob) form.append(name, blob, filename);
@@ -120,8 +125,6 @@ async function main() {
         if (collection === 'feature_flags' && name === 'enabled' && rec.key in STAGING_FLAG_OVERRIDES) v = STAGING_FLAG_OVERRIDES[rec.key];
         form.append(name, v !== null && typeof v === 'object' ? JSON.stringify(v) : String(v ?? ''));
       }
-      const match = String(rec[key] ?? '').replace(/"/g, '\\"');
-      const existing = match ? await pb.collection(collection).getFirstListItem(`${key}="${match}"`).catch(() => null) : null;
       try {
         if (existing) {
           await pb.collection(collection).update(existing.id, form);

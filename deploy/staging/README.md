@@ -5,7 +5,7 @@ Ambiente isolado de produção, no projeto `racoelho` do Railway, ambiente `stag
 | Serviço | Origem | O que faz |
 |---|---|---|
 | `pocketbase-staging` | este repo, `deploy/staging/pocketbase` | PocketBase próprio (volume próprio). O superuser vem de `PB_ADMIN_EMAIL`/`PB_ADMIN_PASSWORD`. |
-| `site-staging` | este repo, branch do rebranding | Next.js. No build roda `npm run staging:prepare` e depois `npm run build`. |
+| `site-staging` | este repo, branch do rebranding | Next.js. Build: `npm run staging:prepare && rm -rf .next/cache/fetch-cache && npm run build` (o cache de fetch do Next é reaproveitado entre builds e guardaria respostas antigas do PocketBase). |
 
 `staging:prepare` = `pb:migrate` → `pb:migrate:rebranding` → `staging:seed`.
 O seed copia só o conteúdo **público** do PocketBase de origem (`SOURCE_PB_URL`, ex.: produção)
