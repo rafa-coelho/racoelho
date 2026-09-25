@@ -2,7 +2,9 @@
 
 import Layout from './Layout';
 import { FaDiscord } from 'react-icons/fa';
-import { Users, MessageSquare, Code2, Sparkles } from 'lucide-react';
+import { Users, MessageSquare, Code2, Sparkles, HelpCircle, Trophy, Briefcase } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { accentIconBox, cardClasses, type Accent } from '@/components/rc';
 
 const DISCORD_LINK = 'https://discord.gg/zK6jeB2R5b';
 
@@ -29,89 +31,111 @@ const perks = [
   },
 ];
 
+// Lista de canais: conteúdo estático (FEATURES §3.9), não vem do Discord.
+const channels: { icon: typeof HelpCircle; name: string; description: string; accent: Accent }[] = [
+  { icon: HelpCircle, name: '#dúvidas', description: 'Pergunta sem medo. Ninguém julga pergunta básica.', accent: 'blue' },
+  { icon: Trophy, name: '#desafios', description: 'Soluções, revisões de código e discussão de abordagem.', accent: 'green' },
+  { icon: Briefcase, name: '#vagas', description: 'Oportunidades da galera, antes de virarem post.', accent: 'amber' },
+];
+
+const discordBtn =
+  'inline-flex h-[50px] items-center justify-center gap-2.5 whitespace-nowrap rounded-[10px] bg-rc-discord px-6 text-[15.5px] font-semibold text-white shadow-rc-discord transition-colors duration-150 ease-out hover:bg-rc-discord-hover';
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-[18px] flex items-center gap-3 md:mb-[22px] md:gap-4">
+      <h2 className="text-rc-h2-m font-semibold text-rc-ink md:text-rc-h2">{children}</h2>
+      <span className="h-px flex-1 bg-rc-border" aria-hidden="true" />
+    </div>
+  );
+}
+
 export default function ComunidadeContent() {
   return (
     <Layout>
-      <div className="min-h-screen section-gradient-1">
-        {/* Hero */}
-        <section className="relative pt-24 pb-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#5865F2]/15 via-purple-600/5 to-transparent" />
+      {/* Hero */}
+      <section className="relative overflow-hidden border-b border-rc-border">
+        <div className="rc-dots-bg" />
+        <div className="rc-dots-fade" />
+        <div className="rc-container relative pb-[26px] pt-[30px] md:pb-14 md:pt-16">
+          <span className="inline-flex items-center gap-2 rounded-full border border-rc-discord-border bg-rc-discord-chip px-[11px] py-1.5 font-mono text-[10.5px] uppercase tracking-[.08em] text-rc-discord-soft md:px-[13px] md:py-[7px] md:text-[11.5px]">
+            <span className="h-1.5 w-1.5 rounded-full bg-rc-discord" aria-hidden="true" />
+            Discord
+          </span>
+          <h1 className="mt-4 max-w-[20ch] text-[31px] font-semibold leading-[1.12] tracking-[-.034em] text-rc-ink md:mt-5 md:text-[48px] md:leading-[1.16] md:tracking-[-.04em]">
+            Comunidade Racoelho
+          </h1>
+          <p className="mt-3 max-w-[48ch] text-[16px] leading-[1.6] text-rc-ink-3 [text-wrap:pretty] md:mt-4 md:text-[19px]">
+            Teste o jogo que estou criando, jogue com a galera e troque uma ideia sobre dev, games e tech.
+          </p>
+          <a
+            href={DISCORD_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(discordBtn, 'mt-[18px] w-full md:mt-8 md:w-auto')}
+          >
+            <FaDiscord className="text-[19px]" aria-hidden="true" />
+            Entrar no Discord
+          </a>
+        </div>
+      </section>
 
-          <div className="content-container relative z-10 text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#5865F2]/10 border border-[#5865F2]/20 mb-6 animate-fade-in">
-              <FaDiscord className="text-[#5865F2]" />
-              <span className="text-sm font-medium text-[#5865F2]">Discord</span>
-            </div>
-
-            <h1 className="text-5xl md:text-6xl font-black mb-6 leading-tight animate-fade-in-up">
-              Comunidade{' '}
-              <span className="bg-gradient-to-r from-[#5865F2] via-purple-400 to-[#5865F2] bg-clip-text text-transparent">
-                Racoelho
+      {/* Por que entrar */}
+      <section className="rc-container pt-[22px] md:pt-[52px]">
+        <SectionTitle>Por que entrar?</SectionTitle>
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-4">
+          {perks.map((perk) => (
+            <div key={perk.title} className={cardClasses({ className: 'flex items-start gap-3 p-[15px] md:block md:p-6' })}>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-rc-discord-border bg-rc-discord-chip text-rc-discord-soft md:h-[38px] md:w-[38px]">
+                <perk.icon size={17} aria-hidden="true" />
               </span>
-            </h1>
+              <div>
+                <h3 className="text-[15.5px] font-semibold text-rc-ink md:mt-4 md:text-[19px] md:tracking-[-.018em]">{perk.title}</h3>
+                <p className="mt-[5px] text-[13.5px] leading-[1.5] text-rc-ink-4 md:mt-[9px] md:text-[15px] md:leading-[1.6]">{perk.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-            <p className="text-xl text-muted-foreground mb-10 leading-relaxed animate-fade-in" style={{ animationDelay: '100ms' }}>
-              Teste o jogo que estou criando, jogue com a galera e troque uma ideia sobre dev, games e tech.
+      {/* Canais */}
+      <section className="rc-container pt-7 md:pt-12">
+        <SectionTitle>Canais</SectionTitle>
+        <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3 md:gap-4">
+          {channels.map((ch) => (
+            <div key={ch.name} className={cardClasses({ className: 'flex items-start gap-3 p-[15px] md:p-5' })}>
+              <span className={cn('grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border', accentIconBox[ch.accent])}>
+                <ch.icon size={17} aria-hidden="true" />
+              </span>
+              <div>
+                <h3 className="text-[15.5px] font-semibold text-rc-ink">{ch.name}</h3>
+                <p className="mt-[5px] text-[13.5px] leading-[1.5] text-rc-ink-4">{ch.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA final */}
+      <section className="rc-container pb-10 pt-7 md:pb-14 md:pt-9">
+        <div className="flex flex-col gap-5 rounded-rc-card-lg border border-rc-discord-border bg-rc-discord-surface px-[18px] py-5 md:flex-row md:items-center md:justify-between md:gap-8 md:p-8">
+          <div>
+            <h2 className="text-[18px] font-semibold tracking-[-.025em] text-rc-ink md:text-[24px]">Bora trocar ideia?</h2>
+            <p className="mt-2 max-w-[48ch] text-[14.5px] leading-[1.55] text-rc-discord-ink md:mt-2.5 md:text-[16px] md:leading-[1.6]">
+              Gratuito e aberto pra todo mundo. Entra lá e vem jogar com a gente!
             </p>
-
-            <a
-              href={DISCORD_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-10 py-5 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg shadow-[#5865F2]/25 animate-fade-in"
-              style={{ animationDelay: '200ms' }}
-            >
-              <FaDiscord className="text-2xl" />
-              Entrar no Discord
-            </a>
           </div>
-        </section>
-
-        {/* Perks */}
-        <section className="py-20 section-gradient-2">
-          <div className="content-container max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Por que entrar?</h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {perks.map((perk, index) => (
-                <div
-                  key={perk.title}
-                  className="card-modern p-8 group animate-fade-in-up"
-                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-[#5865F2]/10 flex items-center justify-center mb-4 group-hover:bg-[#5865F2]/20 transition-colors">
-                    <perk.icon size={24} className="text-[#5865F2]" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">{perk.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{perk.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA final */}
-        <section className="py-20 section-gradient-1">
-          <div className="content-container max-w-2xl mx-auto text-center">
-            <div className="card-modern p-12 border-2 border-[#5865F2]/20">
-              <FaDiscord className="text-6xl text-[#5865F2] mx-auto mb-6" />
-              <h2 className="text-3xl font-bold mb-4">Bora trocar ideia?</h2>
-              <p className="text-muted-foreground text-lg mb-8">
-                Gratuito e aberto pra todo mundo. Entra lá e vem jogar com a gente!
-              </p>
-              <a
-                href={DISCORD_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] text-white font-bold text-lg transition-all duration-300 hover:scale-105 shadow-lg shadow-[#5865F2]/25"
-              >
-                <FaDiscord className="text-xl" />
-                Entrar no Discord
-              </a>
-            </div>
-          </div>
-        </section>
-      </div>
+          <a
+            href={DISCORD_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(discordBtn, 'w-full md:w-auto')}
+          >
+            <FaDiscord className="text-[19px]" aria-hidden="true" />
+            Entrar no Discord
+          </a>
+        </div>
+      </section>
     </Layout>
   );
 }

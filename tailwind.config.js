@@ -48,6 +48,10 @@ const rcTheme = {
         border: v('amber-border'), 'border-soft': v('amber-border-soft'), num: v('amber-num'),
       },
       red: v('red'),
+      discord: {
+        DEFAULT: v('discord'), hover: v('discord-hover'), soft: v('discord-soft'), ink: v('discord-ink'),
+        surface: v('discord-surface'), chip: v('discord-chip'), border: v('discord-border'),
+      },
     },
   },
   fontSize: {
@@ -80,6 +84,7 @@ const rcTheme = {
   },
   boxShadow: {
     'rc-primary': v('shadow-primary'),
+    'rc-discord': v('shadow-discord'),
   },
   backgroundImage: {
     'rc-dots': v('dots'),

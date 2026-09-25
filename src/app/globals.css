@@ -74,6 +74,15 @@
     /* vermelho */
     --rc-red: #ff6b6b;
 
+    /* discord — /comunidade */
+    --rc-discord: #5865f2;
+    --rc-discord-hover: #6b76f5;
+    --rc-discord-soft: #a9b0ff;
+    --rc-discord-ink: #b6bce8;
+    --rc-discord-surface: #131735;
+    --rc-discord-chip: #171b3d;
+    --rc-discord-border: #2e3470;
+
     /* raio */
     --rc-r-chip: 9px;
     --rc-r-control: 11px;
@@ -82,6 +91,7 @@
 
     /* sombra (única) */
     --rc-shadow-primary: 0 8px 20px -8px #2f6bff80;
+    --rc-shadow-discord: 0 8px 20px -8px #5865f280;
 
     /* padrões */
     --rc-dots: radial-gradient(#1b2740 1px, transparent 1px);
