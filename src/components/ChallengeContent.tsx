@@ -13,7 +13,11 @@ import { SlotType } from '@/lib/services/adOrchestrator';
 import { useFeatureFlags } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
 import { useViewTracking } from '@/hooks/use-view-tracking';
-import { Eyebrow, RcImage, cardClasses, formatShortDate } from '@/components/rc';
+import { Eyebrow, Pill, RcImage, cardClasses, formatShortDate, pad2 } from '@/components/rc';
+import { DIFFICULTY_LABEL } from '@/lib/types';
+import { ChallengeCriteria, ChallengeDeliverables } from '@/components/challenges/ChallengeSections';
+import ChallengeSubmission from '@/components/challenges/ChallengeSubmission';
+import MarkDoneButton from '@/components/challenges/MarkDoneButton';
 
 interface ChallengeContentProps {
   challenge: ContentItem;
@@ -30,7 +34,8 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
   useViewTracking({ challengeId: challenge.slug });
 
   // Feature Flags
-  const { flags } = useFeatureFlags(['share', 'newsletter', 'ads']);
+  const { flags } = useFeatureFlags(['share', 'newsletter', 'ads', 'challenge_progress', 'challenge_submissions']);
+  const hasMeta = !!(challenge.number || challenge.difficulty || challenge.estimatedHours);
   // Slots que realmente existem na página de challenges
   const challengeSlots: SlotType[] = ['inline', 'footer'];
   const { placements, loading: adsLoading } = useAds('challenges', challengeSlots);
@@ -51,9 +56,24 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
 
       <div className="rc-container grid grid-cols-1 items-start gap-12 pb-2 pt-3 md:pt-[26px] lg:grid-cols-[minmax(0,1fr)_320px] lg:pb-14">
         <article className="min-w-0 max-w-[72ch]">
-          <span className="inline-flex items-center rounded-full border border-rc-green-border-strong bg-rc-green-surface px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-green md:text-[11px]">
-            Desafio prático
-          </span>
+          {hasMeta ? (
+            // Cabeçalho com número, dificuldade e tempo estimado
+            <div className="flex flex-wrap items-center gap-2.5">
+              {challenge.number && (
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-rc-green-border-strong bg-rc-green-chip font-mono text-[15px] text-rc-green" aria-label={`Desafio ${pad2(challenge.number)}`}>
+                  {pad2(challenge.number)}
+                </span>
+              )}
+              <div className="flex flex-wrap gap-1.5">
+                {challenge.difficulty && <Pill tone="green" className="bg-transparent">{DIFFICULTY_LABEL[challenge.difficulty]}</Pill>}
+                {challenge.estimatedHours && <Pill className="bg-transparent normal-case tracking-normal">~{challenge.estimatedHours}h</Pill>}
+              </div>
+            </div>
+          ) : (
+            <span className="inline-flex items-center rounded-full border border-rc-green-border-strong bg-rc-green-surface px-3 py-1.5 font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-green md:text-[11px]">
+              Desafio prático
+            </span>
+          )}
           <h1 className="mt-4 max-w-[22ch] text-rc-h1-article-m font-semibold text-rc-ink [text-wrap:balance] md:mt-5 md:text-[50px] md:leading-[1.14] md:tracking-[-.04em]">
             {challenge.title}
           </h1>
@@ -84,12 +104,21 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
             <RcImage src={challenge.coverImage} alt="" ratio="16/9" className="mt-6 rounded-rc-card border border-rc-border-card" />
           )}
 
+          <ChallengeDeliverables items={challenge.deliverables} />
+
           <MarkdownRenderer
             content={challenge.content}
             className="[&_blockquote]:border-rc-green [&_blockquote]:bg-rc-green-surface"
           />
 
-          {/* Enviar solução (mesmo fluxo por email de hoje) */}
+          <ChallengeCriteria items={challenge.criteria} />
+
+          {flags.challenge_progress && <MarkDoneButton slug={challenge.slug} className="mt-10 md:mt-11" />}
+
+          {flags.challenge_submissions ? (
+            <ChallengeSubmission challengeSlug={challenge.slug} />
+          ) : (
+          /* Enviar solução (mesmo fluxo por email de hoje) */
           <div className="mt-10 flex flex-col gap-4 rounded-rc-card-lg border border-rc-green-border-strong bg-rc-green-surface p-5 md:mt-11 md:flex-row md:items-start md:gap-5 md:p-7">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-rc-green-border-strong bg-rc-green-chip text-rc-green" aria-hidden="true">
               <ArrowRight className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -107,6 +136,7 @@ export default function ChallengeContent({ challenge }: ChallengeContentProps) {
               </a>
             </div>
           </div>
+          )}
 
           {flags.share && (
             <ShareButtons title={challenge.title} url={challengeUrl} variant="inline" className="mt-8 border-t border-rc-border pt-6 lg:hidden" />
