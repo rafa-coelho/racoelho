@@ -39,7 +39,7 @@ function inferField(name: string, value: any) {
   if (typeof value === 'boolean') return { name, type: 'bool' };
   if (typeof value === 'number') return { name, type: 'number' };
   if (value !== null && typeof value === 'object') return { name, type: 'json' };
-  return { name, type: 'text' };
+  return { name, type: 'text', max: 1_000_000 };
 }
 
 async function fetchAll(collection: string): Promise<any[]> {

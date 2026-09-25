@@ -21,10 +21,13 @@ function toFields(schema: any[] = []): any[] {
     if (type === 'select') Object.assign(field, { values: options.values || [], maxSelect: options.maxSelect ?? 1 });
     else if (type === 'file') Object.assign(field, { maxSelect: options.maxSelect ?? 1, maxSize: options.maxSize ?? 5242880, mimeTypes: options.mimeTypes || [] });
     else if (type === 'relation') Object.assign(field, { collectionId: options.collectionId, maxSelect: options.maxSelect ?? 1, cascadeDelete: !!options.cascadeDelete });
-    else if (type === 'text') Object.assign(field, { min: options.min ?? 0, max: options.max ?? 0, pattern: options.pattern ?? '' });
+    // max 0 no PocketBase novo = limite padrão de 5000 caracteres; conteúdo de post passa disso
+    else if (type === 'text') Object.assign(field, { min: options.min ?? 0, max: options.max || TEXT_MAX, pattern: options.pattern ?? '' });
     return field;
   });
 }
+
+const TEXT_MAX = 1_000_000;
 
 const TIMESTAMPS = [
   { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
@@ -53,7 +56,17 @@ async function ensureCollection(pb: PocketBase, name: string, payload: any) {
       const col: any = (await pb.collections.getList(1, 1, { filter: `name="${name}"` })).items[0];
       const have = new Set((col.fields || []).map((f: any) => f.name));
       const missing = [...wanted, ...TIMESTAMPS].filter((f) => !have.has(f.name));
-      if (missing.length) await pb.collections.update(col.id, { fields: [...col.fields, ...missing] });
+      // Só aumenta limites de texto que ficaram no padrão (0/5000); nunca reduz nem altera tipo
+      let raised = false;
+      const current = (col.fields || []).map((f: any) => {
+        const w = wanted.find((x) => x.name === f.name);
+        if (w && f.type === 'text' && w.type === 'text' && (!f.max || f.max <= 5000) && w.max > (f.max || 5000)) {
+          raised = true;
+          return { ...f, max: w.max };
+        }
+        return f;
+      });
+      if (missing.length || raised) await pb.collections.update(col.id, { fields: [...current, ...missing] });
     } else {
       const created = await pb.collections.create({ ...rest, listRule: null, viewRule: null, fields: [...wanted, ...TIMESTAMPS] });
       await pb.collections.update(created.id, { listRule: rules.listRule, viewRule: rules.viewRule });
