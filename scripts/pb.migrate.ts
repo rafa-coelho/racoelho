@@ -2,6 +2,35 @@ import dotenv from 'dotenv';
 import PocketBase, { RecordModel } from 'pocketbase';
 dotenv.config();
 
+// PocketBase >= 0.23 trocou `schema` (opções aninhadas) por `fields` (opções no nível do campo)
+// e deixou de criar created/updated automaticamente. Detectado uma vez por execução.
+let newFormat: boolean | null = null;
+
+async function detectFormat(pb: PocketBase): Promise<boolean> {
+  if (newFormat !== null) return newFormat;
+  const list = await pb.collections.getList(1, 1).catch(() => null);
+  const sample: any = list?.items?.[0];
+  // sem collections: assume o formato novo se o servidor tem a collection _superusers
+  newFormat = sample ? Array.isArray(sample.fields) : !!(await pb.collections.getOne('_superusers').catch(() => null));
+  return newFormat;
+}
+
+function toFields(schema: any[] = []): any[] {
+  return schema.map(({ name, type, required, options = {} }) => {
+    const field: any = { name, type, required: !!required };
+    if (type === 'select') Object.assign(field, { values: options.values || [], maxSelect: options.maxSelect ?? 1 });
+    else if (type === 'file') Object.assign(field, { maxSelect: options.maxSelect ?? 1, maxSize: options.maxSize ?? 5242880, mimeTypes: options.mimeTypes || [] });
+    else if (type === 'relation') Object.assign(field, { collectionId: options.collectionId, maxSelect: options.maxSelect ?? 1, cascadeDelete: !!options.cascadeDelete });
+    else if (type === 'text') Object.assign(field, { min: options.min ?? 0, max: options.max ?? 0, pattern: options.pattern ?? '' });
+    return field;
+  });
+}
+
+const TIMESTAMPS = [
+  { name: 'created', type: 'autodate', onCreate: true, onUpdate: false },
+  { name: 'updated', type: 'autodate', onCreate: true, onUpdate: true },
+];
+
 async function ensureCollection(pb: PocketBase, name: string, payload: any) {
     const exists = await pb.collections.getList(1, 1, { filter: `name="${name}"` })
         .then(r => r.items?.length > 0)
@@ -15,6 +44,23 @@ async function ensureCollection(pb: PocketBase, name: string, payload: any) {
     updateRule: payload.updateRule ?? null,
     deleteRule: payload.deleteRule ?? null,
   };
+
+  if (await detectFormat(pb)) {
+    // Formato novo: só adiciona campos que faltam (nunca remove nem altera os existentes)
+    const { schema, ...rest } = payload;
+    const wanted = toFields(schema);
+    if (exists) {
+      const col: any = (await pb.collections.getList(1, 1, { filter: `name="${name}"` })).items[0];
+      const have = new Set((col.fields || []).map((f: any) => f.name));
+      const missing = [...wanted, ...TIMESTAMPS].filter((f) => !have.has(f.name));
+      if (missing.length) await pb.collections.update(col.id, { fields: [...col.fields, ...missing] });
+    } else {
+      const created = await pb.collections.create({ ...rest, listRule: null, viewRule: null, fields: [...wanted, ...TIMESTAMPS] });
+      await pb.collections.update(created.id, { listRule: rules.listRule, viewRule: rules.viewRule });
+    }
+    return;
+  }
+
   const basePayload = { ...payload, listRule: null, viewRule: null, createRule: rules.createRule ?? null, updateRule: rules.updateRule ?? null, deleteRule: rules.deleteRule ?? null };
 
   if (exists) {
@@ -29,6 +75,7 @@ async function ensureCollection(pb: PocketBase, name: string, payload: any) {
 
 async function main() {
     const pbUrl = process.env.PB_URL || process.env.NEXT_PUBLIC_PB_URL!;
+    newFormat = null;
     const adminEmail = process.env.PB_ADMIN_EMAIL!;
     const adminPass = process.env.PB_ADMIN_PASSWORD!;
 
