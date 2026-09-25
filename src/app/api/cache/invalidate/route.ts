@@ -19,6 +19,10 @@ const VALID_COLLECTIONS = [
   'assets',
   'ads',
   'feature_flags',
+  'site_status',
+  'mediakit',
+  'community_stats',
+  'challenge_submissions',
 ];
 
 // Mapeamento entre coleções do admin e chaves de cache reais
@@ -33,6 +37,10 @@ const COLLECTION_TO_CACHE_KEY: Record<string, string[]> = {
   'projects': ['projects'],
   'sales_pages': ['sales_pages'],
   'feature_flags': ['feature_flags'],
+  'site_status': ['site_status'],
+  'mediakit': ['mediakit'],
+  'community_stats': ['community_stats'],
+  'challenge_submissions': ['challenge_submissions'],
 };
 
 export async function POST(request: NextRequest) {
