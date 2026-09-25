@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ComponentType } from 'react';
+import { useMemo, useState, type ComponentType } from 'react';
 import { SetupItem } from '@/lib/api';
 import { ChevronRight, Code2, Keyboard, Lamp, Mic, Monitor, Video, type LucideProps } from 'lucide-react';
 import Layout from './Layout';
@@ -12,8 +12,23 @@ interface SetupContentProps {
   categories: string[];
 }
 
-export default function SetupContent({ items, categories }: SetupContentProps) {
+// Ordena por `order` (sem order vai para o fim, mantendo a ordem original).
+function sortByOrder(list: SetupItem[]): SetupItem[] {
+  return list
+    .map((item, i) => ({ item, i }))
+    .sort((a, b) => (a.item.order ?? Number.MAX_SAFE_INTEGER) - (b.item.order ?? Number.MAX_SAFE_INTEGER) || a.i - b.i)
+    .map(({ item }) => item);
+}
+
+// Link externo: afiliado ganha rel="sponsored noopener".
+function linkRel(item: SetupItem) {
+  return item.affiliate ? 'sponsored noopener' : 'noopener noreferrer';
+}
+
+export default function SetupContent({ items: rawItems, categories }: SetupContentProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const items = useMemo(() => sortByOrder(rawItems), [rawItems]);
+  const hasAffiliate = items.some(item => item.affiliate);
 
   const countBy = (category: string) => items.filter(item => item.category === category).length;
 
@@ -35,6 +50,7 @@ export default function SetupContent({ items, categories }: SetupContentProps) {
           <h1 className="mt-[9px] text-rc-h1-m font-semibold text-rc-ink md:mt-3.5 md:text-[42px] md:leading-[1.12] md:tracking-[-.035em]">Meu setup</h1>
           <p className="mt-[9px] max-w-[54ch] text-[15px] leading-[1.6] text-rc-ink-3 md:mt-3 md:text-[17.5px]">
             Equipamentos e ferramentas que utilizo no meu dia a dia como desenvolvedor.
+            {hasAffiliate && ' Alguns links são de afiliado.'}
           </p>
 
           {categories.length > 1 && (
@@ -64,19 +80,7 @@ export default function SetupContent({ items, categories }: SetupContentProps) {
               <section key={group.category} aria-labelledby={`setup-${slugify(group.category)}`}>
                 <CategoryHeader category={group.category} count={group.items.length} />
 
-                {/* Mobile: lista única dentro de um cartão */}
-                <div className={cardClasses({ className: 'overflow-hidden md:hidden' })}>
-                  {group.items.map((item, i) => (
-                    <SetupRow key={`${item.name}-${i}`} item={item} last={i === group.items.length - 1} />
-                  ))}
-                </div>
-
-                {/* Desktop: grade de 2 colunas */}
-                <div className="hidden grid-cols-2 gap-3 md:grid">
-                  {group.items.map((item, i) => (
-                    <SetupCard key={`${item.name}-${i}`} item={item} />
-                  ))}
-                </div>
+                <SetupGroup items={group.items} />
               </section>
             ))}
           </div>
@@ -85,6 +89,60 @@ export default function SetupContent({ items, categories }: SetupContentProps) {
         )}
       </div>
     </Layout>
+  );
+}
+
+// Grupo: software vira chip; hardware e itens sem kind seguem lista (mobile) / grade (desktop).
+function SetupGroup({ items }: { items: SetupItem[] }) {
+  const listItems = items.filter(item => item.kind !== 'software');
+  const softwareItems = items.filter(item => item.kind === 'software');
+
+  return (
+    <div className="flex flex-col gap-3">
+      {listItems.length > 0 && (
+        <>
+          {/* Mobile: lista única dentro de um cartão */}
+          <div className={cardClasses({ className: 'overflow-hidden md:hidden' })}>
+            {listItems.map((item, i) => (
+              <SetupRow key={`${item.name}-${i}`} item={item} last={i === listItems.length - 1} />
+            ))}
+          </div>
+
+          {/* Desktop: grade de 2 colunas */}
+          <div className="hidden grid-cols-2 gap-3 md:grid">
+            {listItems.map((item, i) => (
+              <SetupCard key={`${item.name}-${i}`} item={item} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {softwareItems.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {softwareItems.map((item, i) => (
+            <SoftwareChip key={`${item.name}-${i}`} item={item} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SoftwareChip({ item }: { item: SetupItem }) {
+  const classes = 'inline-flex min-h-[44px] items-center rounded-[11px] border border-rc-border-card bg-rc-surface px-3.5 py-[11px] text-[14px] leading-tight text-rc-ink md:min-h-0';
+  const title = item.detail || item.description || undefined;
+
+  if (item.url) {
+    return (
+      <a href={item.url} target="_blank" rel={linkRel(item)} title={title} className={cn(classes, 'transition-colors duration-150 hover:border-rc-border-hover')}>
+        {item.name}
+      </a>
+    );
+  }
+  return (
+    <span title={title} className={classes}>
+      {item.name}
+    </span>
   );
 }
 
@@ -130,8 +188,8 @@ function SetupRow({ item, last }: { item: SetupItem; last: boolean }) {
       <RcImage src={item.image} alt={item.name} ratio="1/1" className="w-[42px] shrink-0 rounded-[10px]" />
       <div className="min-w-0 flex-1">
         <div className="text-[15px] font-medium leading-[1.3] text-rc-ink">{item.name}</div>
-        {item.description && (
-          <div className="mt-[3px] truncate font-mono text-[10.5px] text-rc-ink-5">{item.description}</div>
+        {(item.detail || item.description) && (
+          <div className="mt-[3px] truncate font-mono text-[10.5px] text-rc-ink-5">{item.detail || item.description}</div>
         )}
       </div>
       {item.url && <ChevronRight className="h-4 w-4 shrink-0 text-rc-ink-6" aria-hidden="true" />}
@@ -141,7 +199,7 @@ function SetupRow({ item, last }: { item: SetupItem; last: boolean }) {
 
   if (item.url) {
     return (
-      <a href={item.url} target="_blank" rel="noopener noreferrer" className={cn(classes, 'transition-colors duration-150 active:bg-rc-surface-2')}>
+      <a href={item.url} target="_blank" rel={linkRel(item)} className={cn(classes, 'transition-colors duration-150 active:bg-rc-surface-2')}>
         {content}
       </a>
     );
@@ -155,6 +213,7 @@ function SetupCard({ item }: { item: SetupItem }) {
       <RcImage src={item.image} alt={item.name} ratio="1/1" className="w-16 rounded-lg" />
       <div className="min-w-0">
         <div className="text-base font-semibold tracking-[-.015em] text-rc-ink">{item.name}</div>
+        {item.detail && <div className="mt-1 font-mono text-[11px] text-rc-ink-5">{item.detail}</div>}
         {item.description && <p className="mt-[5px] line-clamp-3 text-[13.5px] leading-[1.5] text-rc-ink-4">{item.description}</p>}
       </div>
       {item.url ? (
@@ -168,7 +227,7 @@ function SetupCard({ item }: { item: SetupItem }) {
 
   if (item.url) {
     return (
-      <a href={item.url} target="_blank" rel="noopener noreferrer" className={cardClasses({ interactive: true, className: classes })}>
+      <a href={item.url} target="_blank" rel={linkRel(item)} className={cardClasses({ interactive: true, className: classes })}>
         {content}
       </a>
     );
