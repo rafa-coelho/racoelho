@@ -16,7 +16,7 @@ export const communityStatsService = {
   // Lê o cache; nunca consulta o Discord em tempo de request.
   async get(): Promise<CommunityStats | null> {
     return getCached(
-      `${COLLECTION}:latest`,
+      `pb:${COLLECTION}:latest`,
       async () => {
         try {
           const pb = await getPocketBaseServer();

@@ -17,7 +17,7 @@ function map(rec: any): SiteStatus {
 export const siteStatusService = {
   async get(): Promise<SiteStatus | null> {
     return getCached(
-      `${COLLECTION}:single`,
+      `pb:${COLLECTION}:single`,
       async () => {
         try {
           const pb = await getPocketBaseServer();

@@ -35,7 +35,7 @@ export function mapMediaKit(rec: any): MediaKit {
 export const mediakitService = {
   async get(): Promise<MediaKit | null> {
     return getCached(
-      `${COLLECTION}:single`,
+      `pb:${COLLECTION}:single`,
       async () => {
         try {
           const pb = await getPocketBaseServer();
