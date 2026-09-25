@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/services/content.service';
 import { isAdmin } from '@/lib/pocketbase-server';
+import { matchesSearch } from '@/components/posts/search';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -22,11 +23,8 @@ export async function GET(request: NextRequest) {
     let filteredPosts = allPosts;
 
     if (search) {
-      const searchLower = search.toLowerCase();
-      filteredPosts = filteredPosts.filter(post =>
-        post.title.toLowerCase().includes(searchLower) ||
-        post.excerpt.toLowerCase().includes(searchLower)
-      );
+      // Mesma regra da busca da página (sem acento/caixa, título + resumo + tags)
+      filteredPosts = filteredPosts.filter(post => matchesSearch(post, search));
     }
 
     if (tag) {

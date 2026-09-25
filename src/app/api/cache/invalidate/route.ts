@@ -19,6 +19,10 @@ const VALID_COLLECTIONS = [
   'assets',
   'ads',
   'feature_flags',
+  'site_status',
+  'mediakit',
+  'community_stats',
+  'challenge_submissions',
 ];
 
 // Mapeamento entre coleções do admin e chaves de cache reais
@@ -33,6 +37,10 @@ const COLLECTION_TO_CACHE_KEY: Record<string, string[]> = {
   'projects': ['projects'],
   'sales_pages': ['sales_pages'],
   'feature_flags': ['feature_flags'],
+  'site_status': ['site_status'],
+  'mediakit': ['mediakit'],
+  'community_stats': ['community_stats'],
+  'challenge_submissions': ['challenge_submissions'],
 };
 
 export async function POST(request: NextRequest) {
@@ -67,6 +75,10 @@ export async function POST(request: NextRequest) {
     const cacheKeys = COLLECTION_TO_CACHE_KEY[collection] || [collection];
     for (const cacheKey of cacheKeys) {
       await invalidateCollection(cacheKey);
+    }
+
+    if (collection === 'feature_flags') {
+      revalidatePath('/mediakit');
     }
 
     // Invalidar cache do Next.js (ISR/estático)
@@ -123,6 +135,13 @@ export async function POST(request: NextRequest) {
       // Revalidar home e links (que usam socialLinks)
       revalidatePath('/');
       revalidatePath('/links');
+    } else if (collection === 'mediakit') {
+      // /mediakit é ISR (1h): revalida na hora ao salvar no admin
+      revalidatePath('/mediakit');
+    } else if (collection === 'site_status') {
+      revalidatePath('/');
+    } else if (collection === 'community_stats') {
+      revalidatePath('/comunidade');
     } else if (collection === 'setup') {
       // Revalidar página de setup e home
       revalidatePath('/setup');

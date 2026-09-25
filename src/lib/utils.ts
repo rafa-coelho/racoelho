@@ -1,7 +1,23 @@
 
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
 import { BLOG_NAME, DESCRIPTION } from "./config/constants";
+
+// Ensina o tailwind-merge que text-rc-hero, text-rc-eyebrow… são tamanhos de fonte
+// (senão ele os trata como cor e descarta ao combinar com text-rc-ink etc.).
+const RC_FONT_SIZES = [
+  'rc-hero', 'rc-h1', 'rc-h1-article', 'rc-h2-article', 'rc-h2-card', 'rc-h2', 'rc-card-title', 'rc-lead',
+  'rc-article', 'rc-body', 'rc-small', 'rc-meta', 'rc-eyebrow',
+  'rc-hero-m', 'rc-h1-m', 'rc-h1-article-m', 'rc-h2-m', 'rc-article-m',
+];
+
+const twMerge = extendTailwindMerge({
+  extend: {
+    classGroups: {
+      'font-size': [{ text: RC_FONT_SIZES }],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

@@ -2,6 +2,7 @@
 import { CheckCircle } from 'lucide-react';
 import type { SalesPage, SalesPageBlock } from '@/lib/api';
 import { useState } from 'react';
+import { buttonClasses, cardClasses } from '@/components/rc';
 
 interface SaleContentProps {
   salesPage: SalesPage;
@@ -23,7 +24,7 @@ const SaleContent = ({ salesPage }: SaleContentProps) => {
           href={salesPage.paymentUrl || salesPage.ctaUrl}
           target={salesPage.paymentUrl.startsWith("#") ? '' : '_target'}
           rel="noopener noreferrer"
-          className="inline-flex items-center justify-center px-8 py-4 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 text-lg font-medium transition-transform hover:scale-105"
+          className={buttonClasses({ className: 'h-12 px-8 text-base md:h-[52px]' })}
         >
           {salesPage.ctaText}
         </a>
@@ -38,10 +39,10 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
     case 'header':
       return (
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">{block.title}</h1>
-          {block.content && <p className="text-xl text-muted-foreground">{block.content}</p>}
+          <h1 className="mb-6 text-rc-h1-m font-semibold text-rc-ink md:text-rc-h1">{block.title}</h1>
+          {block.content && <p className="text-[16.5px] leading-[1.6] text-rc-ink-3 md:text-rc-lead">{block.content}</p>}
           {block.image && (
-            <div className="mt-8 rounded-lg overflow-hidden">
+            <div className="mt-8 overflow-hidden rounded-rc-card-lg border border-rc-border-card">
               <img
                 src={block.image}
                 alt={block.title}
@@ -54,34 +55,34 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
       
     case 'text':
       return (
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          {block.title && <h2 className="text-3xl font-bold mb-6">{block.title}</h2>}
+        <div className="prose prose-lg prose-invert max-w-none">
+          {block.title && <h2 className="mb-6 text-rc-h2-article font-semibold text-rc-ink">{block.title}</h2>}
           {block.content && <div dangerouslySetInnerHTML={{ __html: block.content }} />}
         </div>
       );
       
     case 'image':
       return (
-        <div className="rounded-lg overflow-hidden">
+        <div className="overflow-hidden rounded-rc-card-lg border border-rc-border-card">
           <img
             src={block.image}
             alt={block.title || "Image"}
             className="w-full h-auto"
           />
           {block.title && (
-            <p className="text-sm text-muted-foreground text-center mt-2">{block.title}</p>
+            <p className="mt-2 text-center font-mono text-rc-meta text-rc-ink-5">{block.title}</p>
           )}
         </div>
       );
       
     case 'pricing':
       return (
-        <div className="glass-panel rounded-xl p-8 text-center">
-          {block.title && <h2 className="text-3xl font-bold mb-4">{block.title}</h2>}
-          {block.content && <p className="text-muted-foreground mb-6">{block.content}</p>}
+        <div className={cardClasses({ tone: 'blue', size: 'lg', className: 'p-6 text-center md:p-8' })}>
+          {block.title && <h2 className="mb-4 text-rc-h2-article font-semibold text-rc-ink">{block.title}</h2>}
+          {block.content && <p className="mb-6 text-rc-body text-rc-ink-3">{block.content}</p>}
           {block.price && (
             <div className="mb-6">
-              <span className="text-4xl font-bold">{block.price}</span>
+              <span className="text-4xl font-semibold tracking-[-.03em] text-rc-ink">{block.price}</span>
             </div>
           )}
         </div>
@@ -90,17 +91,17 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
     case 'features':
       return (
         <div>
-          {block.title && <h2 className="text-3xl font-bold mb-8 text-center">{block.title}</h2>}
+          {block.title && <h2 className="mb-8 text-center text-rc-h2-article font-semibold text-rc-ink">{block.title}</h2>}
           {block.items && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {block.items.map((item, idx) => (
                 <div key={idx} className="flex space-x-4">
-                  <div className="flex-shrink-0 text-primary">
-                    <CheckCircle size={24} />
+                  <div className="flex-shrink-0 text-rc-green">
+                    <CheckCircle size={22} strokeWidth={1.75} />
                   </div>
                   <div>
-                    <h3 className="font-semibold mb-1">{item.title}</h3>
-                    <p className="text-muted-foreground">{item.description}</p>
+                    <h3 className="mb-1 font-semibold text-rc-ink">{item.title}</h3>
+                    <p className="text-rc-body text-rc-ink-4">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -112,13 +113,13 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
     case 'testimonials':
       return (
         <div>
-          {block.title && <h2 className="text-3xl font-bold mb-8 text-center">{block.title}</h2>}
+          {block.title && <h2 className="mb-8 text-center text-rc-h2-article font-semibold text-rc-ink">{block.title}</h2>}
           {block.items && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {block.items.map((item, idx) => (
-                <div key={idx} className="glass-panel rounded-lg p-6">
-                  <p className="italic mb-4">{item.description}</p>
-                  <div className="font-semibold">{item.title}</div>
+                <div key={idx} className={cardClasses({ className: 'p-6' })}>
+                  <p className="mb-4 text-rc-body text-rc-ink-2">{item.description}</p>
+                  <div className="font-mono text-[12px] text-rc-ink-4">{item.title}</div>
                 </div>
               ))}
             </div>
@@ -128,22 +129,22 @@ const renderSalesPageBlock = (block: SalesPageBlock, index: number) => {
       
     case 'cta':
       return (
-        <div className="glass-panel rounded-xl p-8 text-center">
-          {block.title && <h2 className="text-2xl font-bold mb-4">{block.title}</h2>}
-          {block.content && <p className="text-muted-foreground mb-6">{block.content}</p>}
+        <div className={cardClasses({ tone: 'blue', size: 'lg', className: 'p-6 text-center md:p-8' })}>
+          {block.title && <h2 className="mb-4 text-rc-h2 font-semibold text-rc-ink">{block.title}</h2>}
+          {block.content && <p className="mb-6 text-rc-body text-rc-ink-3">{block.content}</p>}
         </div>
       );
       
     case 'faq':
       return (
         <div>
-          {block.title && <h2 className="text-3xl font-bold mb-8 text-center">{block.title}</h2>}
+          {block.title && <h2 className="mb-8 text-center text-rc-h2-article font-semibold text-rc-ink">{block.title}</h2>}
           {block.items && (
             <div className="space-y-6">
               {block.items.map((item, idx) => (
-                <div key={idx} className="border-b border-border pb-6">
-                  <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-                  <p className="text-muted-foreground">{item.description}</p>
+                <div key={idx} className="border-b border-rc-border pb-6">
+                  <h3 className="mb-2 text-lg font-semibold text-rc-ink">{item.title}</h3>
+                  <p className="text-rc-body text-rc-ink-4">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -202,21 +203,21 @@ const FormBlock = ({ title, content, apiUrl, fields, submitText, successMessage 
   };
 
   return (
-    <div className="glass-panel rounded-xl p-8 max-w-2xl mx-auto" id="form-block">
-      {title && <h2 className="text-3xl font-bold mb-4 text-center">{title}</h2>}
-      {content && <div className="prose prose-lg dark:prose-invert max-w-none mb-6" dangerouslySetInnerHTML={{ __html: content }} />}
+    <div className={cardClasses({ tone: 'blue', size: 'lg', className: 'mx-auto max-w-2xl p-6 md:p-8' })} id="form-block">
+      {title && <h2 className="mb-4 text-center text-rc-h2-article font-semibold text-rc-ink">{title}</h2>}
+      {content && <div className="prose prose-lg prose-invert mb-6 max-w-none" dangerouslySetInnerHTML={{ __html: content }} />}
       
       {isSuccess ? (
         <div className="text-center py-8">
-          <div className="text-green-500 text-5xl mb-4">✓</div>
-          <h3 className="text-2xl font-bold mb-2">Inscrição Confirmada!</h3>
-          <p className="text-muted-foreground">{successMessage || 'Obrigado! Você receberá o ebook em breve.'}</p>
+          <CheckCircle className="mx-auto mb-4 h-10 w-10 text-rc-green" strokeWidth={1.75} aria-hidden="true" />
+          <h3 className="mb-2 text-rc-h2 font-semibold text-rc-ink">Inscrição Confirmada!</h3>
+          <p className="text-rc-body text-rc-ink-4">{successMessage || 'Obrigado! Você receberá o ebook em breve.'}</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           {fields?.map((field, index) => (
             <div key={index} className="space-y-2">
-              <label htmlFor={field.name} className="block text-sm font-medium">
+              <label htmlFor={field.name} className="block text-sm font-medium text-rc-ink-2">
                 {field.label}
               </label>
               <input
@@ -227,19 +228,19 @@ const FormBlock = ({ title, content, apiUrl, fields, submitText, successMessage 
                 onChange={handleChange}
                 required={field.required !== false}
                 placeholder={field.placeholder}
-                className="w-full px-4 py-2 rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                className="h-12 w-full rounded-rc-control border border-rc-border-strong bg-rc-input px-3.5 text-[15px] text-rc-ink outline-none transition-colors duration-150 placeholder:text-rc-ink-5 focus:border-rc-blue-link"
               />
             </div>
           ))}
           
           {error && (
-            <div className="text-red-500 text-sm">{error}</div>
+            <div role="alert" className="text-sm text-rc-amber">{error}</div>
           )}
           
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className={buttonClasses({ className: 'h-12 w-full' })}
           >
             {isSubmitting ? 'Enviando...' : submitText || 'Enviar'}
           </button>

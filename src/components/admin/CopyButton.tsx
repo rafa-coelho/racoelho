@@ -42,11 +42,12 @@ export default function CopyButton({ value, label, className }: CopyButtonProps)
       type="button"
       onClick={copy}
       title={copied ? "Copiado!" : `Copiar${label ? ` ${label}` : ""}`}
+      aria-label={copied ? "Copiado" : `Copiar${label ? ` ${label}` : ""}`}
       className={cn(
         "inline-flex items-center justify-center gap-1 rounded-md border transition-colors shrink-0",
         copied
-          ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
-          : "border-white/10 text-muted-foreground hover:text-foreground hover:bg-white/5",
+          ? "border-rc-green-border-strong bg-rc-green-surface text-rc-green"
+          : "border-rc-border-chip text-rc-ink-5 hover:bg-rc-nav-hover hover:text-rc-ink",
         className
       )}
     >

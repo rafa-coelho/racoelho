@@ -8,6 +8,7 @@ import { toast, Toaster } from 'sonner';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';
 import { Loader2, CheckCircle2, Send } from 'lucide-react';
+import { buttonClasses, cardClasses } from '@/components/rc';
 
 const MAX_CV_BYTES = 10 * 1024 * 1024; // 10 MB
 const ACCEPTED_CV = [
@@ -48,10 +49,11 @@ interface ReferralFormProps {
   referralId: string;
 }
 
-const labelCls = 'block text-sm font-bold text-foreground mb-2';
+const labelCls = 'mb-2 block text-[13.5px] font-medium text-rc-ink-2';
 const inputCls =
-  'w-full px-4 py-3 rounded-xl border-2 border-white/10 bg-card/50 backdrop-blur-sm focus:outline-none focus:border-primary transition-all text-base';
-const errorCls = 'mt-1.5 text-sm text-red-400';
+  'h-12 w-full rounded-[11px] border border-rc-border-strong bg-rc-input px-3.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link md:h-[50px] md:rounded-[10px]';
+const errorCls = 'mt-1.5 text-[13px] text-rc-red';
+const requiredMark = <span className="text-rc-blue-link">*</span>;
 
 export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: ReferralFormProps) {
   const { theme = 'system' } = useTheme();
@@ -96,14 +98,14 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
 
   if (submitted) {
     return (
-      <div className="card-modern p-8 sm:p-10 text-center border-2 border-primary/30">
-        <CheckCircle2 size={48} className="mx-auto mb-4 text-primary" />
-        <h3 className="text-2xl font-bold mb-2">Indicação recebida!</h3>
-        <p className="text-muted-foreground mb-6">
-          Obrigado por indicar alguém para <strong>{vagaTitle}</strong>. Vou revisar e levar a
+      <div role="status" className={cardClasses({ tone: 'green', size: 'lg', className: 'p-6 text-center md:p-8' })}>
+        <CheckCircle2 size={36} className="mx-auto mb-3 text-rc-green" aria-hidden="true" />
+        <h3 className="text-rc-h2-m font-semibold text-rc-ink md:text-rc-h2">Indicação recebida!</h3>
+        <p className="mb-5 mt-2 text-rc-body text-rc-ink-3">
+          Obrigado por indicar alguém para <strong className="font-medium text-rc-ink">{vagaTitle}</strong>. Vou revisar e levar a
           indicação adiante pessoalmente.
         </p>
-        <button onClick={() => setSubmitted(false)} className="btn-secondary">
+        <button type="button" onClick={() => setSubmitted(false)} className={buttonClasses({ variant: 'secondary', size: 'lg' })}>
           Indicar outra pessoa
         </button>
         <Toaster theme={theme as any} richColors position="bottom-center" />
@@ -112,11 +114,11 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="card-modern p-5 sm:p-6 space-y-5">
+    <form onSubmit={handleSubmit(onSubmit)} className={cardClasses({ tone: 'blue', size: 'lg', className: 'space-y-5 p-4 md:p-6' })}>
       {/* Nome */}
       <div>
         <label htmlFor="candidateName" className={labelCls}>
-          Nome completo do candidato <span className="text-primary">*</span>
+          Nome completo do candidato {requiredMark}
         </label>
         <input id="candidateName" type="text" className={inputCls} {...register('candidateName')} />
         {errors.candidateName && <p className={errorCls}>{errors.candidateName.message}</p>}
@@ -125,7 +127,7 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
       {/* Email */}
       <div>
         <label htmlFor="candidateEmail" className={labelCls}>
-          E-mail do candidato <span className="text-primary">*</span>
+          E-mail do candidato {requiredMark}
         </label>
         <input
           id="candidateEmail"
@@ -139,7 +141,7 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
       {/* LinkedIn */}
       <div>
         <label htmlFor="linkedinUrl" className={labelCls}>
-          LinkedIn <span className="text-primary">*</span>
+          LinkedIn {requiredMark}
         </label>
         <input
           id="linkedinUrl"
@@ -162,11 +164,11 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
           accept=".pdf,.doc,.docx"
           className={cn(
             inputCls,
-            'file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white file:font-medium file:cursor-pointer cursor-pointer py-2.5'
+            'h-auto min-h-12 cursor-pointer py-2 text-[14px] text-rc-ink-3 file:mr-3 file:h-9 file:cursor-pointer file:rounded-[9px] file:border file:border-rc-border-strong file:bg-rc-surface-3 file:px-3.5 file:text-[13.5px] file:font-medium file:text-rc-ink md:min-h-[50px]'
           )}
           {...register('cv')}
         />
-        <p className="mt-1.5 text-xs text-muted-foreground">
+        <p className="mt-1.5 font-mono text-rc-meta text-rc-ink-5">
           PDF ou documento Word, até 10 MB. Opcional.
         </p>
         {errors.cv && <p className={errorCls}>{errors.cv.message as string}</p>}
@@ -182,15 +184,15 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
 
       {/* Consentimento */}
       <div>
-        <label className="flex items-start gap-3 cursor-pointer">
+        <label className="flex min-h-11 cursor-pointer items-start gap-3">
           <input
             type="checkbox"
-            className="mt-1 w-5 h-5 rounded border-2 border-primary/50 accent-primary cursor-pointer"
+            className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded border border-rc-border-strong accent-rc-blue"
             {...register('consent')}
           />
-          <span className="text-sm text-foreground">
+          <span className="text-[14px] leading-[1.55] text-rc-ink-3">
             Confirmo que tenho consentimento da pessoa indicada para compartilhar seus dados nesta
-            indicação. <span className="text-primary">*</span>
+            indicação. {requiredMark}
           </span>
         </label>
         {errors.consent && <p className={errorCls}>{errors.consent.message as string}</p>}
@@ -199,7 +201,7 @@ export default function ReferralForm({ vagaSlug, vagaTitle, referralId }: Referr
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+        className={buttonClasses({ size: 'lg', className: 'w-full md:h-[50px]' })}
       >
         {isSubmitting ? (
           <>

@@ -78,23 +78,23 @@ export default function NewAdPage() {
 
     return (
         <div className="container mx-auto px-4 py-10">
-            <div className="card-modern p-8 max-w-3xl mx-auto">
-                <h1 className="text-2xl font-semibold mb-6">Novo Anúncio</h1>
+            <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8 max-w-3xl mx-auto">
+                <h1 className="mb-6 text-[24px] font-semibold tracking-[-.02em] text-rc-ink md:text-[28px]">Novo Anúncio</h1>
 
                 <div className="space-y-6">
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Título *</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Título *</label>
                         <input
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40"
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
                             value={title}
                             onChange={e => setTitle(e.target.value)}
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Status *</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Status *</label>
                         <select
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3"
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
                             value={status}
                             onChange={e => setStatus(e.target.value as any)}
                         >
@@ -106,7 +106,7 @@ export default function NewAdPage() {
                     </div>
 
                     <div>
-                        <Label className="text-sm font-medium text-muted-foreground mb-3 block">Targets *</Label>
+                        <Label className="mb-3 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Targets *</Label>
                         <div className="flex gap-6">
                             {['posts', 'challenges'].map(t => (
                                 <div key={t} className="flex items-center space-x-2">
@@ -119,7 +119,7 @@ export default function NewAdPage() {
                                     />
                                     <Label
                                         htmlFor={`target-${t}`}
-                                        className="text-sm font-normal cursor-pointer capitalize"
+                                        className="text-[14.5px] text-rc-ink-2 cursor-pointer capitalize"
                                     >
                                         {t}
                                     </Label>
@@ -129,9 +129,9 @@ export default function NewAdPage() {
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Prioridade</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Prioridade</label>
                         <input
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3"
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
                             type="number"
                             value={priority}
                             onChange={e => setPriority(parseInt(e.target.value || '0', 10))}
@@ -139,17 +139,17 @@ export default function NewAdPage() {
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Janela de veiculação</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Janela de veiculação</label>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" type="datetime-local" value={startAt} onChange={e => setStartAt(e.target.value)} />
-                            <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" type="datetime-local" value={endAt} onChange={e => setEndAt(e.target.value)} />
+                            <input className="min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" type="datetime-local" value={startAt} onChange={e => setStartAt(e.target.value)} />
+                            <input className="min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" type="datetime-local" value={endAt} onChange={e => setEndAt(e.target.value)} />
                         </div>
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">URL de Clique *</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">URL de Clique *</label>
                         <input
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3"
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
                             placeholder="https://..."
                             value={clickUrl}
                             onChange={e => setClickUrl(e.target.value)}
@@ -157,20 +157,20 @@ export default function NewAdPage() {
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">UTM (opcional)</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">UTM (opcional)</label>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_source" value={utmSource} onChange={e => setUtmSource(e.target.value)} />
-                            <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_campaign" value={utmCampaign} onChange={e => setUtmCampaign(e.target.value)} />
-                            <input className="rounded-md bg-white/5 border border-white/10 px-4 py-3" placeholder="utm_medium" value={utmMedium} onChange={e => setUtmMedium(e.target.value)} />
+                            <input className="min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" placeholder="utm_source" value={utmSource} onChange={e => setUtmSource(e.target.value)} />
+                            <input className="min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" placeholder="utm_campaign" value={utmCampaign} onChange={e => setUtmCampaign(e.target.value)} />
+                            <input className="min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" placeholder="utm_medium" value={utmMedium} onChange={e => setUtmMedium(e.target.value)} />
                         </div>
                     </div>
 
                     <div className="space-y-6">
                         <div>
-                            <h3 className="text-sm font-semibold text-foreground mb-4">Criativos (upload um ou mais formatos)</h3>
+                            <h3 className="mb-4 font-mono text-[11.5px] uppercase tracking-[.1em] text-rc-ink-3">Criativos (upload um ou mais formatos)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Leaderboard (728x90 / 970x90)</h4>
+                                    <h4 className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Leaderboard (728x90 / 970x90)</h4>
                                     <ImageUpload
                                         image={creativeLeaderboard}
                                         setImage={setCreativeLeaderboard}
@@ -178,7 +178,7 @@ export default function NewAdPage() {
                                     />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Rectangle (300x250 / 336x280)</h4>
+                                    <h4 className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Rectangle (300x250 / 336x280)</h4>
                                     <ImageUpload
                                         image={creativeRectangle}
                                         setImage={setCreativeRectangle}
@@ -186,7 +186,7 @@ export default function NewAdPage() {
                                     />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Skyscraper (160x600 / 300x600)</h4>
+                                    <h4 className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Skyscraper (160x600 / 300x600)</h4>
                                     <ImageUpload
                                         image={creativeSkyscraper}
                                         setImage={setCreativeSkyscraper}
@@ -194,7 +194,7 @@ export default function NewAdPage() {
                                     />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Square (200x200 / 250x250)</h4>
+                                    <h4 className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Square (200x200 / 250x250)</h4>
                                     <ImageUpload
                                         image={creativeSquare}
                                         setImage={setCreativeSquare}
@@ -202,7 +202,7 @@ export default function NewAdPage() {
                                     />
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-medium text-muted-foreground mb-2">Mobile Banner (320x50 / 320x100)</h4>
+                                    <h4 className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Mobile Banner (320x50 / 320x100)</h4>
                                     <ImageUpload
                                         image={creativeMobileBanner}
                                         setImage={setCreativeMobileBanner}
@@ -213,11 +213,11 @@ export default function NewAdPage() {
                         </div>
                     </div>
 
-                    <div className="flex gap-4 pt-4 border-t border-white/10">
-                        <button onClick={() => history.back()} className="flex-1 px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5">
+                    <div className="flex gap-3 pt-5 border-t border-rc-border">
+                        <button onClick={() => history.back()} className="flex-1 min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover">
                             Cancelar
                         </button>
-                        <button onClick={onSave} disabled={saving} className="flex-1 px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                        <button onClick={onSave} disabled={saving} className="flex-1 min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center justify-center gap-2 disabled:opacity-60">
                             {saving ? "Salvando..." : "Salvar"} <Check size={18} />
                         </button>
                     </div>

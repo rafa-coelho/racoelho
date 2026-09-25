@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
 import Layout from '@/components/Layout';
+import { Button, ButtonLink, Eyebrow } from '@/components/rc';
 
 export default function Error({
   error,
@@ -17,26 +17,20 @@ export default function Error({
 
   return (
     <Layout>
-      <div className="content-container py-8">
-        <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-6xl font-bold mb-4">500</h1>
-          <h2 className="text-2xl font-semibold mb-4">Erro interno do servidor</h2>
-          <p className="text-muted-foreground mb-8">
+      <div className="rc-container py-12 md:py-20">
+        <div className="mx-auto max-w-2xl text-center">
+          <Eyebrow className="text-rc-amber">Erro 500</Eyebrow>
+          <h1 className="mt-3 text-rc-h1-m font-semibold text-rc-ink md:text-rc-h1">Erro interno do servidor</h1>
+          <p className="mb-8 mt-3 text-rc-body text-rc-ink-3">
             Desculpe, algo deu errado. Por favor, tente novamente mais tarde.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={reset}
-              className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
+          <div className="flex flex-col justify-center gap-3 sm:flex-row">
+            <Button onClick={reset} className="h-12 md:h-auto">
               Tentar novamente
-            </button>
-            <Link
-              href="/"
-              className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
+            </Button>
+            <ButtonLink href="/" variant="secondary" className="h-12 md:h-auto">
               Voltar para a página inicial
-            </Link>
+            </ButtonLink>
           </div>
         </div>
       </div>

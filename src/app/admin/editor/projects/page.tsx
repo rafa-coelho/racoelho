@@ -1,161 +1,77 @@
 "use client";
-import Link from "next/link";
-import { pbList } from "@/lib/pocketbase";
-import { pbBulkDelete, pbBulkUpdate } from "@/lib/pb-bulk";
-import { DataTable } from "@/components/admin/DataTable";
-import { Plus, FolderGit2, Pencil, Calendar, ExternalLink, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/lib/utils";
+import { ExternalLink, SquarePen, Star } from "lucide-react";
+import {
+  AdminListPage,
+  CONTENT_BULK_ACTIONS,
+  CONTENT_STATUS_OPTIONS,
+  ContentStatusPill,
+  DataTable,
+  MonoMeta,
+} from "@/components/admin/DataTable";
+import { formatRelative, formatShortDate } from "@/components/rc";
 
 type ProjectRow = {
   id: string;
   title: string;
   slug: string;
   status?: 'draft' | 'published';
-  featured?: boolean;
   date?: string;
+  featured?: boolean;
+  updated?: string;
 };
+
+const CREATE = { href: "/admin/editor/projects/new", label: "Novo projeto" };
 
 export default function AdminProjectsPage() {
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Projetos</h1>
-          <p className="text-sm text-muted-foreground">Gerenciar projetos do portfólio</p>
-        </div>
-        <Link href="/admin/editor/projects/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} /> Novo Projeto
-        </Link>
-      </div>
-
+    <AdminListPage title="Projetos" description="Gerenciar projetos do portfólio." create={CREATE}>
       <DataTable<ProjectRow>
+        collection="projects"
+        cacheCollection="projects"
         columns={[
           {
             id: "title",
             header: "Título",
+            sortable: true,
             cell: (row) => (
-              <div>
-                <div className="font-medium flex items-center gap-2">
-                  {row.title}
-                  {row.featured && <Star className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500" />}
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 text-[15.5px] font-medium tracking-[-.012em] text-rc-ink">
+                  <span className="truncate">{row.title}</span>
+                  {row.featured && <Star className="h-3.5 w-3.5 shrink-0 fill-current text-rc-amber" aria-label="Destaque" />}
                 </div>
-                <div className="text-xs text-muted-foreground">/{row.slug}</div>
+                <div className="mt-1 truncate font-mono text-[11px] text-rc-ink-6">/{row.slug}</div>
               </div>
             ),
-            sortable: true,
           },
-          {
-            id: "status",
-            header: "Status",
-            cell: (row) => (
-              <Badge variant={row.status === 'published' ? 'default' : 'secondary'} className="capitalize">
-                {row.status || 'draft'}
-              </Badge>
-            ),
-            sortable: true,
-          },
-          {
-            id: "date",
-            header: "Data",
-            cell: (row) => (
-              <div className="text-sm text-muted-foreground flex items-center gap-1">
-                <Calendar className="h-3 w-3" />
-                {row.date ? formatDate(row.date) : '-'}
-              </div>
-            ),
-            sortable: true,
-          },
-          {
-            id: "actions",
-            header: "Ações",
-            cell: (row) => (
-              <div className="flex items-center gap-1">
-                <Link href={`/admin/editor/projects/${row.id}`}>
-                  <Button variant="ghost" size="sm">
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <a
-                  href={`/projetos/${row.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex ml-1"
-                  title="Ver"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              </div>
-            ),
-            sortable: false,
-          },
+          { id: "status", header: "Status", sortable: true, width: "140px", cell: (row) => <ContentStatusPill status={row.status} /> },
+          { id: "date", header: "Data", sortable: true, width: "150px", cell: (row) => <MonoMeta>{formatShortDate(row.date) || "—"}</MonoMeta> },
         ]}
-        fetcher={async ({ page, perPage, filter, sort }) => {
-          const res = await pbList("projects", { page, perPage, filter, sort });
-          return {
-            items: res.items as unknown as ProjectRow[],
-            page: res.page,
-            perPage: res.perPage,
-            totalItems: res.totalItems,
-            totalPages: res.totalPages,
-          };
-        }}
+        rowActions={(row) => [
+          { label: "Editar", icon: SquarePen, href: `/admin/editor/projects/${row.id}` },
+          { label: "Abrir no site", icon: ExternalLink, href: `/projetos/${row.slug}`, external: true },
+        ]}
         bulkActions={[
-          {
-            label: "Excluir selecionados",
-            variant: "destructive",
-            action: async (selected) => {
-              await pbBulkDelete("projects", selected.map((s) => s.id));
-            },
-          },
-          {
-            label: "Publicar",
-            action: async (selected) => {
-              await pbBulkUpdate("projects", selected.map((s) => s.id), { status: "published" });
-            },
-          },
-          {
-            label: "Despublicar",
-            action: async (selected) => {
-              await pbBulkUpdate("projects", selected.map((s) => s.id), { status: "draft" });
-            },
-          },
-          {
-            label: "Marcar destaque",
-            action: async (selected) => {
-              await pbBulkUpdate("projects", selected.map((s) => s.id), { featured: true });
-            },
-          },
-          {
-            label: "Remover destaque",
-            action: async (selected) => {
-              await pbBulkUpdate("projects", selected.map((s) => s.id), { featured: false });
-            },
-          },
+          ...CONTENT_BULK_ACTIONS.slice(0, 2),
+          { id: "feature", label: "Marcar destaque", kind: "update", data: { featured: true } },
+          { id: "unfeature", label: "Remover destaque", kind: "update", data: { featured: false } },
+          ...CONTENT_BULK_ACTIONS.slice(2),
         ]}
         defaultSort="-date"
-        filtersSchema={{
-          q: {
-            placeholder: "Buscar por título ou slug...",
-            searchFields: ["title", "slug"],
-          },
-          status: {
-            placeholder: "Status",
-            options: [
-              { label: "Rascunho", value: "draft" },
-              { label: "Publicado", value: "published" },
-            ],
-          },
+        search={{ placeholder: "Buscar por título ou slug…", fields: ["title", "slug"] }}
+        statusOptions={CONTENT_STATUS_OPTIONS}
+        mobile={{
+          title: (row) => row.title,
+          status: (row) => <ContentStatusPill status={row.status} />,
+          meta: (row) =>
+            row.status === "published"
+              ? [formatShortDate(row.date) || "sem data"]
+              : [`editado ${formatRelative(row.updated)}`],
+          highlight: (row) => row.status !== "published",
         }}
-        getRowId={(row) => row.id}
-        emptyMessage="Nenhum projeto encontrado"
-        emptyAction={
-          <Link href="/admin/editor/projects/new" className="btn-primary mt-4 inline-flex">
-            Criar primeiro projeto
-          </Link>
-        }
+        rowLabel={(row) => row.title}
+        create={CREATE}
+        emptyMessage="Nenhum projeto ainda."
       />
-    </div>
+    </AdminListPage>
   );
 }

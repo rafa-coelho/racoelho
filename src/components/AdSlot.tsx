@@ -36,8 +36,9 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
     '300x600': { width: 300, height: 600 }
   }[size];
 
-  // Classes base para o container - mais discreto
-  const baseClasses = 'rounded-lg bg-card/30 backdrop-blur-sm border border-white/5';
+  // Slot de anúncio (rebranding): borda tracejada, fundo rc-ad, rótulo mono uppercase
+  const baseClasses = 'rounded-rc-card bg-rc-ad border border-dashed border-rc-border-strong';
+  const labelClasses = 'font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-ink-6';
 
   // track impressão para novo fluxo
   useEffect(() => {
@@ -52,12 +53,12 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
+          <p className={cn(labelClasses, 'mb-2')}>Publicidade</p>
           <div 
-            className="bg-secondary/30 rounded flex items-center justify-center animate-pulse"
+            className="bg-rc-surface-2 rounded-lg flex items-center justify-center animate-pulse"
             style={{ height: dimensions.height }}
           >
-            <p className="text-xs text-muted-foreground/40">Carregando...</p>
+            <p className="text-xs text-rc-ink-6">Carregando...</p>
           </div>
         </div>
       </div>
@@ -69,12 +70,12 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
+          <p className={cn(labelClasses, 'mb-2')}>Publicidade</p>
           <div 
-            className="bg-secondary/30 rounded flex items-center justify-center"
+            className="bg-rc-surface-2 rounded-lg flex items-center justify-center"
             style={{ height: dimensions.height }}
           >
-            <p className="text-xs text-muted-foreground/40">Ad {size}</p>
+            <p className="text-xs text-rc-ink-6">Ad {size}</p>
           </div>
         </div>
       </div>
@@ -91,7 +92,7 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
 
     return (
       <div className={cn(baseClasses, 'overflow-hidden', className)}>
-        <p className="text-[10px] text-muted-foreground/50 text-center pt-2 pb-1 uppercase tracking-wider">Publicidade</p>
+        <p className={cn(labelClasses, 'text-center pt-2 pb-1')}>Publicidade</p>
         <a
           href={ad.link}
           target="_blank"
@@ -121,15 +122,15 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
     return (
       <div className={cn(baseClasses, 'p-3', className)}>
         <div className="text-center">
-          <p className="text-[10px] text-muted-foreground/60 mb-2 uppercase tracking-wider">Publicidade</p>
+          <p className={cn(labelClasses, 'mb-2')}>Publicidade</p>
           <div
-            className="bg-secondary/30 rounded flex items-center justify-center"
+            className="bg-rc-surface-2 rounded-lg flex items-center justify-center"
             style={{ height: dimensions.height }}
           >
             {/* Google AdSense integration placeholder */}
             <div className="text-center">
-              <p className="text-xs text-muted-foreground/50 mb-1">Google Ads</p>
-              <p className="text-[10px] text-muted-foreground/40">{size}</p>
+              <p className="text-xs text-rc-ink-6 mb-1">Google Ads</p>
+              <p className="text-[10px] text-rc-ink-6">{size}</p>
             </div>
           </div>
         </div>
@@ -147,7 +148,7 @@ export default function AdSlot({ position, placement, size = '300x300', classNam
       const clickLabel = `${placement.adId}:${placement.slotType}`;
       return (
         <div className={cn(baseClasses, 'overflow-hidden', className)}>
-          <p className="text-[10px] text-muted-foreground/50 text-center pt-2 pb-1 uppercase tracking-wider">Publicidade</p>
+          <p className={cn(labelClasses, 'text-center pt-2 pb-1')}>Publicidade</p>
           <a
             href={placement.clickUrl}
             target="_blank"

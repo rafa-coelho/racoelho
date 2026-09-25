@@ -6,6 +6,11 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  // Staging nunca é indexado
+  async headers() {
+    if (process.env.NEXT_PUBLIC_SITE_ENV !== 'staging') return [];
+    return [{ source: '/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }] }];
+  },
   async redirects() {
     return [
       {

@@ -1,139 +1,83 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FileText, Code2, ShoppingCart, Image, Settings, Link as LinkIcon, Share2, ToggleLeft, LayoutDashboard, Folder, FolderGit2, ChevronDown, BarChart3, Briefcase } from "lucide-react";
+import { ChevronDown, ExternalLink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ADMIN_NAV_GROUPS, ADMIN_NAV_TOP, isNavActive, type AdminNavItem } from "./nav";
 
-interface NavItem {
-    title: string;
-    href: string;
-    icon: React.ElementType;
+function TopLink({ item, active, onNavigate }: { item: AdminNavItem; active: boolean; onNavigate?: () => void }) {
+    const Icon = item.icon;
+    return (
+        <Link
+            href={item.href}
+            onClick={onNavigate}
+            aria-current={active ? "page" : undefined}
+            className={cn(
+                "flex items-center gap-[11px] rounded-[9px] border px-3 py-2.5 text-[14.5px] transition-colors duration-150",
+                active
+                    ? "border-rc-border-hover bg-rc-blue-chip font-medium text-rc-ink"
+                    : "border-transparent text-rc-nav-ink hover:bg-rc-nav-hover hover:text-rc-ink",
+            )}
+        >
+            <Icon className={cn("h-4 w-4", active ? "text-rc-blue-link" : "text-rc-ink-6")} aria-hidden="true" />
+            {item.title}
+        </Link>
+    );
 }
-
-type NavSection = {
-    title: string;
-    items: NavItem[];
-};
-
-const navSections: NavSection[] = [
-    {
-        title: "Conteúdo",
-        items: [
-            { title: "Posts", href: "/admin/editor/posts", icon: FileText },
-            { title: "Desafios", href: "/admin/editor/challenges", icon: Code2 },
-            { title: "Projetos", href: "/admin/editor/projects", icon: FolderGit2 }
-        ]
-    },
-    {
-        title: "Mídia",
-        items: [
-            { title: "Asset Packs", href: "/admin/assets", icon: Folder },
-            { title: "Anúncios", href: "/admin/ads", icon: Image },
-            { title: "Páginas de Venda", href: "/admin/sales", icon: ShoppingCart }
-        ]
-    },
-    {
-        title: "Recrutamento",
-        items: [
-            { title: "Indicações", href: "/admin/referrals", icon: Briefcase }
-        ]
-    },
-    {
-        title: "Site",
-        items: [
-            { title: "Links do Setup", href: "/admin/setup", icon: Settings },
-            { title: "Links do Site", href: "/admin/links", icon: LinkIcon },
-            { title: "Links Sociais", href: "/admin/social", icon: Share2 },
-            { title: "Feature Flags", href: "/admin/feature-flags", icon: ToggleLeft }
-        ]
-    }
-];
 
 export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     const pathname = usePathname();
 
     return (
-        <aside className="h-full w-full bg-background px-4 py-6 overflow-y-auto">
-            <div className="mb-8">
-                <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary/60 to-primary/20 flex items-center justify-center mb-3">
-                    <span className="text-primary font-bold text-xl">A</span>
+        <aside className="flex h-full w-full flex-col gap-[22px] overflow-y-auto border-r border-rc-border bg-rc-bg-admin px-4 py-5">
+            {/* Marca */}
+            <div className="flex items-center gap-3 px-2 py-1">
+                <span className="grid h-[38px] w-[38px] place-items-center rounded-[11px] border border-rc-border-hover bg-rc-blue-logo text-base font-semibold text-rc-logo-ink" aria-hidden="true">
+                    A
+                </span>
+                <div>
+                    <div className="text-[15.5px] font-semibold tracking-[-.015em] text-rc-ink">Admin</div>
+                    <div className="mt-0.5 font-mono text-[10.5px] text-rc-ink-5">painel de controle</div>
                 </div>
-                <h2 className="text-lg font-semibold">Admin</h2>
-                <p className="text-xs text-muted-foreground">Painel de Controle</p>
             </div>
 
             {/* Dashboard e Analytics fora das categorias */}
-            <div className="mb-3 space-y-1">
-                <Link
-                    href="/admin"
-                    onClick={onNavigate}
-                    className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors group",
-                        pathname === '/admin'
-                            ? "bg-primary/10 text-primary font-medium"
-                            : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                    )}
-                >
-                    <LayoutDashboard className={cn(
-                        "w-5 h-5",
-                        pathname === '/admin' ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                    )} />
-                    <span className="text-sm">Dashboard</span>
-                </Link>
-                <Link
-                    href="/admin/analytics"
-                    onClick={onNavigate}
-                    className={cn(
-                        "flex items-center gap-3 px-3 py-2.5 rounded-md transition-colors group",
-                        pathname === '/admin/analytics'
-                            ? "bg-primary/10 text-primary font-medium"
-                            : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
-                    )}
-                >
-                    <BarChart3 className={cn(
-                        "w-5 h-5",
-                        pathname === '/admin/analytics' ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                    )} />
-                    <span className="text-sm">Analytics</span>
-                </Link>
+            <div className="flex flex-col gap-[3px]">
+                {ADMIN_NAV_TOP.map((item) => (
+                    <TopLink key={item.href} item={item} active={isNavActive(pathname, item.href)} onNavigate={onNavigate} />
+                ))}
             </div>
 
-            <nav className="space-y-2">
-                {navSections.map((section) => {
-                    const isSectionActive = section.items.some((it) => it.href === '/admin'
-                        ? pathname === '/admin'
-                        : pathname === it.href || pathname?.startsWith(it.href + '/'));
+            <nav aria-label="Seções do admin" className="flex flex-col gap-1.5">
+                {ADMIN_NAV_GROUPS.map((group) => {
+                    const groupActive = group.items.some((it) => isNavActive(pathname, it.href));
                     return (
-                        <Collapsible key={section.title} defaultOpen={isSectionActive} className="rounded-md border border-white/5 bg-white/[0.02]">
-                            <CollapsibleTrigger className="group w-full px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground hover:text-foreground flex items-center justify-between">
-                                <span>{section.title}</span>
-                                <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]:rotate-180 text-muted-foreground group-hover:text-foreground" />
+                        <Collapsible key={group.title} defaultOpen={groupActive} className="flex flex-col gap-1.5">
+                            <CollapsibleTrigger className="group flex w-full items-center justify-between rounded-[9px] border border-rc-border-card bg-rc-surface px-3 py-[9px] font-mono text-[10.5px] uppercase tracking-[.12em] text-rc-ink-4 transition-colors hover:border-rc-border-hover hover:text-rc-ink">
+                                <span>{group.title}</span>
+                                <ChevronDown className="h-3.5 w-3.5 text-rc-ink-6 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden="true" />
                             </CollapsibleTrigger>
                             <CollapsibleContent>
-                                <div className="space-y-1 mb-2 pt-1 pb-2 border-t border-white/5">
-                                    {section.items.map((item) => {
+                                <div className="flex flex-col gap-[3px] pb-1 pl-2">
+                                    {group.items.map((item) => {
                                         const Icon = item.icon;
-                                        const isActive = item.href === '/admin'
-                                            ? pathname === '/admin'
-                                            : pathname === item.href || pathname?.startsWith(item.href + '/');
+                                        const active = isNavActive(pathname, item.href);
                                         return (
                                             <Link
                                                 key={item.href}
                                                 href={item.href}
                                                 onClick={onNavigate}
+                                                aria-current={active ? "page" : undefined}
                                                 className={cn(
-                                                    "flex items-center gap-3 px-3 py-2.5 ml-1 mr-1 rounded-md transition-colors group",
-                                                    isActive
-                                                        ? "bg-primary/10 text-primary font-medium"
-                                                        : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                                                    "flex items-center gap-[11px] rounded-lg px-3 py-[9px] text-sm transition-colors duration-150",
+                                                    active
+                                                        ? "bg-rc-blue-chip font-medium text-rc-ink"
+                                                        : "text-rc-nav-ink hover:bg-rc-nav-hover hover:text-rc-ink",
                                                 )}
                                             >
-                                                <Icon className={cn(
-                                                    "w-5 h-5",
-                                                    isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                                                )} />
-                                                <span className="text-sm">{item.title}</span>
+                                                <Icon className={cn("h-4 w-4", active ? "text-rc-blue-link" : "text-rc-ink-6")} aria-hidden="true" />
+                                                {item.title}
                                             </Link>
                                         );
                                     })}
@@ -143,7 +87,17 @@ export default function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                     );
                 })}
             </nav>
+
+            <div className="mt-auto border-t border-rc-border pt-3.5">
+                <a
+                    href="/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-[10.5px] text-rc-ink-6 transition-colors hover:text-rc-blue-link"
+                >
+                    ver o site <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                </a>
+            </div>
         </aside>
     );
 }
-

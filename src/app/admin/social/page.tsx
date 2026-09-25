@@ -1,105 +1,73 @@
 "use client";
-import Link from "next/link";
-import { pbList } from "@/lib/pocketbase";
-import { pbBulkDelete } from "@/lib/pb-bulk";
-import { DataTable } from "@/components/admin/DataTable";
-import { Plus, Share2, Pencil } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, SquarePen } from "lucide-react";
+import {
+  AdminListPage,
+  DataTable,
+  MonoMeta,
+  VISIBILITY_BULK_ACTIONS,
+  VISIBILITY_STATUS_OPTIONS,
+  VisibilityPill,
+} from "@/components/admin/DataTable";
+import { SocialIcon } from "@/components/rc";
 
 type SocialLink = {
   id: string;
   name: string;
   url: string;
   icon: string;
+  order?: number;
+  visible?: boolean;
 };
+
+const CREATE = { href: "/admin/social/new", label: "Novo link social" };
 
 export default function SocialLinksPage() {
   return (
-    <div className="container mx-auto px-4 py-10">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold">Links Sociais</h1>
-          <p className="text-sm text-muted-foreground">Gerenciar links sociais do footer</p>
-        </div>
-        <Link href="/admin/social/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} /> Novo Link
-        </Link>
-      </div>
-
+    <AdminListPage title="Links Sociais" description="Gerenciar links sociais do footer." create={CREATE}>
       <DataTable<SocialLink>
+        collection="social_links"
+        cacheCollection="social_links"
         columns={[
+          { id: "order", header: "#", sortable: true, width: "72px", cell: (row) => <MonoMeta className="tabular-nums">{row.order ?? "—"}</MonoMeta> },
           {
             id: "name",
             header: "Nome",
-            cell: (row) => <div className="font-medium">{row.name}</div>,
             sortable: true,
+            cell: (row) => (
+              <div className="flex items-center gap-2.5 text-[15px] font-medium text-rc-ink">
+                <span className="text-rc-ink-4"><SocialIcon name={row.icon || row.name} /></span>
+                <span className="truncate">{row.name}</span>
+              </div>
+            ),
           },
           {
             id: "url",
             header: "URL",
             cell: (row) => (
-              <a href={row.url} target="_blank" rel="noopener" className="text-primary hover:underline text-sm truncate max-w-xs block">
+              <a href={row.url} target="_blank" rel="noopener noreferrer" className="block truncate font-mono text-xs text-rc-blue-link hover:underline">
                 {row.url}
               </a>
             ),
           },
-          {
-            id: "icon",
-            header: "Ícone",
-            cell: (row) => (
-              <div className="text-sm text-muted-foreground">
-                {row.icon || "—"}
-              </div>
-            ),
-          },
-          {
-            id: "actions",
-            header: "Ações",
-            cell: (row) => (
-              <Link href={`/admin/social/${row.id}`}>
-                <Button variant="ghost" size="sm">
-                  <Pencil className="h-4 w-4" />
-                </Button>
-              </Link>
-            ),
-            sortable: false,
-          },
+          { id: "visible", header: "Visível", sortable: true, width: "120px", cell: (row) => <VisibilityPill visible={row.visible} /> },
         ]}
-        fetcher={async ({ page, perPage, filter, sort }) => {
-          const res = await pbList("social_links", { page, perPage, filter, sort });
-          return {
-            items: res.items as unknown as SocialLink[],
-            page: res.page,
-            perPage: res.perPage,
-            totalItems: res.totalItems,
-            totalPages: res.totalPages,
-          };
-        }}
-        bulkActions={[
-          {
-            label: "Excluir selecionados",
-            variant: "destructive",
-            action: async (selected) => {
-              await pbBulkDelete("social_links", selected.map((s) => s.id));
-            },
-          },
+        rowActions={(row) => [
+          { label: "Editar", icon: SquarePen, href: `/admin/social/${row.id}` },
+          { label: "Abrir URL", icon: ExternalLink, href: row.url, external: true },
         ]}
+        bulkActions={VISIBILITY_BULK_ACTIONS}
         defaultSort="order"
-        filtersSchema={{
-          q: {
-            placeholder: "Buscar por nome...",
-            searchFields: ["name"],
-          },
+        search={{ placeholder: "Buscar por nome…", fields: ["name"] }}
+        statusOptions={VISIBILITY_STATUS_OPTIONS}
+        mobile={{
+          title: (row) => row.name,
+          status: (row) => <VisibilityPill visible={row.visible} />,
+          meta: (row) => [row.icon || "—", `#${row.order ?? "—"}`],
         }}
-        getRowId={(row) => row.id}
-        emptyMessage="Nenhum link social encontrado"
-        emptyAction={
-          <Link href="/admin/social/new" className="btn-primary mt-4 inline-flex">
-            Adicionar primeiro link
-          </Link>
-        }
+        rowLabel={(row) => row.name}
+        create={CREATE}
+        emptyMessage="Nenhum link social ainda."
       />
-    </div>
+    </AdminListPage>
   );
 }
-

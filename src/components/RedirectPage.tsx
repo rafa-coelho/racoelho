@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { GetSocialIcon } from '@/components/LinksContent';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Button, cardClasses } from '@/components/rc';
 import { analyticsService } from '@/lib/services/analytics.service';
 
 interface RedirectPageProps {
@@ -89,68 +87,54 @@ export default function RedirectPage({
 
   if (isLoading) {
     return (
-      <div className="container flex items-center justify-center min-h-[80vh]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle>Carregando...</CardTitle>
-            <CardDescription>
-              Preparando redirecionamento
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </CardContent>
-        </Card>
+      <div className="rc-container flex min-h-[80vh] items-center justify-center">
+        <div className={cardClasses({ size: 'lg', className: 'w-full max-w-md p-6 text-center md:p-8' })}>
+          <h1 className="text-rc-h2 font-semibold text-rc-ink">Carregando...</h1>
+          <p className="mt-1.5 text-rc-small text-rc-ink-4">Preparando redirecionamento</p>
+          <div className="mx-auto mt-6 h-10 w-10 animate-spin rounded-full border-2 border-rc-border-strong border-t-rc-blue-link" />
+        </div>
       </div>
     );
   }
 
   if (error || !redirectData) {
     return (
-      <div className="container flex items-center justify-center min-h-[80vh]">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CardTitle>Link não encontrado</CardTitle>
-            <CardDescription>
-              Este link pode ter expirado ou não existe.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="flex justify-center">
-            <Button onClick={() => window.location.href = '/'}>
-              Voltar para a página inicial
-            </Button>
-          </CardFooter>
-        </Card>
+      <div className="rc-container flex min-h-[80vh] items-center justify-center">
+        <div className={cardClasses({ size: 'lg', className: 'w-full max-w-md p-6 text-center md:p-8' })}>
+          <h1 className="text-rc-h2 font-semibold text-rc-ink">Link não encontrado</h1>
+          <p className="mt-1.5 text-rc-small text-rc-ink-4">Este link pode ter expirado ou não existe.</p>
+          <Button onClick={() => window.location.href = '/'} className="mt-6 h-12">
+            Voltar para a página inicial
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container flex items-center justify-center min-h-[80vh]">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-primary/10">
-              {GetSocialIcon(redirectData.type)}
-            </div>
-          </div>
-          <CardTitle>Redirecionando para {redirectData.type}</CardTitle>
-          <CardDescription>
-            Você será redirecionado em {countdown} segundos
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Progress value={progress} className="mb-4" />
-          <p className="text-sm text-muted-foreground text-center">
-            {redirectData.url}
-          </p>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <Button onClick={handleRedirectNow}>
-            Redirecionar agora
-          </Button>
-        </CardFooter>
-      </Card>
+    <div className="rc-container flex min-h-[80vh] items-center justify-center">
+      <div className={cardClasses({ size: 'lg', className: 'w-full max-w-md p-6 text-center md:p-8' })}>
+        <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-rc-card border border-rc-blue-border bg-rc-blue-chip text-xl text-rc-blue-link">
+          {GetSocialIcon(redirectData.type)}
+        </div>
+        <h1 className="text-rc-h2 font-semibold text-rc-ink">Redirecionando para {redirectData.type}</h1>
+        <p className="mt-1.5 text-rc-small text-rc-ink-4">
+          Você será redirecionado em {countdown} segundos
+        </p>
+        <div
+          className="mt-6 h-1.5 w-full overflow-hidden rounded-full bg-rc-surface-2"
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.max(0, Math.round(progress))}
+        >
+          <div className="h-full bg-rc-blue transition-[width] duration-1000 ease-linear" style={{ width: `${Math.max(0, progress)}%` }} />
+        </div>
+        <p className="mt-4 break-all font-mono text-rc-meta text-rc-ink-5">{redirectData.url}</p>
+        <Button onClick={handleRedirectNow} className="mt-6 h-12">
+          Redirecionar agora
+        </Button>
+      </div>
     </div>
   );
-} 
+}

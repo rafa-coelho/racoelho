@@ -6,6 +6,7 @@ import MarkdownEditor from "@/components/MarkdownEditor";
 import { calculateReadingTime, slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { CheckboxField } from "@/components/admin/fields";
 
 type Step = 'metadata' | 'content';
 
@@ -23,6 +24,7 @@ export default function EditPostPage() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [tags, setTags] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [featured, setFeatured] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cover, setCover] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -47,6 +49,7 @@ export default function EditPostPage() {
         setDate(dateValue);
         setTags(Array.isArray(rec.tags) ? rec.tags.join(', ') : '');
         setKeywords(rec.keywords || '');
+        setFeatured(!!rec.featured);
         
         // Carregar preview da imagem existente
         if (rec.coverImage) {
@@ -75,6 +78,7 @@ export default function EditPostPage() {
         date,
         tags: tagsArray,
         keywords,
+        featured,
         readingTime: rt
       };
 
@@ -106,8 +110,8 @@ export default function EditPostPage() {
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
-        <div className="animate-spin mx-auto mb-4 text-primary" style={{ width: 48, height: 48 }}>⏳</div>
-        <p className="text-muted-foreground">Carregando post...</p>
+        <div className="animate-spin mx-auto mb-4 text-rc-blue-link" style={{ width: 48, height: 48 }}>⏳</div>
+        <p className="text-rc-ink-4">Carregando post...</p>
       </div>
     </div>
   );
@@ -115,19 +119,19 @@ export default function EditPostPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header fixo com ações */}
-      <div className="sticky top-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-b border-white/5">
+      <div className="sticky top-0 z-10 -mx-4 px-4 py-4 bg-rc-bg border-b border-rc-border">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-primary/60 to-primary/20" />
+            <div className="h-8 w-8 rounded-[9px] border border-rc-blue-border bg-rc-blue-chip" />
             <div>
-              <div className="text-sm text-muted-foreground">Editor</div>
-              <h1 className="text-xl font-semibold">
+              <div className="text-[13.5px] text-rc-ink-4">Editor</div>
+              <h1 className="text-[19px] font-semibold tracking-[-.018em] text-rc-ink md:text-rc-card-title">
                 {step === 'metadata' ? 'Informações do Post' : 'Conteúdo do Post'}
               </h1>
             </div>
           </div>
           {step === 'content' && (
-            <span className="text-xs px-2 py-1 rounded bg-white/5 border border-white/10">{readingTime} min</span>
+            <span className="inline-flex min-h-[32px] items-center rounded-[8px] border border-rc-border-strong bg-rc-surface-3 px-2.5 font-mono text-[12px] text-rc-ink-3">{readingTime} min</span>
           )}
         </div>
         
@@ -135,20 +139,20 @@ export default function EditPostPage() {
                 <div className="flex justify-center gap-3">
           <button
             onClick={() => setStep('metadata')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`min-h-[40px] px-4 rounded-[10px] text-[13.5px] font-medium transition-colors ${
               step === 'metadata' 
-                ? 'bg-primary text-primary-foreground' 
-                : 'bg-white/5 hover:bg-white/10 text-muted-foreground'
+                ? 'bg-rc-blue text-white' 
+                : 'border border-rc-border-strong bg-rc-surface-3 text-rc-ink-3 hover:border-rc-border-hover hover:text-rc-ink'
             }`}
           >
             1. Metadados
           </button>
           <button
             onClick={() => setStep('content')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`min-h-[40px] px-4 rounded-[10px] text-[13.5px] font-medium transition-colors ${
               step === 'content' 
-                ? 'bg-primary text-primary-foreground' 
-                : 'bg-white/5 hover:bg-white/10 text-muted-foreground'
+                ? 'bg-rc-blue text-white' 
+                : 'border border-rc-border-strong bg-rc-surface-3 text-rc-ink-3 hover:border-rc-border-hover hover:text-rc-ink'
             }`}
           >
             2. Conteúdo
@@ -159,12 +163,12 @@ export default function EditPostPage() {
       {/* Form principal baseado na etapa */}
       <div className="mt-6">
         {step === 'metadata' ? (
-          <div className="card-modern p-8 max-w-3xl mx-auto">
+          <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8 max-w-3xl mx-auto">
             <div className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Título *</label>
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Título *</label>
                 <input 
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                  className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                   placeholder="Ex: Como funciona a Internet"
                   value={title}
                   onChange={e => { setTitle(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} 
@@ -172,20 +176,20 @@ export default function EditPostPage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Slug *</label>
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Slug *</label>
                 <input 
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                  className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                   placeholder="exemplo-de-slug"
                   value={slug}
                   onChange={e => setSlug(slugify(e.target.value))} 
                 />
-                <p className="text-xs text-muted-foreground mt-1">URL: /posts/{slug || 'seu-slug'}</p>
+                <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">URL: /posts/{slug || 'seu-slug'}</p>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Resumo (opcional)</label>
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Resumo (opcional)</label>
                 <textarea 
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none" 
+                  className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link resize-y" 
                   placeholder="Breve descrição do post..."
                   rows={3}
                   value={excerpt}
@@ -194,32 +198,32 @@ export default function EditPostPage() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Tags (opcional)</label>
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Tags (opcional)</label>
                 <input 
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                  className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                   placeholder="javascript, typescript, react"
                   value={tags}
                   onChange={e => setTags(e.target.value)} 
                 />
-                <p className="text-xs text-muted-foreground mt-1">Separe as tags por vírgula</p>
+                <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">Separe as tags por vírgula</p>
               </div>
 
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Keywords (opcional)</label>
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Keywords (opcional)</label>
                 <input 
-                  className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                  className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                   placeholder="programação, dev, desenvolvimento"
                   value={keywords}
                   onChange={e => setKeywords(e.target.value)} 
                 />
-                <p className="text-xs text-muted-foreground mt-1">Palavras-chave para SEO</p>
+                <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">Palavras-chave para SEO</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">Data</label>
+                  <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Data</label>
                   <input 
-                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                     type="date"
                     value={date}
                     onChange={e => setDate(e.target.value)} 
@@ -227,9 +231,9 @@ export default function EditPostPage() {
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground mb-2 block">Status</label>
+                  <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Status</label>
                   <select 
-                    className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                     value={status} 
                     onChange={e => setStatus(e.target.value)}
                   >
@@ -239,21 +243,28 @@ export default function EditPostPage() {
                 </div>
               </div>
 
+              <CheckboxField
+                label="Destaque"
+                hint="O mais recente marcado aparece como cartão grande no topo de /posts."
+                checked={featured}
+                onChange={setFeatured}
+              />
+
               <div>
-                <label className="text-sm font-medium text-muted-foreground mb-2 block">Capa (opcional)</label>
-                <div className="border border-white/10 rounded-lg p-4 bg-white/5">
+                <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Capa (opcional)</label>
+                <div className="rounded-[12px] border border-rc-border-strong bg-rc-sunken p-4">
                   {coverPreview && !cover && (
                     <div className="mb-4">
-                      <img src={coverPreview} alt="Preview" className="w-full h-48 object-cover rounded-lg" />
+                      <img src={coverPreview} alt="Preview" className="w-full h-48 object-cover rounded-[10px]" />
                     </div>
                   )}
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/20 rounded-lg cursor-pointer hover:bg-white/5 transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border border-dashed border-rc-border-hover rounded-[10px] cursor-pointer hover:bg-rc-nav-hover transition-colors">
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg className="w-8 h-8 mb-2 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-8 h-8 mb-2 text-rc-ink-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                       </svg>
-                      <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Clique para upload</span> ou arraste e solte</p>
-                      <p className="text-xs text-muted-foreground">PNG, JPG, WEBP até 10MB</p>
+                      <p className="mb-1 text-[13.5px] text-rc-ink-3"><span className="font-semibold">Clique para upload</span> ou arraste e solte</p>
+                      <p className="font-mono text-[11px] text-rc-ink-5">PNG, JPG, WEBP até 10MB</p>
                     </div>
                     <input 
                       type="file" 
@@ -277,8 +288,8 @@ export default function EditPostPage() {
             </div>
           </div>
         ) : (
-          <div className="card-modern p-8">
-            <label className="text-sm font-medium text-muted-foreground mb-3 block">Conteúdo (Markdown)</label>
+          <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8">
+            <label className="mb-3 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Conteúdo (Markdown)</label>
             <div className="mt-3">
               <MarkdownEditor 
                 value={content} 
@@ -292,10 +303,10 @@ export default function EditPostPage() {
       </div>
 
       {/* Footer fixo com ações */}
-      <div className="sticky bottom-0 z-10 -mx-4 px-4 py-4 bg-background/70 backdrop-blur-xl border-t border-white/5 mt-6">
+      <div className="sticky bottom-[calc(72px+env(safe-area-inset-bottom))] md:bottom-0 z-10 -mx-4 px-4 py-3 bg-rc-bg border-t border-rc-border mt-6">
         <div className="flex items-center justify-between">
           <button 
-            className="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-colors text-sm font-medium"
+            className="min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover"
             onClick={() => history.back()}
           >
             Cancelar
@@ -304,7 +315,7 @@ export default function EditPostPage() {
           <div className="flex items-center gap-2">
             {step === 'metadata' ? (
               <button 
-                className="px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                className="min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" 
                 onClick={() => setStep('content')} 
                 disabled={!canProceedMetadata}
               >
@@ -313,13 +324,13 @@ export default function EditPostPage() {
             ) : step === 'content' ? (
               <>
                 <button 
-                  className="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2 text-sm font-medium" 
+                  className="min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover flex items-center gap-2" 
                   onClick={() => setStep('metadata')}
                 >
                   <ChevronLeft size={18} /> Voltar
                 </button>
                 <button 
-                  className="px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                  className="min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed" 
                   onClick={onSave} 
                   disabled={saving}
                 >
@@ -329,7 +340,7 @@ export default function EditPostPage() {
             ) : (
               // Analytics tab - apenas navegação
               <button 
-                className="px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2 text-sm font-medium" 
+                className="min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover flex items-center gap-2" 
                 onClick={() => setStep('metadata')}
               >
                 <ChevronLeft size={18} /> Voltar para Edição

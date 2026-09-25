@@ -12,6 +12,8 @@ import { contentService } from '@/lib/services/content.service';
 import { projectService } from '@/lib/services/project.service';
 import { socialService } from '@/lib/services/social.service';
 import { linkService } from '@/lib/services/link.service';
+import { featureFlagService } from '@/lib/services/feature-flag.service';
+import { siteStatusService } from '@/lib/services/site-status.service';
 
 export default async function Home() {
   // Busca todos para ter a contagem real
@@ -25,6 +27,10 @@ export default async function Home() {
   const videos = await getLatestYoutubeVideos(3);
   const socialLinks = await socialService.getSocialLinks();
   const linkItems = await linkService.getLinkItems();
+  // Card "Agora" (flag now_status): sem flag, nem consulta o site_status
+  const nowStatus = (await featureFlagService.isEnabled('now_status').catch(() => false))
+    ? await siteStatusService.get()
+    : null;
 
   return <HomeContent
     posts={posts}
@@ -35,6 +41,7 @@ export default async function Home() {
     linkItems={linkItems}
     totalPosts={allPosts.length}
     totalChallenges={allChallenges.length}
+    nowStatus={nowStatus}
   />;
 }
 

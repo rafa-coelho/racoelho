@@ -93,6 +93,16 @@ export default async function PostPage({ params }: PostPageProps) {
     notFound();
   }
 
+  // "Continue lendo": prioriza posts com tags em comum, depois os mais recentes.
+  const allPosts = await contentService.getAllPosts();
+  const postTags = new Set(post.tags || []);
+  const related = allPosts
+    .filter((p) => p.slug !== post.slug)
+    .map((p, index) => ({ p, score: (p.tags || []).filter((t) => postTags.has(t)).length * 100 - index }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map(({ p }) => p);
+
   const isDraft = post.status !== 'published';
   const showPreview = adminStatus && isDraft;
 
@@ -123,7 +133,7 @@ export default async function PostPage({ params }: PostPageProps) {
           ],
         })}
       </script>
-      <BlogPostContent post={post as ContentItem} />
+      <BlogPostContent post={post as ContentItem} related={related} />
     </>
   );
 }

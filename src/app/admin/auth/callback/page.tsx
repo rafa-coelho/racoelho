@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader, AlertCircle } from "lucide-react";
+import { Loader, AlertCircle, Check } from "lucide-react";
 
 export default function AuthCallbackPage() {
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -39,10 +39,10 @@ export default function AuthCallbackPage() {
 
     if (status === 'loading') {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="text-center">
-                    <Loader className="animate-spin mx-auto mb-4 text-primary" size={48} />
-                    <p className="text-muted-foreground">Autenticando...</p>
+            <div className="grid min-h-screen place-items-center bg-rc-bg px-5 text-rc-ink" role="status">
+                <div className="flex flex-col items-center gap-3">
+                    <Loader className="h-6 w-6 animate-spin text-rc-blue-link motion-reduce:animate-none" aria-hidden="true" />
+                    <p className="font-mono text-[11.5px] text-rc-ink-5">autenticando…</p>
                 </div>
             </div>
         );
@@ -50,16 +50,16 @@ export default function AuthCallbackPage() {
 
     if (status === 'error') {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <div className="card-modern p-8 max-w-md w-full text-center">
-                    <AlertCircle className="mx-auto mb-4 text-red-500" size={48} />
-                    <h1 className="text-2xl font-bold mb-2">Erro na autenticação</h1>
-                    <p className="text-muted-foreground mb-6">
+            <div className="grid min-h-screen place-items-center bg-rc-bg px-5 text-rc-ink">
+                <div className="w-full max-w-[420px] rounded-[18px] border border-rc-amber-border-soft bg-rc-amber-surface-2 p-8 text-center">
+                    <AlertCircle className="mx-auto mb-4 h-8 w-8 text-rc-amber" aria-hidden="true" />
+                    <h1 className="text-[21px] font-semibold tracking-[-.026em]">Erro na autenticação</h1>
+                    <p className="mb-6 mt-2 text-sm text-rc-ink-4">
                         Não foi possível completar a autenticação. Tente novamente.
                     </p>
                     <button
                         onClick={() => router.push('/admin/login')}
-                        className="px-6 py-3 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors"
+                        className="h-12 rounded-[10px] bg-rc-blue px-6 font-semibold text-white transition-colors hover:bg-rc-blue-hover"
                     >
                         Voltar para o login
                     </button>
@@ -69,12 +69,11 @@ export default function AuthCallbackPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center">
-                <div className="text-green-500 mb-4">✓</div>
-                <p className="text-muted-foreground">Autenticação realizada com sucesso!</p>
+        <div className="grid min-h-screen place-items-center bg-rc-bg px-5 text-rc-ink" role="status">
+            <div className="flex flex-col items-center gap-3">
+                <Check className="h-6 w-6 text-rc-green" aria-hidden="true" />
+                <p className="text-sm text-rc-ink-4">Autenticação realizada com sucesso!</p>
             </div>
         </div>
     );
 }
-

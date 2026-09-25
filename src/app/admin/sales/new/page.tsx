@@ -38,77 +38,77 @@ export default function NewSalesPage() {
 
     return (
         <div className="container mx-auto px-4 py-10">
-            <div className="card-modern p-8 max-w-3xl mx-auto">
-                <h1 className="text-2xl font-semibold mb-6">Nova Página de Venda</h1>
+            <div className="rounded-rc-card border border-rc-border-card bg-rc-surface p-5 md:p-8 max-w-3xl mx-auto">
+                <h1 className="mb-6 text-[24px] font-semibold tracking-[-.02em] text-rc-ink md:text-[28px]">Nova Página de Venda</h1>
                 
                 <div className="space-y-6">
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Título *</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Título *</label>
                         <input 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                             value={title}
                             onChange={e => { setTitle(e.target.value); if (!slug) setSlug(slugify(e.target.value)); }} 
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Slug *</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Slug *</label>
                         <input 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                             value={slug}
                             onChange={e => setSlug(slugify(e.target.value))} 
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Status</label>
-                        <select className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" value={status} onChange={e => setStatus(e.target.value)}>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Status</label>
+                        <select className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" value={status} onChange={e => setStatus(e.target.value)}>
                             <option value="draft">Rascunho</option>
                             <option value="published">Publicado</option>
                         </select>
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">CTA Texto</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">CTA Texto</label>
                         <input 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                             value={ctaText}
                             onChange={e => setCtaText(e.target.value)} 
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">CTA URL</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">CTA URL</label>
                         <input 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                             value={ctaUrl}
                             onChange={e => setCtaUrl(e.target.value)} 
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Payment URL</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Payment URL</label>
                         <input 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link" 
                             value={paymentUrl}
                             onChange={e => setPaymentUrl(e.target.value)} 
                         />
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-muted-foreground mb-2 block">Blocks (JSON)</label>
+                        <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Blocks (JSON)</label>
                         <textarea 
-                            className="w-full rounded-md bg-white/5 border border-white/10 px-4 py-3 outline-none focus:ring-2 focus:ring-primary/40 resize-none h-32 font-mono text-xs" 
+                            className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link resize-y h-32 font-mono !text-[12.5px]" 
                             value={blocks}
                             onChange={e => setBlocks(e.target.value)} 
                         />
                     </div>
 
-                    <div className="flex gap-4 pt-4 border-t border-white/10">
-                        <button onClick={() => history.back()} className="flex-1 px-4 py-2 rounded-lg border border-white/10 hover:bg-white/5">
+                    <div className="flex gap-3 pt-5 border-t border-rc-border">
+                        <button onClick={() => history.back()} className="flex-1 min-h-[44px] rounded-[10px] border border-rc-border-strong bg-rc-surface-3 px-4 text-[14px] font-medium text-rc-ink transition-colors duration-150 hover:border-rc-border-hover">
                             Cancelar
                         </button>
-                        <button onClick={onSave} disabled={saving} className="flex-1 px-6 py-2 rounded-lg bg-primary hover:bg-primary/90 text-white font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
+                        <button onClick={onSave} disabled={saving} className="flex-1 min-h-[44px] rounded-[10px] bg-rc-blue px-5 text-[14.5px] font-semibold text-white shadow-rc-primary transition-colors duration-150 hover:bg-rc-blue-hover flex items-center justify-center gap-2 disabled:opacity-60">
                             {saving ? "Salvando..." : "Salvar"} <Check size={18} />
                         </button>
                     </div>

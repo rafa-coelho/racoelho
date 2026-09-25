@@ -1,8 +1,32 @@
+import type { ChallengeDifficulty } from '@/lib/types';
 import { pbListWithPreview, pbFirstByFilterWithPreview } from '@/lib/pocketbase-server';
 import { ContentItem, ContentMeta } from '@/lib/api';
 import { getCached, cacheKey, cacheListKey, cacheFilterKey } from '@/lib/cache/cache.service';
 
 // Mappers PB -> tipos locais
+// Produção já tinha difficulty com easy/medium/hard; os dois conjuntos são aceitos.
+const LEGACY_DIFFICULTY: Record<string, ChallengeDifficulty> = { easy: 'facil', medium: 'medio', hard: 'dificil' };
+
+function toDifficulty(value: any): ChallengeDifficulty | undefined {
+  if (value === 'facil' || value === 'medio' || value === 'dificil') return value;
+  return LEGACY_DIFFICULTY[value];
+}
+
+function asStringArray(value: any): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const list = value.map((v) => String(v).trim()).filter(Boolean);
+  return list.length ? list : undefined;
+}
+
+function asTextList(value: any): { text: string }[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const list = value
+    .map((v) => (typeof v === 'string' ? v : v?.text))
+    .filter((t) => typeof t === 'string' && t.trim())
+    .map((text) => ({ text: String(text).trim() }));
+  return list.length ? list : undefined;
+}
+
 function mapPbToContentMeta(rec: any): ContentMeta {
   return {
     title: rec.title,
@@ -12,6 +36,13 @@ function mapPbToContentMeta(rec: any): ContentMeta {
     coverImage: rec.coverImage ? fileUrl(rec, rec.coverImage) : undefined,
     tags: rec.tags || [],
     status: rec.status || undefined,
+    number: typeof rec.number === 'number' && rec.number > 0 ? rec.number : undefined,
+    difficulty: toDifficulty(rec.difficulty),
+    estimatedHours: typeof rec.estimatedHours === 'number' && rec.estimatedHours > 0 ? rec.estimatedHours : undefined,
+    stack: asStringArray(rec.stack),
+    deliverables: asTextList(rec.deliverables),
+    criteria: asTextList(rec.criteria),
+    comingSoon: !!rec.comingSoon,
   };
 }
 
@@ -41,6 +72,26 @@ export const challengeService = {
         const res = await pbListWithPreview('challenges', {
           filter: isAdminPreview ? undefined : "status='published'",
           sort: '-date',
+        }, isPreview);
+
+        return (res.items || []).map(mapPbToContentMeta);
+      },
+      3600000 // 1 hora
+    );
+  },
+
+  // Trilha de /listas/desafios: publicados + "em breve" (comingSoon aparece mesmo sem estar publicado).
+  // Separado de getAllChallenges para não vazar "em breve" em sitemap, home e links.
+  async getChallengeTrail(isPreview: boolean = false): Promise<ContentMeta[]> {
+    const cacheKeyData = `${cacheListKey('challenges')}:trail:${isPreview ? 'preview' : 'public'}`;
+
+    return await getCached(
+      cacheKeyData,
+      async () => {
+        const res = await pbListWithPreview('challenges', {
+          filter: isPreview ? undefined : "status='published' || comingSoon=true",
+          sort: '-date',
+          perPage: 200,
         }, isPreview);
 
         return (res.items || []).map(mapPbToContentMeta);
