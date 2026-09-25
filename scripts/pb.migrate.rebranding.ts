@@ -176,12 +176,27 @@ async function main() {
     const current: Field[] = col[listKey] || [];
     const existing = new Set(current.map((f) => f.name));
     const missing = convert(fields).filter((f) => !existing.has(f.name));
-    if (missing.length === 0) {
+
+    // Select que já existe (ex.: challenges.difficulty com easy/medium/hard em produção):
+    // acrescenta os valores novos sem remover os antigos.
+    const widened: string[] = [];
+    const merged = current.map((f: any) => {
+      const want = fields.find((w) => w.name === f.name && w.type === 'select');
+      if (!want || f.type !== 'select') return f;
+      const values: string[] = legacy ? f.options?.values || [] : f.values || [];
+      const extra = (want.values as string[]).filter((v) => !values.includes(v));
+      if (extra.length === 0) return f;
+      widened.push(`${f.name} (+${extra.join(', ')})`);
+      return legacy ? { ...f, options: { ...f.options, values: [...values, ...extra] } } : { ...f, values: [...values, ...extra] };
+    });
+
+    if (missing.length === 0 && widened.length === 0) {
       console.log(`  = ${name}: nada a adicionar`);
       continue;
     }
-    await pb.collections.update(col.id, { [listKey]: [...current, ...missing] });
-    console.log(`  + ${name}: ${missing.map((f) => f.name).join(', ')}`);
+    await pb.collections.update(col.id, { [listKey]: [...merged, ...missing] });
+    if (missing.length) console.log(`  + ${name}: ${missing.map((f) => f.name).join(', ')}`);
+    if (widened.length) console.log(`  + ${name}: valores ${widened.join('; ')}`);
   }
 
   // 2) collections novas

@@ -1,8 +1,17 @@
+import type { ChallengeDifficulty } from '@/lib/types';
 import { pbListWithPreview, pbFirstByFilterWithPreview } from '@/lib/pocketbase-server';
 import { ContentItem, ContentMeta } from '@/lib/api';
 import { getCached, cacheKey, cacheListKey, cacheFilterKey } from '@/lib/cache/cache.service';
 
 // Mappers PB -> tipos locais
+// Produção já tinha difficulty com easy/medium/hard; os dois conjuntos são aceitos.
+const LEGACY_DIFFICULTY: Record<string, ChallengeDifficulty> = { easy: 'facil', medium: 'medio', hard: 'dificil' };
+
+function toDifficulty(value: any): ChallengeDifficulty | undefined {
+  if (value === 'facil' || value === 'medio' || value === 'dificil') return value;
+  return LEGACY_DIFFICULTY[value];
+}
+
 function asStringArray(value: any): string[] | undefined {
   if (!Array.isArray(value)) return undefined;
   const list = value.map((v) => String(v).trim()).filter(Boolean);
@@ -28,7 +37,7 @@ function mapPbToContentMeta(rec: any): ContentMeta {
     tags: rec.tags || [],
     status: rec.status || undefined,
     number: typeof rec.number === 'number' && rec.number > 0 ? rec.number : undefined,
-    difficulty: ['facil', 'medio', 'dificil'].includes(rec.difficulty) ? rec.difficulty : undefined,
+    difficulty: toDifficulty(rec.difficulty),
     estimatedHours: typeof rec.estimatedHours === 'number' && rec.estimatedHours > 0 ? rec.estimatedHours : undefined,
     stack: asStringArray(rec.stack),
     deliverables: asTextList(rec.deliverables),
