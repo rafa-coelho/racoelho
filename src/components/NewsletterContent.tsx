@@ -1,7 +1,8 @@
 'use client';
 
 import Layout from './Layout';
-import { Eyebrow, NewsletterForm, pad2 } from '@/components/rc';
+import { Eyebrow, NewsletterForm, cardClasses, formatShortDate, pad2 } from '@/components/rc';
+import type { NewsletterIssue } from '@/lib/services/newsletter-archive.service';
 
 const benefits = [
   { title: 'Conteúdo exclusivo', text: 'Receba conteúdos que não são publicados no blog ou redes sociais.' },
@@ -9,7 +10,7 @@ const benefits = [
   { title: 'Sem spam', text: 'Apenas conteúdo relevante, sem flood de emails desnecessários.' },
 ];
 
-export default function NewsletterContent() {
+export default function NewsletterContent({ issues = [] }: { issues?: NewsletterIssue[] }) {
   return (
     <Layout>
       <section className="relative overflow-hidden">
@@ -49,6 +50,36 @@ export default function NewsletterContent() {
           </ol>
         </div>
       </section>
+
+      {/* Arquivo de edições (flag newsletter_archive) */}
+      {issues.length > 0 && (
+        <section aria-labelledby="newsletter-edicoes" className="rc-container pb-10 md:pb-16">
+          <div className="mb-3.5 flex items-center gap-3 md:mb-4 md:gap-4">
+            <h2 id="newsletter-edicoes" className="text-[17px] font-semibold tracking-[-.02em] text-rc-ink md:text-[19px]">
+              Edições recentes
+            </h2>
+            <span className="h-px flex-1 bg-rc-border" aria-hidden="true" />
+          </div>
+          <ul className="flex flex-col gap-2.5 md:max-w-[720px] md:gap-3">
+            {issues.map((issue) => (
+              <li key={issue.id}>
+                <a
+                  href={issue.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cardClasses({ interactive: true, className: 'block rounded-[13px] p-[15px] md:rounded-rc-card md:px-5 md:py-4' })}
+                >
+                  <div className="font-mono text-[10.5px] text-rc-ink-5 md:text-[11px]">
+                    {issue.number !== null && <>#{pad2(issue.number)} · </>}
+                    <time dateTime={issue.date}>{formatShortDate(issue.date)}</time>
+                  </div>
+                  <div className="mt-1.5 text-[15.5px] font-medium leading-[1.35] text-rc-ink md:text-base">{issue.subject}</div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </Layout>
   );
 }
