@@ -2,10 +2,29 @@
 
 import React, { ReactNode } from 'react';
 import { FaGithub, FaLinkedin, FaTwitter, FaInstagram, FaYoutube, FaTiktok, FaEnvelope } from 'react-icons/fa';
-import { ExternalLink } from 'lucide-react';
+import {
+  Briefcase,
+  ChevronRight,
+  Code2,
+  FileText,
+  Github,
+  Globe,
+  Link2,
+  Linkedin,
+  Mail,
+  MessageCircle,
+  Monitor,
+  Newspaper,
+  Rocket,
+  Trophy,
+  Youtube,
+  type LucideIcon,
+} from 'lucide-react';
+import Link from 'next/link';
 import Layout from './Layout';
-import ContentCard from './ContentCard';
 import { SocialLink, LinkTreeItem, ContentMeta, YoutubeVideo } from '@/lib/api';
+import { cn } from '@/lib/utils';
+import { RcImage, SocialIcon, Tag, cardClasses, formatShortDate } from '@/components/rc';
 
 interface LinksContentProps {
   socialLinks: SocialLink[];
@@ -15,6 +34,7 @@ interface LinksContentProps {
   challenges?: ContentMeta[];
 }
 
+// Mantido: usado por RedirectPage.
 export const GetSocialIcon = (iconName: string): ReactNode => {
   switch (iconName.toLowerCase()) {
     case 'github':
@@ -36,9 +56,76 @@ export const GetSocialIcon = (iconName: string): ReactNode => {
   }
 };
 
+// Ícone + cor do quadrado de 34px por destino (campo `icon` do LinkTreeItem, com fallback pela URL).
+type IconTone = 'blue' | 'green' | 'red' | 'amber' | 'neutral';
+
+const iconToneClasses: Record<IconTone, string> = {
+  blue: 'bg-rc-blue-chip text-rc-blue-soft',
+  green: 'bg-rc-green-surface text-rc-green',
+  red: 'bg-rc-nav-hover text-rc-red',
+  amber: 'bg-rc-amber-surface text-rc-amber',
+  neutral: 'bg-rc-nav-hover text-rc-blue-soft',
+};
+
+const linkIcons: Record<string, { icon: LucideIcon; tone: IconTone }> = {
+  mail: { icon: Mail, tone: 'blue' },
+  email: { icon: Mail, tone: 'blue' },
+  newsletter: { icon: Mail, tone: 'blue' },
+  trophy: { icon: Trophy, tone: 'green' },
+  desafios: { icon: Trophy, tone: 'green' },
+  code: { icon: Code2, tone: 'green' },
+  youtube: { icon: Youtube, tone: 'red' },
+  'message-circle': { icon: MessageCircle, tone: 'neutral' },
+  discord: { icon: MessageCircle, tone: 'neutral' },
+  briefcase: { icon: Briefcase, tone: 'amber' },
+  rocket: { icon: Rocket, tone: 'amber' },
+  monitor: { icon: Monitor, tone: 'neutral' },
+  setup: { icon: Monitor, tone: 'neutral' },
+  newspaper: { icon: Newspaper, tone: 'blue' },
+  blog: { icon: FileText, tone: 'blue' },
+  'file-text': { icon: FileText, tone: 'blue' },
+  github: { icon: Github, tone: 'neutral' },
+  linkedin: { icon: Linkedin, tone: 'blue' },
+  globe: { icon: Globe, tone: 'neutral' },
+};
+
+function resolveLinkIcon(item: LinkTreeItem): { icon: LucideIcon; tone: IconTone } {
+  const key = (item.icon || '').toLowerCase().trim();
+  if (key && linkIcons[key]) return linkIcons[key];
+  const url = item.url.toLowerCase();
+  if (url.includes('youtube')) return linkIcons.youtube;
+  if (url.includes('newsletter')) return linkIcons.mail;
+  if (url.includes('desafios')) return linkIcons.trophy;
+  if (url.includes('discord') || url.includes('comunidade')) return linkIcons.discord;
+  if (url.includes('vagas') || url.includes('mediakit') || url.includes('projetos')) return linkIcons.briefcase;
+  if (url.includes('setup')) return linkIcons.setup;
+  if (url.includes('/posts')) return linkIcons.blog;
+  return { icon: Link2, tone: 'neutral' };
+}
+
+const isExternal = (url: string) => /^(https?:|mailto:)/.test(url);
+
+function SmartLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+  if (isExternal(href)) {
+    return (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
 export default function LinksContent({ socialLinks, linkItems, videos = [], posts = [], challenges = [] }: LinksContentProps) {
   const highlightItems = linkItems.filter(item => item.type === 'highlight');
   const regularLinks = linkItems.filter(item => item.type === 'link');
+  // Destaques primeiro; o primeiro destaque recebe o tratamento azul.
+  const buttons = [...highlightItems, ...regularLinks];
+  const blueTitle = highlightItems[0]?.title;
 
   // Ordenar conteúdos por score: prioridade de tipo + bonus por recência
   const typePriority = { video: 3, post: 2, challenge: 1 };
@@ -66,153 +153,140 @@ export default function LinksContent({ socialLinks, linkItems, videos = [], post
 
   return (
     <Layout>
-    <div className="min-h-screen section-gradient-1 py-16">
-      <div className="content-container max-w-3xl mx-auto">
-        {/* Header Profile Section */}
-        <div className="text-center mb-12">
-          <div className="relative inline-block mb-6">
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-glow-pulse"></div>
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-primary/30 shadow-2xl">
-              <img
-                src="https://github.com/rafa-coelho.png"
-                alt="Rafael Coelho"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = 'https://via.placeholder.com/128x128?text=RC';
-                }}
-              />
-            </div>
-          </div>
-
-          <h1 className="text-4xl font-bold mb-3 gradient-text">Rafael Coelho</h1>
-          <p className="text-lg text-muted-foreground mb-6">
+      {/* ── Bio ── */}
+      <section className="relative overflow-hidden">
+        <div className="rc-dots-bg" />
+        <div className="rc-dots-fade" />
+        <div className="relative mx-auto flex max-w-[560px] flex-col items-center px-5 pb-[34px] pt-10 text-center md:px-8 md:pb-10 md:pt-14">
+          <RcImage
+            src="https://github.com/rafa-coelho.png"
+            alt=""
+            ratio="1/1"
+            className="w-[92px] rounded-full border border-rc-photo-border"
+          />
+          <h1 className="mt-4 text-2xl font-semibold tracking-[-.028em] text-rc-ink">Rafael Coelho</h1>
+          <div className="mt-1.5 font-mono text-[12.5px] text-rc-blue-link">@racoelhoo</div>
+          <p className="mt-[11px] max-w-[32ch] text-[15px] leading-[1.6] text-rc-ink-3 [text-wrap:pretty]">
             Fullstack Developer • Tech Content Creator
           </p>
 
-          {/* Social Links */}
-          <div className="flex justify-center gap-3 mb-8">
-            {socialLinks.map((social) => {
-              return (
+          {socialLinks.length > 0 && (
+            <div className="mt-5 flex flex-wrap justify-center gap-[9px]">
+              {socialLinks.map((social) => (
                 <a
                   key={social.name}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-14 h-14 flex items-center justify-center rounded-xl bg-card/50 backdrop-blur-sm border border-white/10 hover:bg-primary hover:border-primary/50 hover:scale-110 transition-all duration-300 text-xl shadow-lg"
                   aria-label={social.name}
                   title={social.name}
+                  className="grid h-[46px] w-[46px] place-items-center rounded-[13px] border border-rc-border-chip bg-rc-surface-2 text-rc-ink-3 transition-colors duration-150 hover:border-rc-border-hover hover:text-rc-ink"
                 >
-                  {GetSocialIcon(social.name)}
-                </a>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Regular Links */}
-        {regularLinks.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
-            {regularLinks.map((link, index) => (
-              <a
-                key={link.title}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="card-modern p-5 text-center group animate-fade-in-up"
-                style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}
-              >
-                <span className="font-semibold group-hover:text-primary transition-colors">{link.title}</span>
-                <ExternalLink size={16} className="inline-block ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary" />
-              </a>
-            ))}
-          </div>
-        )}
-
-        {/* Highlight Items */}
-        {highlightItems.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 text-center">Em Destaque</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {highlightItems.map((item, index) => (
-                <a
-                  key={item.title}
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="card-modern p-8 text-center group animate-scale-in"
-                  style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
-                >
-                  {item.image && (
-                    <div className="mb-6 flex justify-center">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-16 w-auto object-contain group-hover:scale-110 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
-                  {item.description && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
-                  )}
+                  <SocialIcon name={social.icon || social.name} className="h-[18px] w-[18px]" />
                 </a>
               ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Confira meus conteúdos */}
-        {hasContent && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold mb-6 text-center">Confira meus conteúdos</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {contentItems.map((item, index) => {
-                if (item.kind === 'video') {
-                  const video = item.data as YoutubeVideo;
-                  return (
-                    <a
-                      key={`video-${video.id}`}
-                      href={video.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="card-modern overflow-hidden group animate-fade-in-up"
-                      style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
-                    >
-                      <div className="relative overflow-hidden">
-                        <img
-                          src={video.thumbnail}
-                          alt={video.title}
-                          className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <FaYoutube className="text-white text-5xl" />
-                        </div>
-                      </div>
-                      <div className="p-5">
-                        <p className="line-clamp-2 font-medium group-hover:text-primary transition-colors">
-                          {video.title}
-                        </p>
-                      </div>
-                    </a>
-                  );
-                }
-                const content = item.data as ContentMeta;
+          {buttons.length > 0 && (
+            <div className="mt-6 flex w-full flex-col gap-2.5">
+              {buttons.map((item) => {
+                const { icon: Icon, tone } = resolveLinkIcon(item);
+                const blue = item.title === blueTitle;
                 return (
-                  <div
-                    key={`${item.kind}-${content.slug}`}
-                    className="animate-fade-in-up"
-                    style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'backwards' }}
+                  <SmartLink
+                    key={`${item.type}-${item.title}`}
+                    href={item.url}
+                    className={cardClasses({
+                      tone: blue ? 'blue' : 'neutral',
+                      interactive: true,
+                      className: 'flex min-h-[56px] items-center gap-[13px] px-4 py-2.5 text-left',
+                    })}
                   >
-                    <ContentCard item={content} type={item.kind === 'post' ? 'post' : 'challenge'} />
-                  </div>
+                    {item.image ? (
+                      <RcImage src={item.image} alt="" ratio="1/1" className="w-[34px] shrink-0 rounded-[10px]" imgClassName="object-contain" />
+                    ) : (
+                      <span className={cn('grid h-[34px] w-[34px] shrink-0 place-items-center rounded-[10px]', iconToneClasses[tone])}>
+                        <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                      </span>
+                    )}
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[15.5px] font-medium text-rc-ink">{item.title}</span>
+                      {item.type === 'highlight' && item.description && (
+                        <span className="mt-0.5 block text-[13px] leading-[1.45] text-rc-ink-4">{item.description}</span>
+                      )}
+                    </span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-rc-ink-6" aria-hidden="true" />
+                  </SmartLink>
                 );
               })}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+      </section>
 
-      </div>
-    </div>
+      {/* ── Conteúdos recentes ── */}
+      {hasContent && (
+        <section className="mx-auto max-w-[720px] px-4 pb-10 md:px-8 md:pb-14">
+          <div className="mb-3.5 flex items-center gap-3 md:mb-4 md:gap-4">
+            <h2 className="text-[17px] font-semibold tracking-[-.02em] text-rc-ink md:text-[19px]">Confira meus conteúdos</h2>
+            <span className="h-px flex-1 bg-rc-border" aria-hidden="true" />
+          </div>
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:gap-3">
+            {contentItems.map((item) => {
+              if (item.kind === 'video') {
+                const video = item.data as YoutubeVideo;
+                return (
+                  <a
+                    key={`video-${video.id}`}
+                    href={video.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cardClasses({ interactive: true, className: 'flex items-center overflow-hidden sm:flex-col sm:items-stretch' })}
+                  >
+                    <RcImage src={video.thumbnail} alt="" ratio="16/9" className="ml-3 w-[108px] shrink-0 rounded-[8px] sm:ml-0 sm:w-full sm:rounded-none" />
+                    <div className="min-w-0 flex-1 p-3.5 sm:p-4">
+                      <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-red">YouTube</span>
+                      <p className="mt-2 line-clamp-2 text-[15.5px] font-semibold leading-[1.35] text-rc-ink">{video.title}</p>
+                    </div>
+                  </a>
+                );
+              }
+              const content = item.data as ContentMeta;
+              const isPost = item.kind === 'post';
+              const tags = content.tags || [];
+              return (
+                <Link
+                  key={`${item.kind}-${content.slug}`}
+                  href={`/${isPost ? 'posts' : 'listas/desafios'}/${content.slug}`}
+                  className={cardClasses({ interactive: true, className: 'flex items-center overflow-hidden sm:flex-col sm:items-stretch' })}
+                >
+                  <RcImage src={content.coverImage} alt="" ratio="16/9" className="ml-3 w-[108px] shrink-0 rounded-[8px] sm:ml-0 sm:w-full sm:rounded-none" />
+                  <div className="min-w-0 flex-1 p-3.5 sm:p-4">
+                    <span className={cn('font-mono text-[9.5px] uppercase tracking-[.1em]', isPost ? 'text-rc-blue-link' : 'text-rc-green')}>
+                      {isPost ? 'Post' : 'Desafio'}
+                    </span>
+                    <p className="mt-2 line-clamp-2 text-[15.5px] font-semibold leading-[1.35] text-rc-ink">{content.title}</p>
+                    {content.date && <div className="mt-2 font-mono text-[10.5px] text-rc-ink-5">{formatShortDate(content.date)}</div>}
+                    {tags.length > 0 && (
+                      <div className="mt-3 hidden flex-wrap gap-1.5 sm:flex">
+                        {tags.slice(0, 2).map((tag) => (
+                          <Tag key={tag} className={isPost ? undefined : 'border-rc-green-border-strong text-rc-green'}>
+                            {tag}
+                          </Tag>
+                        ))}
+                        {tags.length > 2 && <Tag className="text-rc-ink-5">+{tags.length - 2}</Tag>}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <div className="pb-8 text-center font-mono text-[11px] text-rc-ink-6">racoelho.com.br</div>
     </Layout>
   );
-} 
+}
