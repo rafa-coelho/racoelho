@@ -12,6 +12,7 @@ import {
   Link2,
   Linkedin,
   Mail,
+  Megaphone,
   MessageCircle,
   Monitor,
   Newspaper,
@@ -84,6 +85,9 @@ const linkIcons: Record<string, { icon: LucideIcon; tone: IconTone }> = {
   newspaper: { icon: Newspaper, tone: 'blue' },
   blog: { icon: FileText, tone: 'blue' },
   'file-text': { icon: FileText, tone: 'blue' },
+  // media kit para marcas
+  megaphone: { icon: Megaphone, tone: 'amber' },
+  mediakit: { icon: Megaphone, tone: 'amber' },
   github: { icon: Github, tone: 'neutral' },
   linkedin: { icon: Linkedin, tone: 'blue' },
   globe: { icon: Globe, tone: 'neutral' },
@@ -97,7 +101,8 @@ function resolveLinkIcon(item: LinkTreeItem): { icon: LucideIcon; tone: IconTone
   if (url.includes('newsletter')) return linkIcons.mail;
   if (url.includes('desafios')) return linkIcons.trophy;
   if (url.includes('discord') || url.includes('comunidade')) return linkIcons.discord;
-  if (url.includes('vagas') || url.includes('mediakit') || url.includes('projetos')) return linkIcons.briefcase;
+  if (url.includes('mediakit')) return linkIcons.megaphone;
+  if (url.includes('vagas') || url.includes('projetos')) return linkIcons.briefcase;
   if (url.includes('setup')) return linkIcons.setup;
   if (url.includes('/posts')) return linkIcons.blog;
   return { icon: Link2, tone: 'neutral' };
