@@ -3,31 +3,8 @@ import type { ChallengeSubmission, ChallengeSubmissionStatus } from '@/lib/types
 
 const COLLECTION = 'challenge_submissions';
 
-export const REPO_HOSTS = ['github.com', 'gitlab.com', 'bitbucket.org'];
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Repositório precisa ser github/gitlab/bitbucket com owner e repo no path.
-export function isValidRepoUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    if (url.protocol !== 'https:' && url.protocol !== 'http:') return false;
-    const host = url.hostname.replace(/^www\./, '');
-    if (!REPO_HOSTS.includes(host)) return false;
-    const parts = url.pathname.split('/').filter(Boolean);
-    return parts.length >= 2;
-  } catch {
-    return false;
-  }
-}
-
-export function isValidUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return url.protocol === 'https:' || url.protocol === 'http:';
-  } catch {
-    return false;
-  }
-}
+// Validação pura fica em utils (o cliente também usa); reexportada para quem já importa daqui.
+export { REPO_HOSTS, EMAIL_RE, isValidRepoUrl, isValidUrl } from '@/lib/utils/submission-validation';
 
 function map(rec: any): ChallengeSubmission {
   return {
