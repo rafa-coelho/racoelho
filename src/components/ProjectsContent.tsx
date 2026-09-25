@@ -1,29 +1,72 @@
 'use client';
 
-import { useState } from 'react';
-import { ProjectMeta } from '@/lib/types';
+import { useMemo, useState } from 'react';
+import { PROJECT_KIND_LABEL, ProjectKind, ProjectMeta } from '@/lib/types';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
 import { Search, SlidersHorizontal, X } from 'lucide-react';
 import { Button, ButtonLink, Chip, EmptyState, Eyebrow, cardClasses } from '@/components/rc';
+import { ProjectIcon, resolveProjectIcon } from '@/components/projects/ProjectIcon';
 
 interface ProjectsContentProps {
   projects: ProjectMeta[];
   tags: string[];
+  initialKind?: string;
 }
 
-export default function ProjectsContent({ projects }: ProjectsContentProps) {
+const KIND_ORDER = Object.keys(PROJECT_KIND_LABEL) as ProjectKind[];
+
+// Ordem: featured, order, date desc; arquivados sempre no fim.
+function sortProjects(list: ProjectMeta[]): ProjectMeta[] {
+  return [...list].sort((a, b) => {
+    const archA = a.stage === 'arquivado' ? 1 : 0;
+    const archB = b.stage === 'arquivado' ? 1 : 0;
+    if (archA !== archB) return archA - archB;
+    if (!!a.featured !== !!b.featured) return a.featured ? -1 : 1;
+    const orderA = a.order ?? Number.MAX_SAFE_INTEGER;
+    const orderB = b.order ?? Number.MAX_SAFE_INTEGER;
+    if (orderA !== orderB) return orderA - orderB;
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+}
+
+export default function ProjectsContent({ projects: rawProjects, initialKind }: ProjectsContentProps) {
+  const projects = useMemo(() => sortProjects(rawProjects), [rawProjects]);
+
+  // Tipos presentes (só eles viram chip)
+  const kinds = useMemo(
+    () => KIND_ORDER.filter((kind) => projects.some((p) => p.kind === kind)),
+    [projects],
+  );
+
+  const [selectedKind, setSelectedKind] = useState<ProjectKind | null>(
+    kinds.includes(initialKind as ProjectKind) ? (initialKind as ProjectKind) : null,
+  );
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
+  // Reflete o tipo em ?tipo= sem recarregar a página
+  const selectKind = (kind: ProjectKind | null) => {
+    setSelectedKind(kind);
+    try {
+      const url = new URL(window.location.href);
+      if (kind) url.searchParams.set('tipo', kind);
+      else url.searchParams.delete('tipo');
+      window.history.replaceState(window.history.state, '', url.pathname + url.search + url.hash);
+    } catch {
+      // ignora
+    }
+  };
+
   const filteredProjects = projects.filter(project => {
+    const matchesKind = !selectedKind || project.kind === selectedKind;
     const matchesTag = !selectedTag || project.tags?.includes(selectedTag);
     const matchesSearch = !searchTerm ||
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesTag && matchesSearch;
+    return matchesKind && matchesTag && matchesSearch;
   });
 
   // Get tag counts
@@ -41,6 +84,7 @@ export default function ProjectsContent({ projects }: ProjectsContentProps) {
   const clearFilters = () => {
     setSelectedTag(null);
     setSearchTerm('');
+    selectKind(null);
   };
 
   return (
@@ -91,6 +135,29 @@ export default function ProjectsContent({ projects }: ProjectsContentProps) {
             )}
           </div>
 
+          {/* Filtro por tipo */}
+          {kinds.length > 0 && (
+            <div
+              role="group"
+              aria-label="Filtrar por tipo"
+              className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-4 md:flex-wrap md:overflow-visible md:px-0"
+            >
+              <Chip active={!selectedKind} onClick={() => selectKind(null)} className="h-11 font-sans text-[13.5px] md:h-9">
+                Todos
+              </Chip>
+              {kinds.map((kind) => (
+                <Chip
+                  key={kind}
+                  active={selectedKind === kind}
+                  onClick={() => selectKind(selectedKind === kind ? null : kind)}
+                  className="h-11 font-sans text-[13.5px] md:h-9"
+                >
+                  {PROJECT_KIND_LABEL[kind]}
+                </Chip>
+              ))}
+            </div>
+          )}
+
           {showFilters && popularTags.length > 0 && (
             <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-4 md:flex-wrap md:overflow-visible md:px-0">
               <Chip active={!selectedTag} onClick={() => setSelectedTag(null)} className="h-11 md:h-9">
@@ -118,7 +185,7 @@ export default function ProjectsContent({ projects }: ProjectsContentProps) {
             <b className="font-medium text-rc-ink">{filteredProjects.length}</b>{' '}
             {filteredProjects.length === 1 ? 'projeto encontrado' : 'projetos encontrados'}
           </p>
-          {(selectedTag || searchTerm) && (
+          {(selectedTag || searchTerm || selectedKind) && (
             <button type="button" onClick={clearFilters} className="-my-3 flex h-11 items-center gap-1 text-rc-amber transition-colors hover:text-rc-amber-hover">
               <X className="h-3.5 w-3.5" aria-hidden="true" />
               limpar filtros
@@ -167,6 +234,9 @@ export default function ProjectsContent({ projects }: ProjectsContentProps) {
 
 function ProjectCard({ project }: { project: ProjectMeta }) {
   const isPrivate = !project.repoUrl && !project.liveUrl;
+  const isWip = project.stage === 'wip';
+  const isArchived = project.stage === 'arquivado';
+  const hasIcon = !!resolveProjectIcon(project.icon);
   const tags = project.tags ?? [];
   const extra = tags.length - 3;
 
@@ -175,23 +245,28 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
       href={`/projetos/${project.slug}`}
       className={cardClasses({
         interactive: true,
-        className: 'flex flex-col gap-[9px] rounded-[13px] p-3.5 md:min-h-[214px] md:gap-2.5 md:rounded-rc-card md:p-5',
+        className: cn(
+          'flex flex-col gap-[9px] rounded-[13px] p-3.5 md:min-h-[214px] md:gap-2.5 md:rounded-rc-card md:p-5',
+          isArchived && 'opacity-70',
+        ),
       })}
     >
-      {/* Mobile: quadrado com a inicial do título (sem campo de ícone ainda) */}
+      {/* Mobile: quadrado do ícone (ou inicial do título) */}
       <div className="flex items-start justify-between gap-2 md:hidden">
-        <span
-          aria-hidden="true"
-          className="grid h-8 w-8 shrink-0 place-items-center rounded-[9px] border border-rc-amber-border bg-rc-amber-surface font-mono text-sm text-rc-amber"
-        >
-          {project.title.charAt(0).toUpperCase()}
-        </span>
-        {isPrivate && <PrivateBadge />}
+        <ProjectIcon project={project} />
+        {(isWip || isPrivate) && (
+          <div className="flex flex-col items-end gap-1">
+            {isWip && <StagePill>wip</StagePill>}
+                {isPrivate && !isWip && <PrivateBadge />}
+          </div>
+        )}
       </div>
 
-      {/* Desktop: papel + selo de código privado */}
+      {/* Desktop: ícone (se houver) + papel + selos */}
       <div className="hidden flex-wrap items-center gap-2 md:flex">
+        {hasIcon && <ProjectIcon project={project} className="mr-1" />}
         <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{project.role || 'Projeto'}</span>
+        {isWip && <StagePill>wip</StagePill>}
         {isPrivate && <PrivateBadge />}
       </div>
 
@@ -234,6 +309,14 @@ function PrivateBadge() {
     <span className="whitespace-nowrap rounded-full border border-rc-border-chip px-[7px] py-[3px] font-mono text-[9px] uppercase tracking-[.06em] text-rc-ink-4">
       <span className="md:hidden">privado</span>
       <span className="hidden md:inline">código privado</span>
+    </span>
+  );
+}
+
+function StagePill({ children }: { children: string }) {
+  return (
+    <span className="whitespace-nowrap rounded-full border border-rc-border-chip px-[7px] py-[3px] font-mono text-[9px] uppercase tracking-[.06em] text-rc-ink-4">
+      {children}
     </span>
   );
 }

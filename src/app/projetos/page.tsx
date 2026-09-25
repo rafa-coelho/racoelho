@@ -20,11 +20,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Projects() {
+export default async function Projects({ searchParams }: { searchParams?: { tipo?: string | string[] } }) {
   const adminStatus = await isAdmin();
 
   const projects = await projectService.getAllProjects([], adminStatus);
   const tags = Array.from(new Set(projects.flatMap(project => project.tags || [])));
 
-  return <ProjectsContent projects={projects} tags={tags} />;
+  const tipo = typeof searchParams?.tipo === 'string' ? searchParams.tipo : undefined;
+
+  return <ProjectsContent projects={projects} tags={tags} initialKind={tipo} />;
 }

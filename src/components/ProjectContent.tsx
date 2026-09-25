@@ -3,13 +3,21 @@
 import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
 import Layout from './Layout';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
-import { Project } from '@/lib/types';
+import { Project, ProjectStage } from '@/lib/types';
 import { cn, formatDate } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
 import { useFeatureFlags } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
 import { ButtonLink, Eyebrow, Pill, RcImage, buttonClasses, cardClasses } from '@/components/rc';
+import { ProjectIcon } from '@/components/projects/ProjectIcon';
+
+// Rótulo do stage (independente de draft/published)
+const STAGE_LABEL: Record<ProjectStage, string> = {
+  live: 'ativo',
+  wip: 'em construção',
+  arquivado: 'arquivado',
+};
 
 interface ProjectContentProps {
   project: Project;
@@ -53,6 +61,8 @@ const caseProse = cn(
 function ProjectFacts({ project, showLinks = true }: { project: Project; showLinks?: boolean }) {
   const isPrivate = !project.repoUrl && !project.liveUrl;
   const hasLinks = showLinks && (project.repoUrl || project.liveUrl);
+  // Stack: campo próprio; sem ele, as tags
+  const stack = project.stack?.length ? project.stack : project.tags ?? [];
 
   return (
     <div className={cardClasses({ className: 'p-[18px] md:p-5' })}>
@@ -65,15 +75,18 @@ function ProjectFacts({ project, showLinks = true }: { project: Project; showLin
         </>
       )}
 
-      {project.tags && project.tags.length > 0 && (
+      {stack.length > 0 && (
         <>
           <div className="mt-[18px] font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-ink-5">Stack</div>
-          <div className="mt-[9px] flex flex-wrap gap-1.5 font-mono text-[10.5px] text-rc-ink-4">
-            {project.tags.map((tag) => (
-              <span key={tag} className="rounded-md border border-rc-border-chip px-2 py-1">
-                {tag}
-              </span>
-            ))}
+          <p className="mt-2 font-mono text-[13px] leading-[1.85] text-rc-ink-3">{stack.join(' · ')}</p>
+        </>
+      )}
+
+      {project.stage && (
+        <>
+          <div className="mt-[18px] font-mono text-[10.5px] uppercase tracking-[.1em] text-rc-ink-5">Status</div>
+          <div className={cn('mt-1.5 text-[15px] font-medium', project.stage === 'wip' ? 'text-rc-amber' : project.stage === 'arquivado' ? 'text-rc-ink-4' : 'text-rc-ink')}>
+            {STAGE_LABEL[project.stage]}
           </div>
         </>
       )}
@@ -137,13 +150,14 @@ export default function ProjectContent({ project }: ProjectContentProps) {
           {/* Cabeçalho */}
           <header>
             <div className="flex items-center gap-[11px]">
-              <span
-                aria-hidden="true"
-                className="grid h-11 w-11 place-items-center rounded-xl border border-rc-amber-border bg-rc-amber-surface font-mono text-lg text-rc-amber md:hidden"
-              >
-                {project.title.charAt(0).toUpperCase()}
-              </span>
-              <Pill tone="amber" className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">Projeto</Pill>
+              <ProjectIcon project={project} size="lg" className="md:hidden" />
+              {project.stage === 'wip' ? (
+                <Pill tone="amber" className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">em construção</Pill>
+              ) : project.stage === 'arquivado' ? (
+                <Pill className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">arquivado</Pill>
+              ) : (
+                <Pill tone="amber" className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">Projeto</Pill>
+              )}
             </div>
 
             <h1 className="mt-4 max-w-[24ch] break-words text-[29px] font-semibold leading-[1.15] tracking-[-.033em] text-rc-ink [text-wrap:balance] md:mt-5 md:text-[48px] md:leading-[1.14] md:tracking-[-.04em]">
