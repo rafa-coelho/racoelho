@@ -4,6 +4,8 @@ import { ContentMeta, ProjectMeta, YoutubeVideo, SocialLink, LinkTreeItem } from
 import Link from 'next/link';
 import Layout from './Layout';
 import { useFeatureFlag } from '@/hooks/use-feature-flag';
+import { DIFFICULTY_LABEL, type SiteStatus } from '@/lib/types';
+import { NowCard } from '@/components/home/NowCard';
 import {
   ButtonLink,
   Eyebrow,
@@ -27,6 +29,7 @@ interface HomeContentProps {
   linkItems?: LinkTreeItem[];
   totalPosts?: number;
   totalChallenges?: number;
+  nowStatus?: SiteStatus | null;
 }
 
 export default function HomeContent({
@@ -35,7 +38,8 @@ export default function HomeContent({
   projects = [],
   videos = [],
   totalPosts = posts.length,
-  totalChallenges = challenges.length
+  totalChallenges = challenges.length,
+  nowStatus = null,
 }: HomeContentProps) {
   const [featuredPost, ...otherPosts] = posts;
   const latestVideo = videos[0];
@@ -96,6 +100,9 @@ export default function HomeContent({
               <HeroCount value={totalChallenges} label="desafios" valueClass="text-rc-green" />
               {videos.length > 0 && <HeroCount value={`${videos.length}+`} label="vídeos" valueClass="text-rc-red" />}
             </div>
+
+            {/* mobile: card "Agora" no fim do hero */}
+            <NowCard status={nowStatus} className="md:hidden" />
           </div>
 
           {/* desktop: coluna da foto à esquerda */}
@@ -106,6 +113,7 @@ export default function HomeContent({
               ratio="1/1"
               className="rounded-rc-card-lg border border-rc-photo-border"
             />
+            <NowCard status={nowStatus} />
           </div>
         </div>
       </section>
@@ -213,11 +221,11 @@ export default function HomeContent({
                 href={`/listas/desafios/${challenge.slug}`}
                 className={cardClasses({ interactive: true, className: 'flex min-h-[206px] flex-col gap-3 p-[22px]' })}
               >
-                <span className="font-mono text-[26px] tracking-[-.03em] text-rc-green">#{totalChallenges - idx}</span>
+                <span className="font-mono text-[26px] tracking-[-.03em] text-rc-green">#{challengeNumber(challenge, totalChallenges - idx)}</span>
                 <h3 className="text-[19.5px] font-semibold tracking-[-.018em] text-rc-ink">{challenge.title}</h3>
                 {challenge.excerpt && <p className="line-clamp-3 text-[14.5px] leading-[1.6] text-rc-ink-4">{challenge.excerpt}</p>}
                 <div className="mt-auto flex items-center justify-between font-mono text-[11.5px] text-rc-ink-5">
-                  <span>{challenge.tags?.slice(0, 2).join(' · ')}</span>
+                  <span>{challenge.difficulty ? DIFFICULTY_LABEL[challenge.difficulty] : challenge.tags?.slice(0, 2).join(' · ')}</span>
                   <span className="text-rc-green">começar →</span>
                 </div>
               </Link>
@@ -238,7 +246,7 @@ export default function HomeContent({
                       : 'grid h-[38px] w-[38px] shrink-0 place-items-center rounded-[10px] border border-rc-border-chip bg-rc-nav-hover font-mono text-[13px] text-rc-ink-4'
                   }
                 >
-                  {pad2(totalChallenges - idx)}
+                  {pad2(challengeNumber(challenge, totalChallenges - idx))}
                 </span>
                 <div className="min-w-0 flex-1">
                   <h3 className="text-[15.5px] font-semibold tracking-[-.018em] text-rc-ink">{challenge.title}</h3>
@@ -246,6 +254,17 @@ export default function HomeContent({
                     <div className="mt-[5px] font-mono text-[10.5px] text-rc-ink-5">{challenge.tags.slice(0, 3).join(' · ')}</div>
                   )}
                 </div>
+                {challenge.difficulty && (
+                  <span
+                    className={
+                      idx === 0
+                        ? 'shrink-0 rounded-full border border-rc-green-border-strong px-[9px] py-1 font-mono text-[10px] uppercase tracking-[.06em] text-rc-green'
+                        : 'shrink-0 rounded-full border border-rc-border-chip px-[9px] py-1 font-mono text-[10px] uppercase tracking-[.06em] text-rc-ink-4'
+                    }
+                  >
+                    {DIFFICULTY_LABEL[challenge.difficulty]}
+                  </span>
+                )}
               </Link>
             ))}
           </div>
@@ -332,6 +351,11 @@ export default function HomeContent({
       </section>
     </Layout>
   );
+}
+
+// Número do desafio: o do PocketBase quando existir, senão a posição na lista.
+function challengeNumber(challenge: ContentMeta, fallback: number) {
+  return typeof challenge.number === 'number' && challenge.number > 0 ? challenge.number : fallback;
 }
 
 function HeroCount({ value, label, valueClass }: { value: number | string; label: string; valueClass: string }) {
