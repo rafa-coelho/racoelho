@@ -11,6 +11,10 @@ function mapPbToSetupItem(rec: any): SetupItem {
     image: fileUrl(rec, rec.image),
     url: rec.url,
     price: rec.price,
+    affiliate: !!rec.affiliate,
+    detail: rec.detail || undefined,
+    kind: rec.kind === 'software' || rec.kind === 'hardware' ? rec.kind : undefined,
+    order: typeof rec.order === 'number' ? rec.order : undefined,
   };
 }
 

@@ -11,7 +11,26 @@ export interface ContentMeta {
   tags?: string[];
   status?: 'draft' | 'published';
   readingTime?: number;
+  // posts (rebranding, opcionais)
+  featured?: boolean;
+  likes?: number;
+  // challenges (rebranding, opcionais)
+  number?: number;
+  difficulty?: ChallengeDifficulty;
+  estimatedHours?: number;
+  stack?: string[];
+  deliverables?: { text: string }[];
+  criteria?: { text: string }[];
+  comingSoon?: boolean;
 }
+
+export type ChallengeDifficulty = 'facil' | 'medio' | 'dificil';
+
+export const DIFFICULTY_LABEL: Record<ChallengeDifficulty, string> = {
+  facil: 'fácil',
+  medio: 'médio',
+  dificil: 'difícil',
+};
 
 export interface ContentItem extends ContentMeta {
   content: string;
@@ -30,7 +49,23 @@ export interface ProjectMeta {
   featured?: boolean;
   order?: number;
   status?: 'draft' | 'published';
+  // rebranding (opcionais)
+  kind?: ProjectKind;
+  icon?: string;
+  accent?: 'blue' | 'green' | 'amber';
+  stage?: ProjectStage;
+  stack?: string[];
 }
+
+export type ProjectKind = 'saas' | 'open-source' | 'ferramenta' | 'experimento';
+export type ProjectStage = 'live' | 'wip' | 'arquivado';
+
+export const PROJECT_KIND_LABEL: Record<ProjectKind, string> = {
+  saas: 'SaaS',
+  'open-source': 'Open source',
+  ferramenta: 'Ferramenta',
+  experimento: 'Experimento',
+};
 
 export interface Project extends ProjectMeta {
   content: string;
@@ -60,6 +95,67 @@ export interface SetupItem {
   image: string;
   url?: string;
   price?: string;
+  // rebranding (opcionais)
+  affiliate?: boolean;
+  detail?: string;
+  kind?: 'hardware' | 'software';
+  order?: number;
+}
+
+// ── Collections novas do rebranding ──
+
+export interface SiteStatus {
+  id?: string;
+  text: string;
+  active: boolean;
+  updatedAt?: string;
+}
+
+export type ChallengeSubmissionStatus = 'new' | 'reviewed' | 'featured' | 'rejected';
+
+export interface ChallengeSubmission {
+  id: string;
+  challenge: string;
+  challengeTitle?: string;
+  challengeSlug?: string;
+  name: string;
+  email: string;
+  repoUrl: string;
+  demoUrl?: string;
+  notes?: string;
+  status: ChallengeSubmissionStatus;
+  reviewNote?: string;
+  created: string;
+}
+
+export interface MediaKitChannel { network: string; handle: string; url: string; followers?: number; note?: string }
+export interface MediaKitFormat { tag: string; title: string; description: string; exampleLabel?: string; exampleUrl?: string }
+export interface MediaKitFeatured { type: 'video' | 'post' | 'challenge' | 'talk'; title: string; url: string; coverImage?: string }
+export interface MediaKitBrand { name: string; logo?: string; url?: string }
+export interface MediaKitBlock { title: string; text: string }
+
+export interface MediaKit {
+  id?: string;
+  headline: string;
+  summary: string;
+  channels: MediaKitChannel[];
+  formats: MediaKitFormat[];
+  featured: MediaKitFeatured[];
+  brands: MediaKitBrand[];
+  process: MediaKitBlock[];
+  principles: MediaKitBlock[];
+  contactEmail: string;
+  pdf?: string;
+  availability?: string;
+  reviewed: boolean;
+  updatedAt?: string;
+}
+
+export interface CommunityStats {
+  members: number;
+  online: number;
+  channels: number;
+  fetchedAt: string;
 }
 
 export interface SalesPageBlock {

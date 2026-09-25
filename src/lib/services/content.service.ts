@@ -13,7 +13,9 @@ function mapPbToContentMeta(rec: any): ContentMeta {
     coverImage: rec.coverImage ? fileUrl(rec, rec.coverImage) : undefined,
     tags: rec.tags || [],
     status: rec.status || undefined,
-    readingTime: calculateReadingTime(rec.content || ''),
+    readingTime: typeof rec.readingTime === 'number' && rec.readingTime > 0 ? rec.readingTime : calculateReadingTime(rec.content || ''),
+    featured: !!rec.featured,
+    likes: typeof rec.likes === 'number' ? rec.likes : 0,
   };
 }
 
