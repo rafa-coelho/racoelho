@@ -12,12 +12,13 @@ const Analytics = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
-  // Analytics próprio (roda junto com o GA). O init já registra o pageview da carga
-  // inicial; as trocas de rota client-side são disparadas aqui (o SDK ignora a
-  // repetição do mesmo path em sequência).
+  // Analytics próprio (roda junto com o GA). Pageview da carga e das trocas de
+  // rota client-side sai daqui, pulando o admin como o GA.
   useEffect(() => {
     initAnalytics()
-    pageview()
+    if (!pathname?.startsWith('/admin')) {
+      pageview()
+    }
   }, [pathname])
 
   useEffect(() => {

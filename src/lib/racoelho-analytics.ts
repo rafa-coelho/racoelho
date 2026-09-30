@@ -15,8 +15,9 @@ function getClient(): Analytics | null {
   if (client) return client;
   if (!SITE_KEY || typeof window === 'undefined') return null;
   try {
-    // autoPageview/autoWebVitals/autoErrors ficam nos defaults (ligados)
-    client = new Analytics({ siteKey: SITE_KEY, endpoint: ENDPOINT });
+    // autoPageview desligado: o pageview sai do componente Analytics, que pula o
+    // /admin como o GA. Web Vitals e erros JS seguem nos defaults (ligados).
+    client = new Analytics({ siteKey: SITE_KEY, endpoint: ENDPOINT, autoPageview: false });
   } catch (error) {
     client = null;
   }
@@ -27,8 +28,8 @@ export function initAnalytics(): void {
   getClient();
 }
 
-// O autoPageview do SDK só registra a carga inicial (não observa history.pushState),
-// então as trocas de rota do App Router chamam isto.
+// Chamado pelo componente Analytics na carga e em cada troca de rota do App Router
+// (o SDK não observa history.pushState).
 export function pageview(props?: Record<string, unknown>): void {
   try {
     getClient()?.pageview(props);
