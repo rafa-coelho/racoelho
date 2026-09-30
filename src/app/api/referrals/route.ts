@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPocketBaseServer } from '@/lib/pocketbase-server';
 import { sendRawMail } from '@/lib/services/mailer.service';
 import { authorInfo } from '@/lib/config/constants';
+import { reportServerError } from '@/lib/sentinela';
 
 export const runtime = 'nodejs';
 
@@ -146,6 +147,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[referrals] Erro inesperado:', error);
+    reportServerError('/api/referrals', error, { method: 'POST' });
     return NextResponse.json({ error: 'Erro ao processar a indicação' }, { status: 500 });
   }
 }

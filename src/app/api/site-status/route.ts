@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { isAdmin } from '@/lib/pocketbase-server';
 import { siteStatusService } from '@/lib/services/site-status.service';
+import { reportServerError } from '@/lib/sentinela';
 
 export async function GET() {
   const status = await siteStatusService.get();
@@ -28,6 +29,7 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(saved);
   } catch (error) {
     console.error('[site-status] erro ao salvar:', error);
+    reportServerError('/api/site-status', error, { method: 'PATCH' });
     return NextResponse.json({ error: 'Erro ao salvar status' }, { status: 500 });
   }
 }

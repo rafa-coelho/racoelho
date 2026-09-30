@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
 import { communityStatsService } from '@/lib/services/community-stats.service';
+import { reportServerError } from '@/lib/sentinela';
 
 // Chamado por cron (a cada 6h) com o header x-cron-secret.
 export async function POST(request: NextRequest) {
@@ -14,6 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(stats);
   } catch (error: any) {
     console.error('[community-stats] erro:', error);
+    reportServerError('/api/community-stats/refresh', error, { method: 'POST' });
     return NextResponse.json({ error: error?.message || 'Erro ao atualizar' }, { status: 500 });
   }
 }

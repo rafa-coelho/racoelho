@@ -6,6 +6,7 @@ import { contentService } from '@/lib/services/content.service';
 import { challengeService } from '@/lib/services/challenge.service';
 import { projectService } from '@/lib/services/project.service';
 import { salesService } from '@/lib/services/sales.service';
+import { reportServerError } from '@/lib/sentinela';
 
 // Coleções válidas que podem ter cache invalidado
 const VALID_COLLECTIONS = [
@@ -182,6 +183,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Erro ao invalidar cache:', error);
+    reportServerError('/api/cache/invalidate', error, { method: 'POST' });
     return NextResponse.json(
       { error: error.message || 'Erro ao invalidar cache' },
       { status: 500 }

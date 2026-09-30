@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { assetService } from '@/lib/services/asset.service';
+import { reportServerError } from '@/lib/sentinela';
 
 interface RouteParams {
   params: {
@@ -34,6 +35,7 @@ export async function GET(_request: NextRequest, { params }: RouteParams) {
       },
     });
   } catch (error) {
+    reportServerError('/api/assets-proxy', error, { method: 'GET' });
     return NextResponse.json({ error: 'Erro no proxy' }, { status: 500 });
   }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { contentService } from '@/lib/services/content.service';
 import { isAdmin } from '@/lib/pocketbase-server';
 import { matchesSearch } from '@/components/posts/search';
+import { reportServerError } from '@/lib/sentinela';
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
@@ -52,6 +53,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching posts:', error);
+    reportServerError('/api/posts', error, { method: 'GET' });
     return NextResponse.json(
       { error: 'Failed to fetch posts' },
       { status: 500 }

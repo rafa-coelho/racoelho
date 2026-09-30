@@ -83,6 +83,23 @@ public/                 # Arquivos estáticos
 - **Analytics**: Rastreamento de eventos e cliques
 - **Tema escuro/claro**: Suporte a temas claro e escuro
 
+## Observabilidade (Analytics próprio + Sentinela)
+
+Tudo é opcional: sem as variáveis abaixo cada integração vira no-op silencioso (dev e preview
+funcionam sem configurar nada). O Google Analytics (`NEXT_PUBLIC_GA_ID`) continua funcionando junto.
+
+| Variável | Onde | O que faz |
+|---|---|---|
+| `NEXT_PUBLIC_ANALYTICS_SITE_KEY` | build + runtime (pública) | Site key do analytics próprio (`@racoelho/analytics`, vendorizado em `src/vendor/racoelho-analytics`). Pageviews, web vitals, erros JS e os eventos do `analyticsService` (que também vão para o GA). |
+| `NEXT_PUBLIC_ANALYTICS_ENDPOINT` | build + runtime (pública) | Opcional. Ingestor do analytics; sem ela usa o default embutido no SDK. |
+| `SENTINELA_URL` | só servidor | Base do Sentinela. |
+| `SENTINELA_SECRET` | só servidor | Chave `sk_...` do app no Sentinela. **Nunca** com prefixo `NEXT_PUBLIC_`. |
+
+- `GET /api/health` (sem auth) responde `{"status":"ok"}` quando o PocketBase responde em até 3s,
+  senão `{"status":"degraded"}` com 503. É a URL de health a cadastrar no Sentinela.
+- Erros 5xx das rotas `/api/*` são reportados ao Sentinela via `reportServerError` (`src/lib/sentinela.ts`).
+- Como as `NEXT_PUBLIC_*` são embutidas no build, configure-as no serviço do Railway antes do deploy.
+
 ## Sistema de Versionamento
 
 Este projeto conta com um sistema de versionamento automático que incrementa a versão e atualiza a data de build sempre que ocorre um merge para a branch principal (master/main) via Pull Request.

@@ -15,6 +15,7 @@ declare global {
 
 import { GA_TRACKING_ID } from '../gtag'
 import { analyticsConfig } from '../config/constants'
+import { track } from '../racoelho-analytics'
 
 export class AnalyticsService {
   private static instance: AnalyticsService
@@ -51,6 +52,8 @@ export class AnalyticsService {
 
   public event(action: string, category: string, label?: string, value?: number): void {
     if (this.isAdminPath()) return
+    // Repassa também para o analytics próprio (no-op sem site key)
+    track(action, { category, label, value })
     if (typeof window !== 'undefined' && window.gtag) {
       window.gtag('event', action, {
         event_category: category,

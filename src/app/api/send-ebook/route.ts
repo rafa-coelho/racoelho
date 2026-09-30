@@ -5,6 +5,7 @@ import { registerEbookToken } from '@/lib/services/data.service';
 import { convertKitConfig } from '@/lib/config/constants';
 import { registerToForm } from '@/lib/services/convert-kit.service';
 import { assetService } from '@/lib/services/asset.service';
+import { reportServerError } from '@/lib/sentinela';
 
 // Interface para os dados do formulário
 interface FormData {
@@ -107,6 +108,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Erro ao processar solicitação:', error);
+    reportServerError('/api/send-ebook', error, { method: 'POST' });
     return NextResponse.json(
       { error: 'Erro ao processar sua solicitação. Tente novamente mais tarde.' },
       { status: 500 }

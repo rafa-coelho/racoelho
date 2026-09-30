@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { registerToForm } from '@/lib/services/convert-kit.service';
+import { reportServerError } from '@/lib/sentinela';
 
 // Interface para os dados do email
 interface EmailData {
@@ -76,6 +77,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Erro ao processar requisição de email:', error);
+    reportServerError('/api/email', error, { method: 'POST' });
     return NextResponse.json(
       { error: 'Erro ao processar sua solicitação' },
       { status: 500 }

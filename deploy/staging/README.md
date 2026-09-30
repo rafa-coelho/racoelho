@@ -24,3 +24,7 @@ pela API pública, incluindo arquivos. Não usa credenciais de produção e não
 
 Sem `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_GOOGLE_ADS_*`, ConvertKit ou SMTP: analytics e anúncios
 ficam desligados e formulários que dependem desses serviços retornam erro tratado.
+
+Observabilidade é opcional também: sem `NEXT_PUBLIC_ANALYTICS_SITE_KEY` o analytics próprio fica
+desligado, e sem `SENTINELA_URL`/`SENTINELA_SECRET` nada é reportado ao Sentinela. Se quiser monitorar o
+staging, cadastre-o como um app separado no Sentinela (chave própria) e use `/api/health` como URL de health.

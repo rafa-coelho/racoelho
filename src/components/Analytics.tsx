@@ -6,10 +6,19 @@ import { analyticsService } from '@/lib/services/analytics.service'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { Suspense } from 'react';
+import { initAnalytics, pageview } from '@/lib/racoelho-analytics'
 
 const Analytics = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+
+  // Analytics próprio (roda junto com o GA). O init já registra o pageview da carga
+  // inicial; as trocas de rota client-side são disparadas aqui (o SDK ignora a
+  // repetição do mesmo path em sequência).
+  useEffect(() => {
+    initAnalytics()
+    pageview()
+  }, [pathname])
 
   useEffect(() => {
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { isAdmin } from '@/lib/pocketbase-server';
+import { reportServerError } from '@/lib/sentinela';
 
 export const dynamic = 'force-dynamic';
 
@@ -44,6 +45,7 @@ export async function GET() {
     return NextResponse.json({ available: true, total, last30, prev30 });
   } catch (error) {
     console.error('[admin/subscribers] erro ao consultar ConvertKit:', error);
+    reportServerError('/api/admin/subscribers', error, { method: 'GET' });
     return NextResponse.json({ available: false, error: 'Falha ao consultar ConvertKit' }, { status: 502 });
   }
 }
