@@ -4,6 +4,7 @@ import { assetService } from '@/lib/services/asset.service';
 import { getPocketBaseServer } from '@/lib/pocketbase-server';
 import path from 'path';
 import fs from 'fs/promises';
+import { reportServerError } from '@/lib/sentinela';
 
 interface RouteParams {
   params: {
@@ -174,6 +175,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     }
   } catch (error) {
     console.error('Erro ao processar download:', error);
+    reportServerError('/api/download', error, { method: 'GET' });
     return NextResponse.json(
       { error: 'Erro ao processar download' },
       { status: 500 }

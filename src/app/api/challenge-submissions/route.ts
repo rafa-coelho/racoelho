@@ -6,6 +6,7 @@ import { featureFlagService } from '@/lib/services/feature-flag.service';
 import { challengeSubmissionService, EMAIL_RE, isValidRepoUrl, isValidUrl } from '@/lib/services/challenge-submission.service';
 import { clientIp, rateLimit } from '@/lib/utils/rate-limit';
 import type { ChallengeSubmissionStatus } from '@/lib/types';
+import { reportServerError } from '@/lib/sentinela';
 
 export const runtime = 'nodejs';
 
@@ -88,6 +89,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[challenge-submissions] erro:', error);
+    reportServerError('/api/challenge-submissions', error, { method: 'POST' });
     return NextResponse.json({ error: 'Erro ao processar envio' }, { status: 500 });
   }
 }

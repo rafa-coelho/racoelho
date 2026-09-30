@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { socialService } from '@/lib/services/social.service';
+import { reportServerError } from '@/lib/sentinela';
 
 export async function GET() {
   try {
@@ -7,6 +8,7 @@ export async function GET() {
     return NextResponse.json(socialLinks);
   } catch (error) {
     console.error('Error fetching social links:', error);
+    reportServerError('/api/social-links', error, { method: 'GET' });
     return NextResponse.json(
       { error: 'Failed to fetch social links' },
       { status: 500 }

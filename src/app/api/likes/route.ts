@@ -3,6 +3,7 @@ import { getPocketBaseServer } from '@/lib/pocketbase-server';
 import { featureFlagService } from '@/lib/services/feature-flag.service';
 import { clientIp, rateLimit } from '@/lib/utils/rate-limit';
 import { createHash } from 'crypto';
+import { reportServerError } from '@/lib/sentinela';
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const SLUG_RE = /^[a-z0-9-]{1,200}$/i;
@@ -75,6 +76,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ liked: true, count });
   } catch (error) {
     console.error('[likes] erro:', error);
+    reportServerError('/api/likes', error, { method: 'POST' });
     return NextResponse.json({ error: 'Erro ao curtir' }, { status: 500 });
   }
 }
@@ -93,6 +95,7 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ liked: false, count });
   } catch (error) {
     console.error('[likes] erro:', error);
+    reportServerError('/api/likes', error, { method: 'DELETE' });
     return NextResponse.json({ error: 'Erro ao descurtir' }, { status: 500 });
   }
 }

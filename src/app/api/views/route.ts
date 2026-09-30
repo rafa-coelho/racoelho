@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPublicPocketBaseClient } from '@/lib/auth';
 import { getViewData, isValidViewerId } from '@/lib/analytics';
 import PocketBase from 'pocketbase';
+import { reportServerError } from '@/lib/sentinela';
 
 /**
  * Retorna um cliente PocketBase autenticado como admin
@@ -123,6 +124,7 @@ export async function POST(request: NextRequest) {
     
   } catch (error) {
     console.error('[Views API] Error tracking view:', error);
+    reportServerError('/api/views', error, { method: 'POST' });
     
     // Retorna sucesso mesmo com erro para não impactar UX
     // Apenas loga o erro para monitoramento
@@ -216,6 +218,7 @@ export async function GET(request: NextRequest) {
     
   } catch (error) {
     console.error('[Views API] Error fetching stats:', error);
+    reportServerError('/api/views', error, { method: 'GET' });
     return NextResponse.json(
       { error: 'Erro ao buscar estatísticas' },
       { status: 500 }

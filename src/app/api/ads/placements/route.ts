@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pbListWithPreview } from '@/lib/pocketbase-server';
 import { PageType, SlotType, Placement } from '@/lib/services/adOrchestrator';
+import { reportServerError } from '@/lib/sentinela';
 
 function fileUrl(rec: any, filename: string): string {
   if (!filename) return '';
@@ -135,6 +136,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error: any) {
     console.error('[Ads API] Error getting placements:', error);
+    reportServerError('/api/ads/placements', error, { method: 'GET' });
     return NextResponse.json(
       { error: error?.message || 'Erro ao buscar placements' },
       { status: 500 }

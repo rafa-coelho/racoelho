@@ -1,5 +1,6 @@
 // PocketBase Auth Helper
 import PocketBase from 'pocketbase';
+import { identify, resetAnalytics } from './racoelho-analytics';
 
 const PB_URL = process.env.NEXT_PUBLIC_PB_URL || '';
 
@@ -71,6 +72,7 @@ export async function signOut() {
   const pb = getPocketBase();
   pb.authStore.clear();
   localStorage.removeItem('pb_auth');
+  resetAnalytics();
   
   window.location.href = '/admin/login';
 }
@@ -117,6 +119,11 @@ export async function checkAuth(): Promise<boolean> {
     // Try to refresh to validate token
     await pb.admins.authRefresh();
     console.log('[Auth] Token is valid');
+
+    // Admin logado conhecido (login ou sessão restaurada): identifica no analytics
+    const model = pb.authStore.model as { id?: string; email?: string } | null;
+    const adminId = model?.id || model?.email;
+    if (adminId) identify(adminId, model?.email ? { email: model.email } : undefined);
     
     return true;
   } catch (error) {

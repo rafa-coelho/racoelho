@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import Layout from '@/components/Layout';
 import { Button, ButtonLink, Eyebrow } from '@/components/rc';
+import { captureException } from '@/lib/racoelho-analytics';
 
 export default function Error({
   error,
@@ -13,6 +14,7 @@ export default function Error({
 }) {
   useEffect(() => {
     console.error(error);
+    captureException(error, { digest: error.digest, boundary: 'app/error' });
   }, [error]);
 
   return (
