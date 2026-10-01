@@ -88,16 +88,30 @@ export function resolveProjectIcon(name?: string): LucideIcon | null {
   return PROJECT_ICONS[name.toLowerCase().trim()] ?? null;
 }
 
-// Quadrado do projeto: ícone lucide na cor do accent; sem ícone, inicial do título em mono.
+// Quadrado do projeto: o ícone do próprio produto (logo) quando houver; senão ícone
+// lucide na cor do accent; sem nenhum, inicial do título em mono.
 export function ProjectIcon({
   project,
   size = 'sm',
   className,
 }: {
-  project: Pick<ProjectMeta, 'title' | 'icon' | 'accent'>;
+  project: Pick<ProjectMeta, 'title' | 'icon' | 'accent' | 'logo'>;
   size?: 'sm' | 'lg';
   className?: string;
 }) {
+  if (project.logo) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={project.logo}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        className={cn('shrink-0 object-contain', size === 'lg' ? 'h-11 w-11 rounded-xl' : 'h-8 w-8 rounded-[9px]', className)}
+      />
+    );
+  }
+
   const Icon = resolveProjectIcon(project.icon);
   const box = accentIconBox[project.accent ?? 'amber'];
 

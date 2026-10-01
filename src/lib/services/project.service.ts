@@ -19,6 +19,7 @@ function mapPbToProjectMeta(rec: any): ProjectMeta {
     status: rec.status || undefined,
     kind: ['saas', 'open-source', 'ferramenta', 'experimento', 'cliente'].includes(rec.kind) ? rec.kind : undefined,
     icon: rec.icon || undefined,
+    logo: rec.logo ? fileUrl(rec, rec.logo) : undefined,
     accent: ['blue', 'green', 'amber'].includes(rec.accent) ? rec.accent : undefined,
     stage: ['live', 'wip', 'arquivado'].includes(rec.stage) ? rec.stage : 'live',
     stack: Array.isArray(rec.stack) && rec.stack.length ? rec.stack.map(String) : undefined,

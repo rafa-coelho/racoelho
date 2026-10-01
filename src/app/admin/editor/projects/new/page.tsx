@@ -4,7 +4,7 @@ import { pbCreate } from "@/lib/pocketbase";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
-import { ProjectExtraFields, projectExtraToPayload, emptyProjectExtra, type ProjectExtra } from "@/components/admin/fields";
+import { LogoField, ProjectExtraFields, projectExtraToPayload, emptyProjectExtra, type ProjectExtra } from "@/components/admin/fields";
 import ImageUpload from "@/components/admin/ImageUpload";
 
 type Step = 'metadata' | 'content';
@@ -17,6 +17,7 @@ export default function NewProjectPage() {
     const [excerpt, setExcerpt] = useState("");
     const [content, setContent] = useState("");
     const [cover, setCover] = useState<File | null>(null);
+    const [logo, setLogo] = useState<File | null>(null);
     const [status, setStatus] = useState("draft");
     const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
     const [tags, setTags] = useState("");
@@ -54,6 +55,9 @@ export default function NewProjectPage() {
 
             if (cover) {
                 projectData.coverImage = cover;
+            }
+            if (logo) {
+                projectData.logo = logo;
             }
 
             await pbCreate("projects", projectData);
@@ -228,6 +232,7 @@ export default function NewProjectPage() {
                             <div className="border-t border-rc-border pt-6">
                               <h2 className="mb-5 font-mono text-[11.5px] uppercase tracking-[.1em] text-rc-ink-3">Vitrine</h2>
                               <ProjectExtraFields value={extra} onChange={setExtra} title={title} />
+                              <LogoField id="pj-logo" file={logo} onChange={setLogo} />
                             </div>
 
                             <label className="flex min-h-[44px] items-center gap-3 cursor-pointer select-none rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5">

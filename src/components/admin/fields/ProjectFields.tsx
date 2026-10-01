@@ -22,7 +22,7 @@ const pick = <T extends string>(v: unknown, allowed: readonly T[]): T | '' => (a
 
 export function projectExtraFromRecord(rec: any): ProjectExtra {
   return {
-    kind: pick(rec?.kind, ['saas', 'open-source', 'ferramenta', 'experimento'] as const),
+    kind: pick(rec?.kind, ['saas', 'open-source', 'ferramenta', 'experimento', 'cliente'] as const),
     icon: typeof rec?.icon === 'string' ? rec.icon : '',
     accent: pick(rec?.accent, ['blue', 'green', 'amber'] as const),
     stage: pick(rec?.stage, ['live', 'wip', 'arquivado'] as const),

@@ -5,7 +5,7 @@ import { pbGetById, pbUpdate } from "@/lib/pocketbase";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { slugify } from "@/lib/utils";
 import { ChevronRight, ChevronLeft, Check } from "lucide-react";
-import { ProjectExtraFields, projectExtraFromRecord, projectExtraToPayload, emptyProjectExtra, type ProjectExtra } from "@/components/admin/fields";
+import { LogoField, ProjectExtraFields, projectExtraFromRecord, projectExtraToPayload, emptyProjectExtra, type ProjectExtra } from "@/components/admin/fields";
 
 type Step = 'metadata' | 'content';
 
@@ -29,6 +29,8 @@ export default function EditProjectPage() {
   const [loading, setLoading] = useState(true);
   const [cover, setCover] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [logo, setLogo] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -52,6 +54,10 @@ export default function EditProjectPage() {
         setFeatured(!!rec.featured);
         setOrder(typeof rec.order === 'number' ? String(rec.order) : "");
         setExtra(projectExtraFromRecord(rec));
+
+        if (rec.logo) {
+          setLogoUrl(`${process.env.NEXT_PUBLIC_PB_URL || ''}/api/files/projects/${rec.id}/${rec.logo}`);
+        }
 
         if (rec.coverImage) {
           const pbUrl = process.env.NEXT_PUBLIC_PB_URL || '';
@@ -87,6 +93,9 @@ export default function EditProjectPage() {
 
       if (cover) {
         projectData.coverImage = cover;
+      }
+      if (logo) {
+        projectData.logo = logo;
       }
 
       await pbUpdate("projects", id, projectData);
@@ -257,6 +266,7 @@ export default function EditProjectPage() {
               <div className="border-t border-rc-border pt-6">
                 <h2 className="mb-5 font-mono text-[11.5px] uppercase tracking-[.1em] text-rc-ink-3">Vitrine</h2>
                 <ProjectExtraFields value={extra} onChange={setExtra} title={title} />
+              <LogoField id="pj-logo" file={logo} onChange={setLogo} existingUrl={logoUrl} />
               </div>
 
               <label className="flex min-h-[44px] items-center gap-3 cursor-pointer select-none rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5">
