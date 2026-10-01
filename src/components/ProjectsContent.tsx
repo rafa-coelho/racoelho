@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Button, ButtonLink, Chip, EmptyState, Eyebrow, cardClasses } from '@/components/rc';
 import { ProjectIcon, resolveProjectIcon } from '@/components/projects/ProjectIcon';
+import { ProjectMedia } from '@/components/projects/ProjectMedia';
 
 interface ProjectsContentProps {
   projects: ProjectMeta[];
@@ -316,11 +317,13 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
       className={cardClasses({
         interactive: true,
         className: cn(
-          'flex flex-col gap-[9px] rounded-[13px] p-3.5 md:min-h-[214px] md:gap-2.5 md:rounded-rc-card md:p-5',
+          'group flex flex-col overflow-hidden rounded-[13px] md:rounded-rc-card',
           isArchived && 'opacity-70',
         ),
       })}
     >
+      <ProjectMedia project={project} chrome={false} className="hidden sm:block" />
+      <div className="flex flex-1 flex-col gap-[9px] p-3.5 md:gap-2.5 md:p-5">
       {/* Mobile: quadrado do ícone (ou inicial do título) */}
       <div className="flex items-start justify-between gap-2 md:hidden">
         <ProjectIcon project={project} />
@@ -367,11 +370,20 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
       )}
 
       <div className={cn('hidden items-center justify-between border-t border-rc-border-card pt-[11px] md:flex', tags.length === 0 && 'mt-auto')}>
-        <span className="font-mono text-[10px] text-rc-ink-5">{isPrivate ? 'spec & arquitetura' : project.liveUrl ? 'site no ar' : 'código aberto'}</span>
+        <span className="font-mono text-[10px] text-rc-ink-5">
+          {[projectYear(project.date), isPrivate ? 'spec & arquitetura' : project.liveUrl ? 'site no ar' : 'código aberto'].filter(Boolean).join(' · ')}
+        </span>
         <span className="text-[13.5px] font-medium text-rc-blue-link">Ver case →</span>
+      </div>
       </div>
     </Link>
   );
+}
+
+function projectYear(date?: string): string | null {
+  if (!date) return null;
+  const year = new Date(date).getFullYear();
+  return Number.isNaN(year) ? null : String(year);
 }
 
 function ProductCard({ project }: { project: ProjectMeta }) {
@@ -379,7 +391,9 @@ function ProductCard({ project }: { project: ProjectMeta }) {
   const host = project.liveUrl ? project.liveUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : null;
 
   return (
-    <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col gap-3 rounded-rc-card p-4 md:gap-3.5 md:p-6' })}>
+    <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col overflow-hidden rounded-rc-card' })}>
+      <ProjectMedia project={project} />
+      <div className="flex flex-1 flex-col gap-3 p-4 md:gap-3.5 md:p-6">
       <div className="flex items-start gap-3">
         <ProjectIcon project={project} size="lg" />
         <div className="min-w-0 flex-1">
@@ -411,6 +425,21 @@ function ProductCard({ project }: { project: ProjectMeta }) {
         </div>
       )}
 
+      <dl className="grid grid-cols-3 gap-2 border-t border-rc-border-card pt-3 font-mono text-[10.5px] md:text-[11px]">
+        <div className="min-w-0">
+          <dt className="uppercase tracking-[.08em] text-rc-ink-5">ano</dt>
+          <dd className="mt-0.5 text-rc-ink-2">{projectYear(project.date) ?? '—'}</dd>
+        </div>
+        <div className="min-w-0">
+          <dt className="uppercase tracking-[.08em] text-rc-ink-5">papel</dt>
+          <dd className="mt-0.5 truncate text-rc-ink-2">{project.role ?? '—'}</dd>
+        </div>
+        <div className="min-w-0">
+          <dt className="uppercase tracking-[.08em] text-rc-ink-5">código</dt>
+          <dd className="mt-0.5 text-rc-ink-2">{project.repoUrl ? 'aberto' : 'privado'}</dd>
+        </div>
+      </dl>
+
       <div className="mt-auto flex items-center justify-between gap-3 border-t border-rc-border-card pt-3">
         <span className="text-[13.5px] font-medium text-rc-blue-link">Ver case →</span>
         {project.liveUrl && (
@@ -425,6 +454,7 @@ function ProductCard({ project }: { project: ProjectMeta }) {
             <span className="sr-only">{project.title} (abre em nova aba)</span>
           </a>
         )}
+      </div>
       </div>
     </article>
   );
