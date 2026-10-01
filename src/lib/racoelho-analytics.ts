@@ -1,9 +1,9 @@
 // Analytics próprio (@racoelho/analytics), rodando junto com o Google Analytics.
-// O SDK é vendorizado em src/vendor/racoelho-analytics (a versão do npm está desatualizada).
+// O SDK vem do pacote npm @racoelho/analytics.
 //
 // Sem NEXT_PUBLIC_ANALYTICS_SITE_KEY, ou fora do browser (SSR), tudo aqui é no-op
 // silencioso: dev e preview não precisam saber que ele existe. Nada aqui lança.
-import { Analytics } from '@/vendor/racoelho-analytics';
+import { Analytics } from '@racoelho/analytics';
 
 const SITE_KEY = process.env.NEXT_PUBLIC_ANALYTICS_SITE_KEY || '';
 // Opcional: sem ele o SDK usa o ingestor default embutido no build.
