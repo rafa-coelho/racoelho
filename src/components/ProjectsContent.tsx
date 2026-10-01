@@ -7,7 +7,7 @@ import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
 import { ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Button, ButtonLink, Chip, EmptyState, Eyebrow, cardClasses } from '@/components/rc';
-import { ProjectIcon, resolveProjectIcon } from '@/components/projects/ProjectIcon';
+import { ProjectIcon } from '@/components/projects/ProjectIcon';
 import { BrowserBar } from '@/components/projects/BrowserBar';
 
 interface ProjectsContentProps {
@@ -307,7 +307,6 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
   const isPrivate = !project.repoUrl && !project.liveUrl;
   const isWip = project.stage === 'wip';
   const isArchived = project.stage === 'arquivado';
-  const hasIcon = !!project.logo || !!resolveProjectIcon(project.icon);
   const tags = project.tags ?? [];
   const extra = tags.length - 3;
 
@@ -323,28 +322,20 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
       })}
     >
       <div className="flex flex-1 flex-col gap-[9px] p-3.5 md:gap-2.5 md:p-5">
-      {/* Mobile: quadrado do ícone (ou inicial do título) */}
-      <div className="flex items-start justify-between gap-2 md:hidden">
+      {/* Ícone ao lado do título; categoria e selos embaixo. No celular (2 colunas) o ícone fica em cima. */}
+      <div className="flex flex-col gap-[9px] sm:flex-row sm:items-start sm:gap-3">
         <ProjectIcon project={project} />
-        {(isWip || isPrivate) && (
-          <div className="flex flex-col items-end gap-1">
+        <div className="min-w-0 flex-1">
+          <h3 className="line-clamp-3 text-[14.5px] font-semibold leading-[1.3] tracking-[-.018em] text-rc-ink md:text-rc-card-title">
+            {project.title}
+          </h3>
+          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+            <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{project.kind ? PROJECT_KIND_LABEL[project.kind] : project.role || 'Projeto'}</span>
             {isWip && <StagePill>wip</StagePill>}
-                {isPrivate && !isWip && <PrivateBadge />}
+            {isPrivate && !isWip && <PrivateBadge />}
           </div>
-        )}
+        </div>
       </div>
-
-      {/* Desktop: ícone (se houver) + papel + selos */}
-      <div className="hidden flex-wrap items-center gap-2 md:flex">
-        {hasIcon && <ProjectIcon project={project} className="mr-1" />}
-        <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{project.kind ? PROJECT_KIND_LABEL[project.kind] : project.role || 'Projeto'}</span>
-        {isWip && <StagePill>wip</StagePill>}
-        {isPrivate && <PrivateBadge />}
-      </div>
-
-      <h3 className="line-clamp-3 text-[14.5px] font-semibold leading-[1.3] tracking-[-.018em] text-rc-ink md:text-rc-card-title">
-        {project.title}
-      </h3>
       {project.excerpt && (
         <p className="line-clamp-2 text-[12.5px] leading-[1.45] text-rc-ink-4 md:line-clamp-3 md:text-rc-small">{project.excerpt}</p>
       )}
