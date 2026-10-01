@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Button, ButtonLink, Chip, EmptyState, Eyebrow, cardClasses } from '@/components/rc';
 import { ProjectIcon, resolveProjectIcon } from '@/components/projects/ProjectIcon';
-import { ProjectMedia } from '@/components/projects/ProjectMedia';
+import { BrowserBar } from '@/components/projects/BrowserBar';
 
 interface ProjectsContentProps {
   projects: ProjectMeta[];
@@ -307,7 +307,7 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
   const isPrivate = !project.repoUrl && !project.liveUrl;
   const isWip = project.stage === 'wip';
   const isArchived = project.stage === 'arquivado';
-  const hasIcon = !!resolveProjectIcon(project.icon);
+  const hasIcon = !!project.logo || !!resolveProjectIcon(project.icon);
   const tags = project.tags ?? [];
   const extra = tags.length - 3;
 
@@ -322,7 +322,6 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
         ),
       })}
     >
-      <ProjectMedia project={project} chrome={false} className="hidden sm:block" />
       <div className="flex flex-1 flex-col gap-[9px] p-3.5 md:gap-2.5 md:p-5">
       {/* Mobile: quadrado do ícone (ou inicial do título) */}
       <div className="flex items-start justify-between gap-2 md:hidden">
@@ -392,7 +391,7 @@ function ProductCard({ project }: { project: ProjectMeta }) {
 
   return (
     <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col overflow-hidden rounded-rc-card' })}>
-      <ProjectMedia project={project} />
+      {host && <BrowserBar host={host} />}
       <div className="flex flex-1 flex-col gap-3 p-4 md:gap-3.5 md:p-6">
       <div className="flex items-start gap-3">
         <ProjectIcon project={project} size="lg" />
@@ -403,7 +402,7 @@ function ProductCard({ project }: { project: ProjectMeta }) {
               {project.title}
             </Link>
           </h3>
-          {host && <p className="mt-1 truncate font-mono text-[11.5px] text-rc-ink-5">{host}</p>}
+          {project.role && <p className="mt-1 truncate font-mono text-[11.5px] text-rc-ink-5">{project.role}</p>}
         </div>
       </div>
 
@@ -424,21 +423,6 @@ function ProductCard({ project }: { project: ProjectMeta }) {
           )}
         </div>
       )}
-
-      <dl className="grid grid-cols-3 gap-2 border-t border-rc-border-card pt-3 font-mono text-[10.5px] md:text-[11px]">
-        <div className="min-w-0">
-          <dt className="uppercase tracking-[.08em] text-rc-ink-5">ano</dt>
-          <dd className="mt-0.5 text-rc-ink-2">{projectYear(project.date) ?? '—'}</dd>
-        </div>
-        <div className="min-w-0">
-          <dt className="uppercase tracking-[.08em] text-rc-ink-5">papel</dt>
-          <dd className="mt-0.5 truncate text-rc-ink-2">{project.role ?? '—'}</dd>
-        </div>
-        <div className="min-w-0">
-          <dt className="uppercase tracking-[.08em] text-rc-ink-5">código</dt>
-          <dd className="mt-0.5 text-rc-ink-2">{project.repoUrl ? 'aberto' : 'privado'}</dd>
-        </div>
-      </dl>
 
       <div className="mt-auto flex items-center justify-between gap-3 border-t border-rc-border-card pt-3">
         <span className="text-[13.5px] font-medium text-rc-blue-link">Ver case →</span>

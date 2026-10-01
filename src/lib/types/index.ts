@@ -52,6 +52,8 @@ export interface ProjectMeta {
   // rebranding (opcionais)
   kind?: ProjectKind;
   icon?: string;
+  // ícone do próprio produto (favicon/app icon); sem ele, cai no ícone lucide
+  logo?: string;
   accent?: 'blue' | 'green' | 'amber';
   stage?: ProjectStage;
   stack?: string[];

@@ -6,3 +6,4 @@ export * from './IconField';
 export * from './ChallengeFields';
 export * from './ProjectFields';
 export * from './SetupFields';
+export * from './LogoField';
