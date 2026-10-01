@@ -17,7 +17,7 @@ function mapPbToProjectMeta(rec: any): ProjectMeta {
     featured: !!rec.featured,
     order: typeof rec.order === 'number' ? rec.order : undefined,
     status: rec.status || undefined,
-    kind: ['saas', 'open-source', 'ferramenta', 'experimento'].includes(rec.kind) ? rec.kind : undefined,
+    kind: ['saas', 'open-source', 'ferramenta', 'experimento', 'cliente'].includes(rec.kind) ? rec.kind : undefined,
     icon: rec.icon || undefined,
     accent: ['blue', 'green', 'amber'].includes(rec.accent) ? rec.accent : undefined,
     stage: ['live', 'wip', 'arquivado'].includes(rec.stage) ? rec.stage : 'live',

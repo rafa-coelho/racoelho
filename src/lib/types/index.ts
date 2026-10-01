@@ -57,7 +57,7 @@ export interface ProjectMeta {
   stack?: string[];
 }
 
-export type ProjectKind = 'saas' | 'open-source' | 'ferramenta' | 'experimento';
+export type ProjectKind = 'saas' | 'open-source' | 'ferramenta' | 'experimento' | 'cliente';
 export type ProjectStage = 'live' | 'wip' | 'arquivado';
 
 export const PROJECT_KIND_LABEL: Record<ProjectKind, string> = {
@@ -65,6 +65,7 @@ export const PROJECT_KIND_LABEL: Record<ProjectKind, string> = {
   'open-source': 'Open source',
   ferramenta: 'Ferramenta',
   experimento: 'Experimento',
+  cliente: 'Para clientes',
 };
 
 export interface Project extends ProjectMeta {

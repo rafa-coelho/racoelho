@@ -5,7 +5,7 @@ import { PROJECT_KIND_LABEL, ProjectKind, ProjectMeta } from '@/lib/types';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowUpRight, Search, SlidersHorizontal, X } from 'lucide-react';
 import { Button, ButtonLink, Chip, EmptyState, Eyebrow, cardClasses } from '@/components/rc';
 import { ProjectIcon, resolveProjectIcon } from '@/components/projects/ProjectIcon';
 
@@ -29,6 +29,32 @@ function sortProjects(list: ProjectMeta[]): ProjectMeta[] {
     if (orderA !== orderB) return orderA - orderB;
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
+}
+
+// Sem filtro ativo, a página vira um portfólio em seções: produtos no ar
+// primeiro (cards grandes, com link direto), depois o resto agrupado por tipo,
+// o que está em construção e, por fim, os arquivados.
+interface ProjectSection {
+  id: string;
+  title: string;
+  description: string;
+  projects: ProjectMeta[];
+  variant: 'product' | 'compact';
+}
+
+function buildSections(projects: ProjectMeta[]): ProjectSection[] {
+  const live = projects.filter((p) => p.stage !== 'wip' && p.stage !== 'arquivado');
+  const byKind = (kinds: (ProjectKind | undefined)[]) => live.filter((p) => kinds.includes(p.kind));
+  const sections: ProjectSection[] = [
+    { id: 'produtos', title: 'Produtos no ar', description: 'SaaS que eu construí e mantenho, com gente usando.', projects: byKind(['saas']), variant: 'product' },
+    { id: 'open-source', title: 'Open source e ferramentas', description: 'Código aberto e utilitários para o dia a dia de dev.', projects: byKind(['open-source', 'ferramenta']), variant: 'compact' },
+    { id: 'experimentos', title: 'Jogos e experimentos', description: 'Onde eu testo ideias, tecnologias e um pouco de diversão.', projects: byKind(['experimento']), variant: 'compact' },
+    { id: 'clientes', title: 'Para clientes', description: 'Sistemas sob medida, com código privado.', projects: byKind(['cliente']), variant: 'compact' },
+    { id: 'outros', title: 'Outros projetos', description: '', projects: byKind([undefined]), variant: 'compact' },
+    { id: 'em-construcao', title: 'Em construção', description: 'O que está saindo do forno agora.', projects: projects.filter((p) => p.stage === 'wip'), variant: 'compact' },
+    { id: 'arquivados', title: 'Arquivados', description: 'Projetos encerrados, mantidos aqui pelo registro técnico.', projects: projects.filter((p) => p.stage === 'arquivado'), variant: 'compact' },
+  ];
+  return sections.filter((section) => section.projects.length > 0);
 }
 
 export default function ProjectsContent({ projects: rawProjects, initialKind }: ProjectsContentProps) {
@@ -80,6 +106,9 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
   const popularTags = Object.entries(tagCounts)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 15);
+
+  const hasFilters = !!(selectedTag || searchTerm || selectedKind);
+  const sections = useMemo(() => buildSections(projects), [projects]);
 
   const clearFilters = () => {
     setSelectedTag(null);
@@ -181,11 +210,21 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
       <div className="rc-container pb-7 pt-[18px] md:pb-14 md:pt-7">
         {/* Resultado */}
         <div className="mb-3 flex min-h-[20px] items-center justify-between gap-2 font-mono text-xs text-rc-ink-5 md:mb-3.5 md:text-[12.5px]">
-          <p>
-            <b className="font-medium text-rc-ink">{filteredProjects.length}</b>{' '}
-            {filteredProjects.length === 1 ? 'projeto encontrado' : 'projetos encontrados'}
-          </p>
-          {(selectedTag || searchTerm || selectedKind) && (
+          {hasFilters ? (
+            <p>
+              <b className="font-medium text-rc-ink">{filteredProjects.length}</b>{' '}
+              {filteredProjects.length === 1 ? 'projeto encontrado' : 'projetos encontrados'}
+            </p>
+          ) : (
+            <nav aria-label="Seções" className="-mx-1 flex flex-wrap gap-x-1 gap-y-0.5">
+              {sections.map((section) => (
+                <a key={section.id} href={`#${section.id}`} className="rounded px-1 py-0.5 hover:text-rc-ink">
+                  {section.title.toLowerCase()} <b className="font-medium text-rc-ink">{section.projects.length}</b>
+                </a>
+              ))}
+            </nav>
+          )}
+          {hasFilters && (
             <button type="button" onClick={clearFilters} className="-my-3 flex h-11 items-center gap-1 text-rc-amber transition-colors hover:text-rc-amber-hover">
               <X className="h-3.5 w-3.5" aria-hidden="true" />
               limpar filtros
@@ -193,7 +232,38 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
           )}
         </div>
 
-        {filteredProjects.length > 0 ? (
+        {!hasFilters ? (
+          <div className="space-y-9 md:space-y-12">
+            {sections.map((section) => (
+              <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20">
+                <div className="mb-3 flex items-baseline justify-between gap-3 md:mb-4">
+                  <div>
+                    <h2 id={`${section.id}-title`} className="text-[18px] font-semibold tracking-[-.02em] text-rc-ink md:text-[22px]">
+                      {section.title}
+                    </h2>
+                    {section.description && (
+                      <p className="mt-1 text-[13.5px] leading-[1.5] text-rc-ink-4 md:text-rc-small">{section.description}</p>
+                    )}
+                  </div>
+                  <span className="shrink-0 font-mono text-xs text-rc-ink-5">{section.projects.length}</span>
+                </div>
+                {section.variant === 'product' ? (
+                  <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3.5">
+                    {section.projects.map((project) => (
+                      <ProductCard key={project.slug} project={project} />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2.5 md:gap-3.5 lg:grid-cols-3">
+                    {section.projects.map((project) => (
+                      <ProjectCard key={project.slug} project={project} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            ))}
+          </div>
+        ) : filteredProjects.length > 0 ? (
           <div className="grid grid-cols-2 gap-2.5 md:gap-3.5 lg:grid-cols-3">
             {filteredProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
@@ -265,7 +335,7 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
       {/* Desktop: ícone (se houver) + papel + selos */}
       <div className="hidden flex-wrap items-center gap-2 md:flex">
         {hasIcon && <ProjectIcon project={project} className="mr-1" />}
-        <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{project.role || 'Projeto'}</span>
+        <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{project.kind ? PROJECT_KIND_LABEL[project.kind] : project.role || 'Projeto'}</span>
         {isWip && <StagePill>wip</StagePill>}
         {isPrivate && <PrivateBadge />}
       </div>
@@ -301,6 +371,62 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
         <span className="text-[13.5px] font-medium text-rc-blue-link">Ver case →</span>
       </div>
     </Link>
+  );
+}
+
+function ProductCard({ project }: { project: ProjectMeta }) {
+  const tags = project.tags ?? [];
+  const host = project.liveUrl ? project.liveUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : null;
+
+  return (
+    <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col gap-3 rounded-rc-card p-4 md:gap-3.5 md:p-6' })}>
+      <div className="flex items-start gap-3">
+        <ProjectIcon project={project} size="lg" />
+        <div className="min-w-0 flex-1">
+          <h3 className="text-[16.5px] font-semibold leading-[1.3] tracking-[-.02em] text-rc-ink md:text-[19px]">
+            {/* O link do título cobre o card inteiro; o "Abrir" fica por cima. */}
+            <Link href={`/projetos/${project.slug}`} className="after:absolute after:inset-0 after:rounded-rc-card focus-visible:outline-none">
+              {project.title}
+            </Link>
+          </h3>
+          {host && <p className="mt-1 truncate font-mono text-[11.5px] text-rc-ink-5">{host}</p>}
+        </div>
+      </div>
+
+      {project.excerpt && (
+        <p className="line-clamp-2 text-[13.5px] leading-[1.55] text-rc-ink-3 md:line-clamp-3 md:text-rc-small">{project.excerpt}</p>
+      )}
+
+      {tags.length > 0 && (
+        <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-rc-ink-4">
+          {tags.slice(0, 5).map((tag, i) => (
+            <span key={tag} className={cn('rounded-md border border-rc-border-chip px-[7px] py-1', i > 2 && 'hidden md:inline')}>{tag}</span>
+          ))}
+          {tags.length > 3 && (
+            <span className="rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5 md:hidden">+{tags.length - 3}</span>
+          )}
+          {tags.length > 5 && (
+            <span className="hidden rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5 md:inline">+{tags.length - 5}</span>
+          )}
+        </div>
+      )}
+
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-rc-border-card pt-3">
+        <span className="text-[13.5px] font-medium text-rc-blue-link">Ver case →</span>
+        {project.liveUrl && (
+          <a
+            href={project.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative z-10 -my-2 inline-flex h-10 items-center gap-1 rounded-lg px-2.5 text-[13.5px] font-medium text-rc-ink-3 transition-colors hover:bg-rc-surface-2 hover:text-rc-ink"
+          >
+            Abrir
+            <ArrowUpRight className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+            <span className="sr-only">{project.title} (abre em nova aba)</span>
+          </a>
+        )}
+      </div>
+    </article>
   );
 }
 
