@@ -340,9 +340,9 @@ function ProjectCard({ project }: { project: ProjectMeta }) {
         {isPrivate && <PrivateBadge />}
       </div>
 
-      <h2 className="line-clamp-3 text-[14.5px] font-semibold leading-[1.3] tracking-[-.018em] text-rc-ink md:text-rc-card-title">
+      <h3 className="line-clamp-3 text-[14.5px] font-semibold leading-[1.3] tracking-[-.018em] text-rc-ink md:text-rc-card-title">
         {project.title}
-      </h2>
+      </h3>
       {project.excerpt && (
         <p className="line-clamp-2 text-[12.5px] leading-[1.45] text-rc-ink-4 md:line-clamp-3 md:text-rc-small">{project.excerpt}</p>
       )}
