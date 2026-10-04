@@ -36,7 +36,9 @@ export default function MermaidBlock({ code }: { code: string }) {
   return (
     <div
       ref={containerRef}
-      className="my-6 flex justify-center overflow-x-auto rounded-md bg-card/30 p-4 border border-white/10"
+      // Os rótulos do mermaid são <p> dentro de foreignObject: sem isso herdam o tamanho e a
+      // entrelinha do artigo ([&_p]:…), maiores que os que o mermaid mediu, e o texto é cortado.
+      className="my-6 flex justify-center overflow-x-auto rounded-md bg-card/30 p-4 border border-white/10 [&_foreignObject_p]:!m-0 [&_foreignObject_p]:!text-[length:inherit] [&_foreignObject_p]:!leading-[inherit]"
       dangerouslySetInnerHTML={{ __html: svg }}
     />
   );
