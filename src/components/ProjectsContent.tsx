@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { PROJECT_KIND_LABEL, ProjectKind, ProjectMeta } from '@/lib/types';
+import { PROJECT_KINDS, PROJECT_KIND_LABEL, ProjectKind, ProjectMeta } from '@/lib/types';
 import Link from 'next/link';
 import Layout from '@/components/Layout';
 import { cn } from '@/lib/utils';
@@ -16,7 +16,7 @@ interface ProjectsContentProps {
   initialKind?: string;
 }
 
-const KIND_ORDER = Object.keys(PROJECT_KIND_LABEL) as ProjectKind[];
+const KIND_ORDER: readonly ProjectKind[] = PROJECT_KINDS;
 
 // Ordem: featured, order, date desc; arquivados sempre no fim.
 function sortProjects(list: ProjectMeta[]): ProjectMeta[] {
@@ -32,27 +32,31 @@ function sortProjects(list: ProjectMeta[]): ProjectMeta[] {
   });
 }
 
-// Sem filtro ativo, a página vira um portfólio em seções: produtos no ar
-// primeiro (cards grandes, com link direto), depois o resto agrupado por tipo,
-// o que está em construção e, por fim, os arquivados.
+// Sem filtro ativo, a página vira um portfólio em seções, da mais importante para a
+// menos: os destaques (o que está sendo divulgado agora), depois cada grupo por tipo.
+// O que está em construção fica no próprio grupo, depois dos que estão no ar.
 interface ProjectSection {
   id: string;
   title: string;
   description: string;
   projects: ProjectMeta[];
-  variant: 'product' | 'compact';
+  variant: 'feature' | 'product' | 'compact';
 }
 
 function buildSections(projects: ProjectMeta[]): ProjectSection[] {
-  const live = projects.filter((p) => p.stage !== 'wip' && p.stage !== 'arquivado');
-  const byKind = (kinds: (ProjectKind | undefined)[]) => live.filter((p) => kinds.includes(p.kind));
+  const featured = projects.filter((p) => p.featured && p.stage !== 'arquivado');
+  const rest = projects.filter((p) => !p.featured && p.stage !== 'arquivado');
+  // Estável: mantém a ordem de sortProjects e só joga o "wip" para o fim do grupo.
+  const byKind = (kinds: (ProjectKind | undefined)[]) =>
+    rest.filter((p) => kinds.includes(p.kind)).sort((a, b) => Number(a.stage === 'wip') - Number(b.stage === 'wip'));
   const sections: ProjectSection[] = [
-    { id: 'produtos', title: 'Produtos no ar', description: 'SaaS que eu construí e mantenho, com gente usando.', projects: byKind(['saas']), variant: 'product' },
+    { id: 'destaque', title: 'Em destaque', description: 'O que eu acabei de lançar.', projects: featured, variant: 'feature' },
+    { id: 'saas', title: 'SaaS', description: 'Sistemas por assinatura que eu construí e mantenho.', projects: byKind(['saas', 'app']), variant: 'product' },
+    { id: 'comunidade', title: 'Para a comunidade dev', description: 'Sites abertos para quem programa.', projects: byKind(['comunidade']), variant: 'product' },
+    { id: 'jogos', title: 'Jogos e 3D', description: 'Jogos, experimentos interativos e ferramentas para game dev.', projects: byKind(['jogo', 'experimento']), variant: 'compact' },
     { id: 'open-source', title: 'Open source e ferramentas', description: 'Código aberto e utilitários para o dia a dia de dev.', projects: byKind(['open-source', 'ferramenta']), variant: 'compact' },
-    { id: 'experimentos', title: 'Jogos e experimentos', description: 'Onde eu testo ideias, tecnologias e um pouco de diversão.', projects: byKind(['experimento']), variant: 'compact' },
     { id: 'clientes', title: 'Para clientes', description: 'Sistemas sob medida, com código privado.', projects: byKind(['cliente']), variant: 'compact' },
     { id: 'outros', title: 'Outros projetos', description: '', projects: byKind([undefined]), variant: 'compact' },
-    { id: 'em-construcao', title: 'Em construção', description: 'O que está saindo do forno agora.', projects: projects.filter((p) => p.stage === 'wip'), variant: 'compact' },
     { id: 'arquivados', title: 'Arquivados', description: 'Projetos encerrados, mantidos aqui pelo registro técnico.', projects: projects.filter((p) => p.stage === 'arquivado'), variant: 'compact' },
   ];
   return sections.filter((section) => section.projects.length > 0);
@@ -248,8 +252,14 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
                   </div>
                   <span className="shrink-0 font-mono text-xs text-rc-ink-5">{section.projects.length}</span>
                 </div>
-                {section.variant === 'product' ? (
+                {section.variant === 'feature' ? (
                   <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3.5">
+                    {section.projects.map((project) => (
+                      <ProductCard key={project.slug} project={project} size="lg" />
+                    ))}
+                  </div>
+                ) : section.variant === 'product' ? (
+                  <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3.5 lg:grid-cols-3">
                     {section.projects.map((project) => (
                       <ProductCard key={project.slug} project={project} />
                     ))}
@@ -376,41 +386,46 @@ function projectYear(date?: string): string | null {
   return Number.isNaN(year) ? null : String(year);
 }
 
-function ProductCard({ project }: { project: ProjectMeta }) {
+// Card com link direto pro site. "lg" é o dos destaques (2 por linha); o normal cabe 3 por linha.
+function ProductCard({ project, size = 'md' }: { project: ProjectMeta; size?: 'md' | 'lg' }) {
   const tags = project.tags ?? [];
   const host = project.liveUrl ? project.liveUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : null;
+  const maxTags = size === 'lg' ? 5 : 3;
 
   return (
     <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col overflow-hidden rounded-rc-card' })}>
       {host && <BrowserBar host={host} />}
-      <div className="flex flex-1 flex-col gap-3 p-4 md:gap-3.5 md:p-6">
+      <div className={cn('flex flex-1 flex-col gap-3 p-4', size === 'lg' ? 'md:gap-3.5 md:p-6' : 'md:p-5')}>
       <div className="flex items-start gap-3">
         <ProjectIcon project={project} size="lg" />
         <div className="min-w-0 flex-1">
-          <h3 className="text-[16.5px] font-semibold leading-[1.3] tracking-[-.02em] text-rc-ink md:text-[19px]">
+          <h3 className={cn('text-[16.5px] font-semibold leading-[1.3] tracking-[-.02em] text-rc-ink', size === 'lg' ? 'md:text-[21px]' : 'md:text-[17px]')}>
             {/* O link do título cobre o card inteiro; o "Abrir" fica por cima. */}
             <Link href={`/projetos/${project.slug}`} className="after:absolute after:inset-0 after:rounded-rc-card focus-visible:outline-none">
               {project.title}
             </Link>
           </h3>
-          {project.role && <p className="mt-1 truncate font-mono text-[11.5px] text-rc-ink-5">{project.role}</p>}
+          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+            {project.kind && <span className="font-mono text-[9.5px] uppercase tracking-[.1em] text-rc-amber">{PROJECT_KIND_LABEL[project.kind]}</span>}
+            {project.stage === 'wip' && <StagePill>wip</StagePill>}
+          </div>
         </div>
       </div>
 
       {project.excerpt && (
-        <p className="line-clamp-2 text-[13.5px] leading-[1.55] text-rc-ink-3 md:line-clamp-3 md:text-rc-small">{project.excerpt}</p>
+        <p className={cn('line-clamp-3 text-[13.5px] leading-[1.55] text-rc-ink-3', size === 'lg' && 'md:text-rc-small')}>{project.excerpt}</p>
       )}
 
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-1.5 font-mono text-[10px] text-rc-ink-4">
-          {tags.slice(0, 5).map((tag, i) => (
+          {tags.slice(0, maxTags).map((tag, i) => (
             <span key={tag} className={cn('rounded-md border border-rc-border-chip px-[7px] py-1', i > 2 && 'hidden md:inline')}>{tag}</span>
           ))}
           {tags.length > 3 && (
-            <span className="rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5 md:hidden">+{tags.length - 3}</span>
+            <span className={cn('rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5', maxTags > 3 && 'md:hidden')}>+{tags.length - 3}</span>
           )}
-          {tags.length > 5 && (
-            <span className="hidden rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5 md:inline">+{tags.length - 5}</span>
+          {maxTags > 3 && tags.length > maxTags && (
+            <span className="hidden rounded-md border border-rc-border-chip px-[7px] py-1 text-rc-ink-5 md:inline">+{tags.length - maxTags}</span>
           )}
         </div>
       )}

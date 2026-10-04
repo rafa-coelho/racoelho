@@ -1,5 +1,5 @@
 import { pbListWithPreview, pbFirstByFilterWithPreview } from '@/lib/pocketbase-server';
-import { Project, ProjectMeta } from '@/lib/types';
+import { PROJECT_KINDS, Project, ProjectKind, ProjectMeta } from '@/lib/types';
 import { getCached, cacheKey, cacheListKey } from '@/lib/cache/cache.service';
 
 // Mappers PB -> tipos locais
@@ -17,7 +17,7 @@ function mapPbToProjectMeta(rec: any): ProjectMeta {
     featured: !!rec.featured,
     order: typeof rec.order === 'number' ? rec.order : undefined,
     status: rec.status || undefined,
-    kind: ['saas', 'open-source', 'ferramenta', 'experimento', 'cliente'].includes(rec.kind) ? rec.kind : undefined,
+    kind: (PROJECT_KINDS as readonly string[]).includes(rec.kind) ? (rec.kind as ProjectKind) : undefined,
     icon: rec.icon || undefined,
     logo: rec.logo ? fileUrl(rec, rec.logo) : undefined,
     accent: ['blue', 'green', 'amber'].includes(rec.accent) ? rec.accent : undefined,
