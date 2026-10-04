@@ -59,11 +59,16 @@ export interface ProjectMeta {
   stack?: string[];
 }
 
-export type ProjectKind = 'saas' | 'open-source' | 'ferramenta' | 'experimento' | 'cliente';
+export type ProjectKind = 'app' | 'saas' | 'comunidade' | 'jogo' | 'open-source' | 'ferramenta' | 'experimento' | 'cliente';
 export type ProjectStage = 'live' | 'wip' | 'arquivado';
 
+export const PROJECT_KINDS = ['app', 'saas', 'comunidade', 'jogo', 'open-source', 'ferramenta', 'experimento', 'cliente'] as const satisfies readonly ProjectKind[];
+
 export const PROJECT_KIND_LABEL: Record<ProjectKind, string> = {
+  app: 'App',
   saas: 'SaaS',
+  comunidade: 'Comunidade',
+  jogo: 'Jogos e 3D',
   'open-source': 'Open source',
   ferramenta: 'Ferramenta',
   experimento: 'Experimento',

@@ -1,7 +1,7 @@
 'use client';
 
 import type { ProjectKind, ProjectStage } from '@/lib/types';
-import { PROJECT_KIND_LABEL } from '@/lib/types';
+import { PROJECT_KINDS, PROJECT_KIND_LABEL } from '@/lib/types';
 import { Field, SelectField } from './Field';
 import { IconField } from './IconField';
 import { TagsInput, toStringList } from './TagsInput';
@@ -22,7 +22,7 @@ const pick = <T extends string>(v: unknown, allowed: readonly T[]): T | '' => (a
 
 export function projectExtraFromRecord(rec: any): ProjectExtra {
   return {
-    kind: pick(rec?.kind, ['saas', 'open-source', 'ferramenta', 'experimento', 'cliente'] as const),
+    kind: pick(rec?.kind, PROJECT_KINDS),
     icon: typeof rec?.icon === 'string' ? rec.icon : '',
     accent: pick(rec?.accent, ['blue', 'green', 'amber'] as const),
     stage: pick(rec?.stage, ['live', 'wip', 'arquivado'] as const),
@@ -45,7 +45,7 @@ export function ProjectExtraFields({ value, onChange, title }: { value: ProjectE
           value={value.kind}
           onChange={(v) => set('kind', v as ProjectExtra['kind'])}
           emptyLabel="—"
-          options={(Object.keys(PROJECT_KIND_LABEL) as ProjectKind[]).map((k) => ({ value: k, label: PROJECT_KIND_LABEL[k] }))}
+          options={PROJECT_KINDS.map((k) => ({ value: k, label: PROJECT_KIND_LABEL[k] }))}
         />
         <SelectField
           id="pj-stage"
