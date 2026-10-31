@@ -44,6 +44,7 @@ export const analyticsConfig = {
   trackingId: process.env.NEXT_PUBLIC_GA_ID || '',
   events: {
     pageview: 'pageview',
+    productCtaClick: 'product_cta_click',
     linkClick: 'link_click',
   },
   categories: {

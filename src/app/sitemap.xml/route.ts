@@ -29,6 +29,7 @@ export async function GET() {
   add('/posts')
   add('/listas/desafios')
   add('/projetos')
+  add('/trabalhe-comigo')
   add('/links')
   add('/setup')
 

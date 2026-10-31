@@ -180,6 +180,8 @@ async function main() {
             { name: 'role', type: 'text' },
             { name: 'repoUrl', type: 'text' },
             { name: 'liveUrl', type: 'text' },
+            { name: 'offer', type: 'text' },
+            { name: 'ctaLabel', type: 'text' },
             { name: 'featured', type: 'bool' },
             { name: 'order', type: 'number' },
             { name: 'status', type: 'select', options: { values: ['draft', 'published'] } },

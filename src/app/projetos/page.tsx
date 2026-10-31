@@ -7,12 +7,12 @@ import { BLOG_NAME, SITE_URL } from '@/lib/config/constants';
 export const revalidate = 0; // Sempre buscar dados atualizados (pode ser invalidado via revalidatePath)
 
 export const metadata: Metadata = {
-  title: `Projetos | ${BLOG_NAME}`,
-  description: 'Portfólio de projetos com especificação, arquitetura e decisões técnicas por trás de cada um.',
+  title: 'Produtos e projetos',
+  description: 'Apps que você pode testar agora e o portfólio técnico por trás deles, com arquitetura e decisões de cada projeto.',
   alternates: { canonical: `${SITE_URL}/projetos` },
   openGraph: {
-    title: `Projetos | ${BLOG_NAME}`,
-    description: 'Portfólio de projetos com especificação, arquitetura e decisões técnicas por trás de cada um.',
+    title: `Produtos e projetos | ${BLOG_NAME}`,
+    description: 'Apps que você pode testar agora e o portfólio técnico por trás deles, com arquitetura e decisões de cada projeto.',
     url: `${SITE_URL}/projetos`,
     siteName: BLOG_NAME,
     locale: 'pt_BR',

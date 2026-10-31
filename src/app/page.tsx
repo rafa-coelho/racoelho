@@ -23,7 +23,8 @@ export default async function Home() {
   // Mas passa apenas os primeiros 3 para exibir
   const posts = allPosts.slice(0, 3);
   const challenges = allChallenges.slice(0, 3);
-  const projects = await projectService.getFeaturedProjects(3);
+  const products = await projectService.getFeaturedProjects(3);
+  const showProducts = await featureFlagService.isEnabled('projects').catch(() => false);
   const videos = await getLatestYoutubeVideos(3);
   const socialLinks = await socialService.getSocialLinks();
   const linkItems = await linkService.getLinkItems();
@@ -35,7 +36,8 @@ export default async function Home() {
   return <HomeContent
     posts={posts}
     challenges={challenges}
-    projects={projects}
+    products={products}
+    showProducts={showProducts}
     videos={videos}
     socialLinks={socialLinks}
     linkItems={linkItems}

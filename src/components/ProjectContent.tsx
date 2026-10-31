@@ -3,7 +3,7 @@
 import { ArrowLeft, ExternalLink, Github, Globe } from 'lucide-react';
 import Layout from './Layout';
 import MarkdownRenderer from '@/components/MarkdownRenderer';
-import { Project, ProjectStage } from '@/lib/types';
+import { Project, ProjectMeta, ProjectStage } from '@/lib/types';
 import { cn, formatDate } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
@@ -11,6 +11,9 @@ import { useFeatureFlags } from '@/hooks/use-feature-flag';
 import ShareButtons from './ShareButtons';
 import { ButtonLink, Eyebrow, Pill, RcImage, buttonClasses, cardClasses } from '@/components/rc';
 import { ProjectIcon } from '@/components/projects/ProjectIcon';
+import { ProductCard } from '@/components/projects/ProductCard';
+import { ProductCta } from '@/components/projects/ProductCta';
+import { isProduct, productName } from '@/lib/utils/projects';
 
 // Rótulo do stage (independente de draft/published)
 const STAGE_LABEL: Record<ProjectStage, string> = {
@@ -21,6 +24,7 @@ const STAGE_LABEL: Record<ProjectStage, string> = {
 
 interface ProjectContentProps {
   project: Project;
+  related?: ProjectMeta[];
 }
 
 // Tipografia do case (markdown) nos tokens do rebranding. Listas numeradas viram
@@ -102,16 +106,20 @@ function ProjectFacts({ project, showLinks = true }: { project: Project; showLin
                 </ButtonLink>
               )}
               {project.liveUrl && (
-                <ButtonLink href={project.liveUrl} external size="sm" className="h-10 justify-start">
-                  <Globe className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
-                  Ver projeto no ar
-                </ButtonLink>
+                isProduct(project) ? (
+                  <ProductCta project={project} placement="projeto-ficha" className="h-10" />
+                ) : (
+                  <ButtonLink href={project.liveUrl} external size="sm" className="h-10 justify-start">
+                    <Globe className="h-4 w-4" strokeWidth={1.75} aria-hidden="true" />
+                    Ver projeto no ar
+                  </ButtonLink>
+                )
               )}
             </div>
           )}
           {isPrivate && (
             <p className="text-[13.5px] leading-[1.6] text-rc-ink-4">
-              Código privado — o case detalha a arquitetura e as decisões técnicas.
+              Código privado: o case detalha a arquitetura e as decisões técnicas.
             </p>
           )}
         </div>
@@ -120,7 +128,7 @@ function ProjectFacts({ project, showLinks = true }: { project: Project; showLin
   );
 }
 
-export default function ProjectContent({ project }: ProjectContentProps) {
+export default function ProjectContent({ project, related = [] }: ProjectContentProps) {
   const projectUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/projetos/${project.slug}`
     : '';
@@ -128,7 +136,7 @@ export default function ProjectContent({ project }: ProjectContentProps) {
   // Feature Flags
   const { flags } = useFeatureFlags(['share', 'newsletter']);
 
-  const contactHref = `mailto:${authorInfo.email}?subject=${encodeURIComponent(`Sobre o projeto: ${project.title}`)}`;
+  const product = isProduct(project);
 
   return (
     <Layout>
@@ -156,7 +164,7 @@ export default function ProjectContent({ project }: ProjectContentProps) {
               ) : project.stage === 'arquivado' ? (
                 <Pill className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">arquivado</Pill>
               ) : (
-                <Pill tone="amber" className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">Projeto</Pill>
+                <Pill tone="amber" className="md:px-3 md:py-1.5 md:text-[11px] md:tracking-[.1em]">{product ? 'App' : 'Projeto'}</Pill>
               )}
             </div>
 
@@ -168,6 +176,14 @@ export default function ProjectContent({ project }: ProjectContentProps) {
               <p className="mt-3 max-w-[60ch] text-[16.5px] leading-[1.68] text-rc-ink-3 [text-wrap:pretty] md:mt-5 md:text-rc-lead md:text-rc-ink-2">
                 {project.excerpt}
               </p>
+            )}
+
+            {/* Oferta: o primeiro passo do produto, antes da história e da parte técnica */}
+            {product && (
+              <div className="mt-5 flex flex-col gap-3 md:mt-6 md:flex-row md:items-center md:gap-5">
+                <ProductCta project={project} placement="projeto" size="lg" className="rounded-xl md:rounded-[10px]" />
+                {project.offer && <p className="text-[14.5px] font-medium leading-[1.45] text-rc-green">{project.offer}</p>}
+              </div>
             )}
 
             <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 border-b border-rc-border pb-5 font-mono text-[11.5px] text-rc-ink-5 md:mt-[22px] md:pb-[26px] md:text-xs">
@@ -202,7 +218,7 @@ export default function ProjectContent({ project }: ProjectContentProps) {
           </div>
 
           {/* Ações no mobile: GitHub + link externo */}
-          {(project.repoUrl || project.liveUrl) && (
+          {!product && (project.repoUrl || project.liveUrl) && (
             <div className="mt-4 flex gap-2.5 lg:hidden">
               {project.repoUrl ? (
                 <ButtonLink href={project.repoUrl} external size="lg" className="flex-1 rounded-xl">
@@ -232,15 +248,33 @@ export default function ProjectContent({ project }: ProjectContentProps) {
           {/* Call to Action - Contato */}
           <div className="mt-8 flex flex-col gap-4 rounded-rc-card-lg border border-rc-blue-border bg-rc-blue-surface px-[18px] py-[22px] md:mt-9 md:flex-row md:items-center md:justify-between md:gap-7 md:p-7">
             <div>
-              <h2 className="text-[19px] font-semibold tracking-[-.02em] text-rc-ink md:text-[21px]">Curtiu o projeto?</h2>
+              <h2 className="text-[19px] font-semibold tracking-[-.02em] text-rc-ink md:text-[21px]">
+                {product ? `Quer experimentar o ${productName(project)}?` : 'Quer algo assim?'}
+              </h2>
               <p className="mt-2 max-w-[52ch] text-[14.5px] leading-[1.6] text-rc-ink-3 md:text-rc-body">
-                Se quiser conversar sobre esse projeto, arquitetura ou uma oportunidade de trabalho, é só me chamar.
+                {product ? project.offer || 'É só abrir o site e começar.' : 'Eu também desenvolvo sistemas sob medida. Me conta o que você precisa.'}
               </p>
             </div>
-            <ButtonLink href={contactHref} size="lg" className="min-w-0 shrink rounded-xl md:h-auto md:rounded-[10px] md:px-5 md:py-[13px]">
-              <span className="truncate">{authorInfo.email}</span>
-            </ButtonLink>
+            {product ? (
+              <ProductCta project={project} placement="projeto-fim" size="lg" className="shrink-0 rounded-xl md:rounded-[10px]" />
+            ) : (
+              <ButtonLink href="/trabalhe-comigo" size="lg" className="shrink-0 rounded-xl md:rounded-[10px]">
+                Trabalhe comigo
+              </ButtonLink>
+            )}
           </div>
+
+          {/* Relacionados */}
+          {related.length > 0 && (
+            <section aria-labelledby="relacionados-title" className="mt-8 md:mt-9">
+              <h2 id="relacionados-title" className="text-[18px] font-semibold tracking-[-.02em] text-rc-ink md:text-[21px]">Veja também</h2>
+              <div className="mt-3 grid grid-cols-1 gap-2.5 md:mt-4 md:grid-cols-2 md:gap-3.5">
+                {related.map((item) => (
+                  <ProductCard key={item.slug} project={item} placement="relacionados" />
+                ))}
+              </div>
+            </section>
+          )}
         </article>
 
         {/* Sidebar Direita */}
@@ -292,6 +326,16 @@ export default function ProjectContent({ project }: ProjectContentProps) {
           </div>
         </aside>
       </div>
+
+      {/* Botão fixo no celular: a oferta nunca sai de alcance */}
+      {product && (
+        <>
+          <div aria-hidden="true" className="h-[72px] lg:hidden" />
+          <div className="fixed inset-x-0 bottom-0 z-30 border-t border-rc-border bg-rc-bg/[.95] px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 backdrop-blur-md lg:hidden">
+            <ProductCta project={project} placement="projeto-fixo" size="lg" className="w-full rounded-xl" />
+          </div>
+        </>
+      )}
     </Layout>
   );
 }

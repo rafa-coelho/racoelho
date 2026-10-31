@@ -57,6 +57,9 @@ export interface ProjectMeta {
   accent?: 'blue' | 'green' | 'amber';
   stage?: ProjectStage;
   stack?: string[];
+  // oferta do produto: texto curto (preço, teste) e rótulo do botão; com botão, vira produto
+  offer?: string;
+  ctaLabel?: string;
 }
 
 export type ProjectKind = 'app' | 'saas' | 'comunidade' | 'jogo' | 'open-source' | 'ferramenta' | 'experimento' | 'cliente';
