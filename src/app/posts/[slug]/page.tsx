@@ -7,6 +7,8 @@ import { BLOG_NAME } from '@/lib/config/constants';
 import { SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
 import { isAdmin } from '@/lib/pocketbase-server';
+import { projectService } from '@/lib/services/project.service';
+import { pickPromoProduct } from '@/lib/utils/projects';
 
 // Permitir rotas dinâmicas não pré-geradas (necessário para posts em rascunho)
 export const dynamicParams = true;
@@ -103,6 +105,8 @@ export default async function PostPage({ params }: PostPageProps) {
     .slice(0, 3)
     .map(({ p }) => p);
 
+  const promo = pickPromoProduct(post, await projectService.getAllProjects([], false));
+
   const isDraft = post.status !== 'published';
   const showPreview = adminStatus && isDraft;
 
@@ -133,7 +137,7 @@ export default async function PostPage({ params }: PostPageProps) {
           ],
         })}
       </script>
-      <BlogPostContent post={post as ContentItem} related={related} />
+      <BlogPostContent post={post as ContentItem} related={related} promo={promo} />
     </>
   );
 }

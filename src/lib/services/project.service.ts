@@ -23,6 +23,8 @@ function mapPbToProjectMeta(rec: any): ProjectMeta {
     accent: ['blue', 'green', 'amber'].includes(rec.accent) ? rec.accent : undefined,
     stage: ['live', 'wip', 'arquivado'].includes(rec.stage) ? rec.stage : 'live',
     stack: Array.isArray(rec.stack) && rec.stack.length ? rec.stack.map(String) : undefined,
+    offer: rec.offer || undefined,
+    ctaLabel: rec.ctaLabel || undefined,
   };
 }
 

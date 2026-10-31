@@ -9,6 +9,9 @@ import { calculateReadingTime } from '@/lib/utils';
 import { TrackedLink } from './TrackedLink';
 import { authorInfo } from '@/lib/config/constants';
 import AdSlot from './AdSlot';
+import { ProductCta } from '@/components/projects/ProductCta';
+import { ProjectIcon } from '@/components/projects/ProjectIcon';
+import type { ProjectMeta } from '@/lib/types';
 import { useAds } from '@/hooks/use-ads';
 import { SlotType } from '@/lib/services/adOrchestrator';
 import { useFeatureFlags } from '@/hooks/use-feature-flag';
@@ -24,9 +27,10 @@ import { LikeButton } from '@/components/posts/LikeButton';
 interface BlogPostContentProps {
   post: ContentItem;
   related?: ContentMeta[];
+  promo?: ProjectMeta | null;
 }
 
-export default function BlogPostContent({ post, related = [] }: BlogPostContentProps) {
+export default function BlogPostContent({ post, related = [], promo = null }: BlogPostContentProps) {
   const readingTime = calculateReadingTime(post.content);
   const [postUrl, setPostUrl] = useState('');
   const headings = useMemo(() => extractHeadings(post.content), [post.content]);
@@ -124,6 +128,26 @@ export default function BlogPostContent({ post, related = [] }: BlogPostContentP
             flags.share && (
               <ShareButtons title={post.title} url={postUrl} variant="inline" className="mt-10 border-t border-rc-border pt-[26px]" />
             )
+          )}
+
+          {/* Produto ligado ao post; sem ligação direta, um dos destaques */}
+          {promo && (
+            <aside aria-label="App do autor" className="mt-7 rounded-rc-card-lg border border-rc-border-card bg-rc-surface p-[18px] md:p-6">
+              <Eyebrow>Feito por mim</Eyebrow>
+              <div className="mt-3 flex items-start gap-3">
+                <ProjectIcon project={promo} size="lg" />
+                <div className="min-w-0">
+                  <h2 className="text-[17px] font-semibold leading-[1.3] tracking-[-.02em] text-rc-ink">
+                    <Link href={`/projetos/${promo.slug}`} className="hover:text-rc-blue-link">{promo.title}</Link>
+                  </h2>
+                  <p className="mt-1.5 line-clamp-3 text-[14px] leading-[1.55] text-rc-ink-3">{promo.excerpt}</p>
+                </div>
+              </div>
+              <div className="mt-3.5 flex flex-col gap-2.5 md:flex-row md:items-center md:gap-4">
+                <ProductCta project={promo} placement="post" className="h-11 rounded-[9px]" />
+                {promo.offer && <p className="text-[13px] font-medium leading-[1.45] text-rc-green">{promo.offer}</p>}
+              </div>
+            </aside>
           )}
 
           {/* Newsletter no fim (mobile/tablet; no desktop fica na lateral) */}

@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import { BLOG_NAME, SITE_URL } from '@/lib/config/constants';
 import { notFound } from 'next/navigation';
 import { isAdmin } from '@/lib/pocketbase-server';
+import { pickRelatedProjects } from '@/lib/utils/projects';
 
 interface ProjectPageProps {
   params: Promise<{
@@ -17,10 +18,11 @@ export async function generateMetadata({ params }: ProjectPageProps): Promise<Me
   const { slug } = await params;
   const project = await projectService.getProjectBySlug(slug, [], false);
 
+  // Aqui, antes do loading da raiz abrir o streaming, o notFound ainda vira HTTP 404.
   if (!project || !project.content) {
-    return {
-      title: 'Projeto não encontrado',
-    };
+    const isDraftForAdmin = (await isAdmin()) && (await projectService.getProjectBySlug(slug, [], true));
+    if (isDraftForAdmin) return { title: 'Rascunho' };
+    notFound();
   }
 
   const description = project.excerpt || project.content.substring(0, 160);
@@ -71,6 +73,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     notFound();
   }
 
+  const related = pickRelatedProjects(project, await projectService.getAllProjects([], false), 2);
   const isDraft = project.status !== 'published';
   const showPreview = adminStatus && isDraft;
 
@@ -105,7 +108,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           ],
         })}
       </script>
-      <ProjectContent project={project as Project} />
+      <ProjectContent project={project as Project} related={related} />
     </>
   );
 }

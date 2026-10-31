@@ -3,7 +3,7 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search, X } from "lucide-react";
+import { ChevronDown, Menu, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { BLOG_NAME } from "@/lib/config/constants";
 import { SocialLink } from '@/lib/api';
@@ -13,16 +13,21 @@ import { GA_TRACKING_ID } from "@/lib/gtag";
 import { AnalyticsWrapper } from "./Analytics";
 import { useFeatureFlag } from "@/hooks/use-feature-flag";
 import { Logo, SocialIcon } from "@/components/rc";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const navigation = [
-  { name: 'Home', href: '/' },
+  { name: 'Produtos', href: '/projetos' },
   { name: 'Blog', href: '/posts' },
   { name: 'Desafios', href: '/listas/desafios' },
-  { name: 'Projetos', href: '/projetos' },
+  { name: 'Trabalhe comigo', href: '/trabalhe-comigo' },
+];
+
+// No desktop ficam no menu "Mais"; no celular, na mesma lista.
+const secondaryNavigation = [
   { name: 'Setup', href: '/setup' },
   { name: 'Vagas', href: '/vagas' },
   { name: 'Comunidade', href: '/comunidade' },
@@ -102,6 +107,26 @@ export default function Layout({ children }: LayoutProps) {
                 </Link>
               );
             })}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={cn(
+                  "inline-flex items-center gap-1 rounded-lg px-[13px] py-2 outline-none transition-colors duration-150 ease-out",
+                  secondaryNavigation.some((item) => isActivePath(pathname, item.href))
+                    ? "bg-rc-blue-chip text-rc-ink"
+                    : "text-rc-nav-ink hover:bg-rc-nav-hover hover:text-rc-ink"
+                )}
+              >
+                Mais
+                <ChevronDown className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden="true" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="border-rc-border-chip bg-rc-surface text-rc-ink">
+                {secondaryNavigation.map((item) => (
+                  <DropdownMenuItem key={item.href} asChild>
+                    <Link href={item.href}>{item.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           <div className="-mr-2.5 flex items-center gap-0.5 md:hidden">
@@ -219,7 +244,7 @@ function MobileDrawer({
         </div>
 
         <nav className="flex flex-col gap-0.5 overflow-y-auto px-4 pt-[18px] text-[19px] font-medium tracking-[-.02em]" aria-label="Principal">
-          {navigation.map((item, index) => {
+          {[...navigation, ...secondaryNavigation].map((item, index) => {
             const active = isActivePath(pathname, item.href);
             return (
               <Link
@@ -275,7 +300,7 @@ function MobileDrawer({
 
 function Footer({ socialLinks }: { socialLinks: SocialLink[] }) {
   const year = new Date().getFullYear();
-  const footerLinks = [...navigation.slice(1), { name: 'Links', href: '/links' }];
+  const footerLinks = [...navigation, ...secondaryNavigation, { name: 'Links', href: '/links' }];
 
   return (
     <footer className="mt-[30px] border-t border-rc-border md:mt-[76px] md:bg-rc-footer">

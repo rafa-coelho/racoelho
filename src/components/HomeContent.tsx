@@ -1,6 +1,7 @@
 'use client';
 
 import { ContentMeta, ProjectMeta, YoutubeVideo, SocialLink, LinkTreeItem } from '@/lib/api';
+import { ProductCard } from '@/components/projects/ProductCard';
 import Link from 'next/link';
 import Layout from './Layout';
 import { useFeatureFlag } from '@/hooks/use-feature-flag';
@@ -23,7 +24,9 @@ import {
 interface HomeContentProps {
   posts: ContentMeta[];
   challenges: ContentMeta[];
-  projects?: ProjectMeta[];
+  products?: ProjectMeta[];
+  // Vem do servidor para os produtos já chegarem no HTML
+  showProducts?: boolean;
   videos?: YoutubeVideo[];
   socialLinks?: SocialLink[];
   linkItems?: LinkTreeItem[];
@@ -35,7 +38,8 @@ interface HomeContentProps {
 export default function HomeContent({
   posts,
   challenges,
-  projects = [],
+  products = [],
+  showProducts = false,
   videos = [],
   totalPosts = posts.length,
   totalChallenges = challenges.length,
@@ -46,7 +50,6 @@ export default function HomeContent({
 
   // Feature Flags
   const { enabled: newsletterEnabled } = useFeatureFlag('newsletter');
-  const { enabled: projectsEnabled } = useFeatureFlag('projects');
 
   let sectionIndex = 0;
   const nextNumber = () => pad2(++sectionIndex);
@@ -80,18 +83,17 @@ export default function HomeContent({
               Oi, eu sou <span className="text-rc-blue-link">Rafael Coelho</span>
             </h1>
             <p className="max-w-[52ch] text-[16.5px] leading-[1.6] text-rc-ink-3 [text-wrap:pretty] md:mt-5 md:text-[19.5px]">
-              Compartilho o que aprendo sobre{' '}
-              <span className="font-medium text-rc-ink">programação</span>,{' '}
-              <span className="font-medium text-rc-ink">desafios práticos</span> e{' '}
-              <span className="font-medium text-rc-ink">dicas de carreira</span> em tech
+              Crio <span className="font-medium text-rc-ink">apps para o dia a dia</span>, desenvolvo{' '}
+              <span className="font-medium text-rc-ink">sistemas sob medida</span> e ensino{' '}
+              <span className="font-medium text-rc-ink">programação na prática</span>
             </p>
 
             <div className="grid grid-cols-2 gap-2.5 md:mt-8 md:flex md:gap-3">
-              <ButtonLink href="#conteudo" className="h-12 rounded-[11px] px-3 text-[15px] md:h-auto md:rounded-[10px] md:px-[22px] md:text-[15.5px]">
-                Explorar conteúdo
+              <ButtonLink href="#produtos" className="h-12 rounded-[11px] px-3 text-[15px] md:h-auto md:rounded-[10px] md:px-[22px] md:text-[15.5px]">
+                Conheça meus apps
               </ButtonLink>
-              <ButtonLink href="/links" variant="secondary" className="h-12 rounded-[11px] px-3 text-[15px] md:h-auto md:rounded-[10px] md:px-[22px] md:text-[15.5px]">
-                Minhas redes
+              <ButtonLink href="/trabalhe-comigo" variant="secondary" className="h-12 rounded-[11px] px-3 text-[15px] md:h-auto md:rounded-[10px] md:px-[22px] md:text-[15.5px]">
+                Trabalhe comigo
               </ButtonLink>
             </div>
 
@@ -117,6 +119,19 @@ export default function HomeContent({
           </div>
         </div>
       </section>
+
+      {/* ── 01 Produtos ── */}
+      {showProducts && products.length > 0 && (
+        <section id="produtos" className="rc-container scroll-mt-20 pt-[26px] md:pt-16">
+          <SectionHeader number={nextNumber()} title="Apps que eu criei" accent="amber" href="/projetos" linkLabel="Ver todos os produtos →" />
+          <div className="grid grid-cols-1 gap-2.5 md:grid-cols-3 md:gap-[18px]">
+            {products.slice(0, 3).map((project) => (
+              <ProductCard key={project.slug} project={project} placement="home" />
+            ))}
+          </div>
+          <SectionMobileLink href="/projetos" label="Ver todos os produtos →" accent="amber" />
+        </section>
+      )}
 
       {/* ── 01 Conteúdo recente ── */}
       {featuredPost && (
@@ -209,6 +224,27 @@ export default function HomeContent({
         </section>
       )}
 
+      {/* ── Newsletter ── */}
+      {newsletterEnabled && (
+        <section className="rc-container pt-[26px] md:pt-16">
+          <div className="relative overflow-hidden rounded-rc-card-lg border border-rc-blue-border bg-rc-blue-surface px-[18px] py-[22px] md:rounded-[18px] md:p-8">
+            <div className="pointer-events-none absolute inset-0 bg-rc-dots-blue bg-rc-dots-sm opacity-60 md:bg-rc-dots-m" />
+            <div className="relative">
+              <Eyebrow className="text-rc-blue-soft">Newsletter</Eyebrow>
+              <h2 className="mt-2.5 text-[21px] font-semibold tracking-[-.025em] text-rc-ink md:mt-3.5 md:text-rc-h2-card">Não perca nenhum conteúdo</h2>
+              <p className="mt-[9px] max-w-[42ch] text-[14.5px] leading-[1.55] text-rc-ink-3 md:mt-3 md:text-rc-body">
+                Receba novos artigos, desafios e dicas diretamente no seu email.
+              </p>
+              <NewsletterForm className="mt-4 md:mt-[22px]" source="home" />
+              <div className="mt-3.5 flex items-center gap-2 font-mono text-[11.5px] text-rc-ink-5">
+                <StatusDot pulse={false} />
+                sem spam, cancele quando quiser
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── 02 Desafios práticos ── */}
       {challenges.length > 0 && (
         <section className="rc-container pt-[26px] md:pt-16">
@@ -272,82 +308,19 @@ export default function HomeContent({
         </section>
       )}
 
-      {/* ── 03 Projetos em destaque ── */}
-      {projectsEnabled && projects.length > 0 && (
-        <section className="rc-container pt-[26px] md:pt-16">
-          <SectionHeader number={nextNumber()} title="Projetos em destaque" accent="amber" href="/projetos" linkLabel="Ver todos os projetos →" />
-
-          <div className="hidden grid-cols-3 gap-[18px] md:grid">
-            {projects.slice(0, 3).map((project) => (
-              <Link
-                key={project.slug}
-                href={`/projetos/${project.slug}`}
-                className={cardClasses({ interactive: true, size: 'lg', className: 'flex min-h-[238px] flex-col gap-3 p-6' })}
-              >
-                <Eyebrow className="tracking-[.1em] text-rc-amber">{project.role || 'Projeto'}</Eyebrow>
-                <h3 className="text-[22px] font-semibold tracking-[-.02em] text-rc-ink">{project.title}</h3>
-                {project.excerpt && <p className="line-clamp-3 text-[14.5px] leading-[1.6] text-rc-ink-4">{project.excerpt}</p>}
-                {project.tags && project.tags.length > 0 && (
-                  <div className="mt-auto flex flex-wrap gap-[7px]">
-                    {project.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="rounded-md border border-rc-border-chip px-2 py-1 font-mono text-[11px] text-rc-ink-4">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </Link>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 gap-2.5 md:hidden">
-            {projects.slice(0, 2).map((project) => (
-              <Link key={project.slug} href={`/projetos/${project.slug}`} className={cardClasses({ className: 'flex flex-col gap-2 rounded-[13px] p-3.5' })}>
-                <span className="grid h-[30px] w-[30px] place-items-center rounded-[9px] border border-rc-amber-border bg-rc-amber-surface font-mono text-sm text-rc-amber">
-                  {project.title.charAt(0).toUpperCase()}
-                </span>
-                <h3 className="text-[14.5px] font-semibold leading-[1.3] tracking-[-.018em] text-rc-ink">{project.title}</h3>
-                {project.excerpt && <p className="line-clamp-2 text-[12.5px] leading-[1.45] text-rc-ink-4">{project.excerpt}</p>}
-              </Link>
-            ))}
-          </div>
-          <SectionMobileLink href="/projetos" label="Ver todos os projetos →" accent="amber" />
-        </section>
-      )}
-
-      {/* ── Setup + Newsletter ── */}
+      {/* ── Setup ── */}
       <section className="rc-container pt-[26px] md:pt-16">
-        <div className={newsletterEnabled ? 'grid grid-cols-1 gap-4 md:grid-cols-[1fr_1.15fr] md:gap-[18px]' : 'grid grid-cols-1'}>
-          <Link
-            href="/setup"
-            className={cardClasses({ interactive: true, size: 'lg', className: 'flex flex-col px-[18px] py-[22px] md:rounded-[18px] md:p-8' })}
-          >
-            <Eyebrow>Setup</Eyebrow>
-            <h2 className="mt-2.5 text-[21px] font-semibold tracking-[-.025em] text-rc-ink md:mt-3.5 md:text-rc-h2-card">Meu setup de desenvolvimento</h2>
-            <p className="mt-[9px] max-w-[36ch] text-[14.5px] leading-[1.55] text-rc-ink-3 md:mt-3 md:text-rc-body">
-              Ferramentas, equipamentos e configurações que uso no dia a dia.
-            </p>
-            <span className="mt-auto hidden pt-[22px] text-[15px] font-medium text-rc-blue-link md:block">Ver setup completo →</span>
-          </Link>
-
-          {newsletterEnabled && (
-            <div className="relative overflow-hidden rounded-rc-card-lg border border-rc-blue-border bg-rc-blue-surface px-[18px] py-[22px] md:rounded-[18px] md:p-8">
-              <div className="pointer-events-none absolute inset-0 bg-rc-dots-blue bg-rc-dots-sm opacity-60 md:bg-rc-dots-m" />
-              <div className="relative">
-                <Eyebrow className="text-rc-blue-soft">Newsletter</Eyebrow>
-                <h2 className="mt-2.5 text-[21px] font-semibold tracking-[-.025em] text-rc-ink md:mt-3.5 md:text-rc-h2-card">Não perca nenhum conteúdo</h2>
-                <p className="mt-[9px] max-w-[42ch] text-[14.5px] leading-[1.55] text-rc-ink-3 md:mt-3 md:text-rc-body">
-                  Receba novos artigos, desafios e dicas diretamente no seu email.
-                </p>
-                <NewsletterForm className="mt-4 md:mt-[22px]" source="home" />
-                <div className="mt-3.5 flex items-center gap-2 font-mono text-[11.5px] text-rc-ink-5">
-                  <StatusDot pulse={false} />
-                  sem spam, cancele quando quiser
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <Link
+          href="/setup"
+          className={cardClasses({ interactive: true, size: 'lg', className: 'flex flex-col px-[18px] py-[22px] md:rounded-[18px] md:p-8' })}
+        >
+          <Eyebrow>Setup</Eyebrow>
+          <h2 className="mt-2.5 text-[21px] font-semibold tracking-[-.025em] text-rc-ink md:mt-3.5 md:text-rc-h2-card">Meu setup de desenvolvimento</h2>
+          <p className="mt-[9px] max-w-[36ch] text-[14.5px] leading-[1.55] text-rc-ink-3 md:mt-3 md:text-rc-body">
+            Ferramentas, equipamentos e configurações que uso no dia a dia.
+          </p>
+          <span className="mt-auto hidden pt-[22px] text-[15px] font-medium text-rc-blue-link md:block">Ver setup completo →</span>
+        </Link>
       </section>
     </Layout>
   );

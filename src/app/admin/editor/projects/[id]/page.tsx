@@ -23,6 +23,8 @@ export default function EditProjectPage() {
   const [role, setRole] = useState("");
   const [repoUrl, setRepoUrl] = useState("");
   const [liveUrl, setLiveUrl] = useState("");
+  const [offer, setOffer] = useState("");
+  const [ctaLabel, setCtaLabel] = useState("");
   const [featured, setFeatured] = useState(false);
   const [order, setOrder] = useState("");
   const [extra, setExtra] = useState<ProjectExtra>(emptyProjectExtra);
@@ -51,6 +53,8 @@ export default function EditProjectPage() {
         setRole(rec.role || "");
         setRepoUrl(rec.repoUrl || "");
         setLiveUrl(rec.liveUrl || "");
+        setOffer(rec.offer || "");
+        setCtaLabel(rec.ctaLabel || "");
         setFeatured(!!rec.featured);
         setOrder(typeof rec.order === 'number' ? String(rec.order) : "");
         setExtra(projectExtraFromRecord(rec));
@@ -86,6 +90,8 @@ export default function EditProjectPage() {
         role,
         repoUrl,
         liveUrl,
+        offer,
+        ctaLabel,
         featured,
         order: order.trim() !== "" ? Number(order) : null,
         ...projectExtraToPayload(extra),
@@ -225,6 +231,26 @@ export default function EditProjectPage() {
                     value={liveUrl}
                     onChange={e => setLiveUrl(e.target.value)}
                   />
+                </div>
+                <div>
+                  <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Botão do produto (opcional)</label>
+                  <input
+                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
+                    placeholder="Testar grátis"
+                    value={ctaLabel}
+                    onChange={e => setCtaLabel(e.target.value)}
+                  />
+                  <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">Com botão e URL no ar, entra em Apps para usar</p>
+                </div>
+                <div>
+                  <label className="mb-2 block font-mono text-[11px] uppercase tracking-[.08em] text-rc-ink-4">Oferta (opcional)</label>
+                  <input
+                    className="w-full min-h-[46px] rounded-[10px] border border-rc-border-strong bg-rc-input px-3.5 py-2.5 text-[15px] text-rc-ink placeholder:text-rc-ink-5 outline-none transition-colors duration-150 focus:border-rc-blue-link"
+                    placeholder="7 dias grátis, sem cartão"
+                    value={offer}
+                    onChange={e => setOffer(e.target.value)}
+                  />
+                  <p className="mt-1.5 text-[12.5px] leading-[1.5] text-rc-ink-5">Preço e condição, em uma frase curta</p>
                 </div>
               </div>
 
