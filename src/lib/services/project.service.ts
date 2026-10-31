@@ -48,6 +48,7 @@ export const projectService = {
         const res = await pbListWithPreview('projects', {
           filter: isPreview ? undefined : "status='published'",
           sort: '-featured,order,-date',
+          perPage: 200,
         }, isPreview);
 
         return (res.items || []).map(mapPbToProjectMeta);
