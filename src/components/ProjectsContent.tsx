@@ -78,11 +78,11 @@ function sortProjects(list: ProjectMeta[]): ProjectMeta[] {
 // Sem filtro ativo, a página abre com o que dá para usar agora; o resto é o portfólio
 // técnico, por grupo. O que está em construção fica no próprio grupo, depois dos que estão no ar.
 interface ProjectSection {
-  id: ProjectGroup | 'arquivados';
+  id: ProjectGroup | 'destaque' | 'arquivados';
   title: string;
   description: string;
   projects: ProjectMeta[];
-  variant: 'product' | 'compact';
+  variant: 'feature' | 'product' | 'compact';
 }
 
 function buildSections(projects: ProjectMeta[]): ProjectSection[] {
@@ -91,7 +91,8 @@ function buildSections(projects: ProjectMeta[]): ProjectSection[] {
   const inGroup = (group: ProjectGroup) =>
     active.filter((p) => groupOf(p) === group).sort((a, b) => Number(a.stage === 'wip') - Number(b.stage === 'wip'));
   const sections: ProjectSection[] = [
-    { id: 'apps', title: GROUP_LABEL.apps, description: 'Produtos no ar, prontos para você testar agora.', projects: inGroup('apps'), variant: 'product' },
+    { id: 'destaque', title: 'Em destaque', description: 'Os apps que acabei de lançar.', projects: active.filter((p) => p.featured), variant: 'feature' },
+    { id: 'apps', title: GROUP_LABEL.apps, description: 'Mais produtos no ar, prontos para você testar agora.', projects: inGroup('apps').filter((p) => !p.featured), variant: 'product' },
     { id: 'sistemas', title: 'Outros sistemas e apps', description: 'Produtos em construção e sistemas de uso próprio.', projects: inGroup('sistemas'), variant: 'compact' },
     { id: 'comunidade', title: 'Para a comunidade dev', description: 'Sites abertos para quem programa.', projects: inGroup('comunidade'), variant: 'compact' },
     { id: 'jogos', title: GROUP_LABEL.jogos, description: 'Jogos, experimentos interativos e ferramentas para game dev.', projects: inGroup('jogos'), variant: 'compact' },
@@ -295,7 +296,7 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
           <div className="space-y-9 md:space-y-12">
             {sections.map((section, index) => (
               <section key={section.id} id={section.id} aria-labelledby={`${section.id}-title`} className="scroll-mt-20">
-                {index > 0 && section.variant === 'compact' && sections[index - 1].variant === 'product' && (
+                {index > 0 && section.variant === 'compact' && sections[index - 1].variant !== 'compact' && (
                   <div className="mb-7 border-t border-rc-border pt-7 md:mb-9 md:pt-9">
                     <Eyebrow className="text-rc-amber">Portfólio técnico</Eyebrow>
                     <p className="mt-2 text-[14.5px] leading-[1.55] text-rc-ink-3 md:text-rc-body">O que eu construí para aprender, para a comunidade e para clientes.</p>
@@ -312,10 +313,10 @@ export default function ProjectsContent({ projects: rawProjects, initialKind }: 
                   </div>
                   <span className="shrink-0 font-mono text-xs text-rc-ink-5">{section.projects.length}</span>
                 </div>
-                {section.variant === 'product' ? (
+                {section.variant !== 'compact' ? (
                   <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 md:gap-3.5 lg:grid-cols-3">
                     {section.projects.map((project) => (
-                      <ProductCard key={project.slug} project={project} placement="projetos" />
+                      <ProductCard key={project.slug} project={project} placement="projetos" featured={section.variant === 'feature'} />
                     ))}
                   </div>
                 ) : (
