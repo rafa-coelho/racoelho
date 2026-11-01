@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
 import { PROJECT_KIND_LABEL, ProjectMeta } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { cardClasses } from '@/components/rc';
+import { RcImage, cardClasses } from '@/components/rc';
 import { isProduct } from '@/lib/utils/projects';
 import { BrowserBar } from './BrowserBar';
 import { ProductCta } from './ProductCta';
@@ -17,14 +17,19 @@ export function StagePill({ children }: { children: string }) {
 }
 
 // Card com link direto pro site. Produto mostra a oferta e o botão; o resto, as tags e o "Abrir".
-export function ProductCard({ project, placement }: { project: ProjectMeta; placement: string }) {
+// O "featured" é o dos destaques: traz a capa do produto no lugar da barra de endereço.
+export function ProductCard({ project, placement, featured = false }: { project: ProjectMeta; placement: string; featured?: boolean }) {
   const product = isProduct(project);
   const tags = project.tags ?? [];
   const host = project.liveUrl ? project.liveUrl.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : null;
 
   return (
     <article className={cardClasses({ interactive: true, className: 'group relative flex flex-col overflow-hidden rounded-rc-card' })}>
-      {host && <BrowserBar host={host} />}
+      {featured && project.coverImage ? (
+        <RcImage src={project.coverImage} alt="" ratio="16/9" className="border-b border-rc-border-card" />
+      ) : (
+        host && <BrowserBar host={host} />
+      )}
       <div className="flex flex-1 flex-col gap-3 p-4 md:p-5">
         <div className="flex items-start gap-3">
           <ProjectIcon project={project} size="lg" />
